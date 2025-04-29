@@ -1,52 +1,91 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-body {
-  font-family: 'Inter', sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-}
-
-@layer base {
-  :root {
-    /* Light Theme - Mindful AI Palette */
-    --background: 200 60% 96%; /* Very light blue */
-    --foreground: 200 10% 20%; /* Dark blue-grey */
-    --card: 0 0% 100%; /* White */
-    --card-foreground: 200 10% 20%; /* Dark blue-grey */
-    --primary: 200 68% 55%; /* Calming Blue (#A0D2EB adjusted for contrast) */
-    --primary-foreground: 0 0% 100%; /* White */
-    --muted: 200 30% 90%; /* Lighter blue-grey */
-    --muted-foreground: 200 10% 45%; /* Medium blue-grey */
-    --accent: 266 43% 77%; /* Muted Lavender (#B19CD9) */
-    --accent-foreground: 266 30% 35%; /* Darker Lavender/Grey for contrast */
-    --radius: 0.5rem;
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
-
-  .dark {
-    /* Dark Theme - Mindful AI Palette (Inverted/Adjusted) */
-    --background: 200 10% 10%; /* Dark Blue-Grey */
-    --foreground: 200 15% 95%; /* Light Blue-Grey */
-    --card: 200 10% 15%; /* Slightly Lighter Dark Blue-Grey */
-    --card-foreground: 200 15% 95%; /* Light Blue-Grey */
-    --primary: 200 68% 55%; /* Calming Blue (Keep vibrant) */
-    --primary-foreground: 200 10% 10%; /* Dark Blue-Grey */
-    --muted: 200 10% 25%; /* Medium Dark Blue-Grey */
-    --muted-foreground: 200 10% 65%; /* Lighter Muted Blue-Grey */
-    --accent: 266 43% 70%; /* Adjusted Lavender */
-    --accent-foreground: 266 50% 95%; /* Lighter Lavender */
-    --radius: 0.5rem;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
+  
   body {
-    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-color: hsl(200, 60%, 96%); /* Very light blue */
+    color: hsl(200, 10%, 20%); /* Dark blue-grey */
   }
-}
+  
+  :root {
+    --background: hsl(200, 60%, 96%); /* Very light blue */
+    --foreground: hsl(200, 10%, 20%); /* Dark blue-grey */
+    --card: #ffffff; /* White */
+    --card-foreground: hsl(200, 10%, 20%); /* Dark blue-grey */
+    --primary: hsl(200, 68%, 55%); /* Calming Blue */
+    --primary-foreground: #ffffff; /* White */
+    --muted: hsl(200, 30%, 90%); /* Lighter blue-grey */
+    --muted-foreground: hsl(200, 10%, 45%); /* Medium blue-grey */
+    --accent: hsl(266, 43%, 77%); /* Muted Lavender */
+    --accent-foreground: hsl(266, 30%, 35%); /* Darker Lavender/Grey */
+    --radius: 0.5rem;
+  }
+  
+  body.dark {
+    background-color: hsl(200, 10%, 10%); /* Dark Blue-Grey */
+    color: hsl(200, 15%, 95%); /* Light Blue-Grey */
+  }
+  
+  body.dark :root {
+    --background: hsl(200, 10%, 10%); /* Dark Blue-Grey */
+    --foreground: hsl(200, 15%, 95%); /* Light Blue-Grey */
+    --card: hsl(200, 10%, 15%); /* Slightly Lighter Dark Blue-Grey */
+    --card-foreground: hsl(200, 15%, 95%); /* Light Blue-Grey */
+    --primary: hsl(200, 68%, 55%); /* Calming Blue */
+    --primary-foreground: hsl(200, 10%, 10%); /* Dark Blue-Grey */
+    --muted: hsl(200, 10%, 25%); /* Medium Dark Blue-Grey */
+    --muted-foreground: hsl(200, 10%, 65%); /* Lighter Muted Blue-Grey */
+    --accent: hsl(266, 43%, 70%); /* Adjusted Lavender */
+    --accent-foreground: hsl(266, 50%, 95%); /* Lighter Lavender */
+  }
+  
+  .card {
+    background-color: var(--card);
+    color: var(--card-foreground);
+    border-radius: var(--radius);
+  }
+  
+  .primary-button {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    padding: 1rem 2rem;
+    border-radius: var(--radius);
+    border: none;
+    cursor: pointer;
+  }
+  
+  .primary-button:hover {
+    opacity: 0.8;
+  }
+  
+  .muted-text {
+    color: var(--muted-foreground);
+  }
+  
+  .accent-text {
+    color: var(--accent-foreground);
+  }
+  
+  /* Sidebar (if needed, based on your previous variables) */
+  .sidebar {
+    background-color: var(--sidebar-background);
+    color: var(--sidebar-foreground);
+    padding: 1rem;
+    border-radius: var(--radius);
+  }
+  
+  .sidebar-header {
+    color: var(--sidebar-primary-foreground);
+  }
+  
+  .sidebar-footer {
+    color: var(--sidebar-accent-foreground);
+  }
+  

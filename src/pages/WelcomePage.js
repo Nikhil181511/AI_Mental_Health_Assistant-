@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // React Router Link for navigation
-import { Button } from '../components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../components/ui/card';
-// Custom Card components
+import { Button } from './button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './card';
 import { Activity, BookOpenText, BrainCircuit, CalendarHeart } from 'lucide-react'; // Icons from Lucide
 
 export default function WelcomePage() {
