@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+@layer base {
+  :root {
+    /* Light Theme - Mindful AI Palette */
+    --background: 200 60% 96%; /* Very light blue */
+    --foreground: 200 10% 20%; /* Dark blue-grey */
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 200 10% 20%; /* Dark blue-grey */
+    --primary: 200 68% 55%; /* Calming Blue (#A0D2EB adjusted for contrast) */
+    --primary-foreground: 0 0% 100%; /* White */
+    --muted: 200 30% 90%; /* Lighter blue-grey */
+    --muted-foreground: 200 10% 45%; /* Medium blue-grey */
+    --accent: 266 43% 77%; /* Muted Lavender (#B19CD9) */
+    --accent-foreground: 266 30% 35%; /* Darker Lavender/Grey for contrast */
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Dark Theme - Mindful AI Palette (Inverted/Adjusted) */
+    --background: 200 10% 10%; /* Dark Blue-Grey */
+    --foreground: 200 15% 95%; /* Light Blue-Grey */
+    --card: 200 10% 15%; /* Slightly Lighter Dark Blue-Grey */
+    --card-foreground: 200 15% 95%; /* Light Blue-Grey */
+    --primary: 200 68% 55%; /* Calming Blue (Keep vibrant) */
+    --primary-foreground: 200 10% 10%; /* Dark Blue-Grey */
+    --muted: 200 10% 25%; /* Medium Dark Blue-Grey */
+    --muted-foreground: 200 10% 65%; /* Lighter Muted Blue-Grey */
+    --accent: 266 43% 70%; /* Adjusted Lavender */
+    --accent-foreground: 266 50% 95%; /* Lighter Lavender */
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}

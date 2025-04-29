@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.navbar {
+  @apply bg-gray-800 p-4;
+}
+
+.nav-links {
+  @apply list-none flex gap-6 m-0 p-0;
+}
+
+.nav-links li a {
+  @apply text-white font-medium hover:underline;
+}
