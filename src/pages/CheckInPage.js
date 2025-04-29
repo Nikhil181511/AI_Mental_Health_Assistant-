@@ -1,130 +1,168 @@
-import React, { useState, useEffect } from 'react';
-import { db } from './firebase';
-import { ref, push, onValue } from 'firebase/database';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import {
-  LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer
-} from 'recharts';
+import { format } from 'date-fns';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import './Check.css';
 
+// Firebase imports
+import { db, collection, addDoc, getDocs } from './firebase';
+
+const MOOD_LABELS = {
+  1: "Very Poor",
+  2: "Poor",
+  3: "Neutral",
+  4: "Good",
+  5: "Very Good"
+};
+
 const CheckInPage = () => {
-  const [mood, setMood] = useState(3);
+  const [moodRating, setMoodRating] = useState(3);
   const [desc, setDesc] = useState('');
-  const [recording, setRecording] = useState(false);
-  const [voiceUrl, setVoiceUrl] = useState('');
   const [checkIns, setCheckIns] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const startRecording = () => {
-    setRecording(true);
-    // TODO: Add actual recording logic
+  // Speech recognition
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
+
+  useEffect(() => {
+    if (transcript) {
+      setDesc(transcript);
+    }
+  }, [transcript]);
+
+  const startListening = () => {
+    resetTranscript();
+    SpeechRecognition.startListening({ continuous: true, language: 'en-IN' });
   };
 
-  const stopRecording = () => {
-    setRecording(false);
-    const fakeVoiceUrl = "https://example.com/voice.mp3";
-    setVoiceUrl(fakeVoiceUrl);
+  const stopListening = () => {
+    SpeechRecognition.stopListening();
   };
 
-  const submitCheckIn = async () => {
+  const fetchCheckIns = async () => {
     try {
-      const newData = {
-        mood: Number(mood),
-        description: desc,
-        voiceUrl,
-        timestamp: Date.now(),
-      };
-      await push(ref(db, 'checkins'), newData);
-      await axios.post('http://localhost:8000/checkin', newData);
-      alert('✅ Check-in submitted!');
-      setDesc('');
-      setVoiceUrl('');
+      const querySnapshot = await getDocs(collection(db, "checkins"));
+      const entries = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          ...data,
+          id: doc.id,
+          formattedTime: format(new Date(data.timestamp), 'MMM d, HH:mm')
+        };
+      });
+      setCheckIns(entries.sort((a, b) => a.timestamp - b.timestamp));
     } catch (error) {
-      console.error("❌ Error submitting check-in:", error);
-      alert('Failed to submit check-in.');
+      console.error("Error fetching check-ins:", error);
     }
   };
 
+  const submitCheckIn = async () => {
+    setIsSubmitting(true);
+    const newData = {
+      moodRating,
+      moodDescription: MOOD_LABELS[moodRating],
+      description: desc,
+      timestamp: Date.now()
+    };
+
+    try {
+      await addDoc(collection(db, "checkins"), newData);
+      alert("✅ Mood check-in saved!");
+      setDesc('');
+      fetchCheckIns();
+    } catch (error) {
+      alert("❌ Failed to submit.");
+      console.error(error);
+    }
+    setIsSubmitting(false);
+  };
+
+  const formattedHistory = useMemo(() => {
+    return checkIns.map(record => ({
+      ...record,
+      date: record.formattedTime
+    }));
+  }, [checkIns]);
+
   useEffect(() => {
-    const checkInRef = ref(db, 'checkins');
-    onValue(checkInRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const entries = Object.values(data).map(entry => ({
-          ...entry,
-          time: new Date(entry.timestamp).toLocaleString()
-        }));
-        entries.sort((a, b) => a.timestamp - b.timestamp);
-        setCheckIns(entries);
-      } else {
-        setCheckIns([]);
-      }
-    });
+    fetchCheckIns();
   }, []);
 
   return (
     <div className="checkin-container">
-      <h2>How are you feeling today?</h2>
+      <h2>How are you feeling right now?</h2>
 
-      <div>
-        <label htmlFor="mood">Mood Level</label>
-        <input
-          id="mood"
-          type="range"
-          min="1"
-          max="5"
-          value={mood}
-          onChange={(e) => setMood(e.target.value)}
-        />
-        <div className="mood-labels">
-          <span>1 (Low)</span>
-          <span>5 (High)</span>
-        </div>
+      <label>Mood Level (1-5): {MOOD_LABELS[moodRating]}</label>
+      <input
+        type="range"
+        min="1"
+        max="5"
+        value={moodRating}
+        onChange={(e) => setMoodRating(Number(e.target.value))}
+      />
+      <div className="mood-labels">
+        <span>1 (Low)</span>
+        <span>5 (High)</span>
       </div>
 
-      <div>
-        <label htmlFor="desc">Describe how you're feeling</label>
+      <label>Description:</label>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <textarea
-          id="desc"
-          placeholder="Write about your mood, thoughts, or anything you'd like to share..."
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
+          placeholder="Type or speak about your mood..."
         />
-      </div>
-
-      <div>
         <button
-          className={`record-btn ${recording ? 'recording' : ''}`}
-          onClick={recording ? stopRecording : startRecording}
+          onClick={listening ? stopListening : startListening}
+          style={{
+            marginLeft: 10,
+            backgroundColor: listening ? 'red' : '#4CAF50',
+            borderRadius: '50%',
+            width: 40,
+            height: 40,
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer'
+          }}
+          title={listening ? 'Stop Listening' : 'Start Listening'}
         >
-          {recording ? 'Stop Recording' : 'Record Voice'}
-        </button>
-
-        {voiceUrl && (
-          <div className="audio-preview">
-            <audio controls>
-              <source src={voiceUrl} type="audio/mpeg" />
-              Your browser does not support the audio element.
-            </audio>
-          </div>
-        )}
-      </div>
-
-      <div>
-        <button className="submit-btn" onClick={submitCheckIn}>
-          Submit Check-In
+          🎤
         </button>
       </div>
 
-      {checkIns.length > 0 && (
-        <div className="chart-container">
-          <h3>Mood Over Time</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={checkIns}>
-              <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-              <XAxis dataKey="time" tick={{ fontSize: 10 }} />
-              <YAxis domain={[1, 5]} tickCount={5} />
-              <Tooltip />
-              <Line type="monotone" dataKey="mood" stroke="#8884d8" strokeWidth={2} />
+      {!browserSupportsSpeechRecognition && (
+        <p>Your browser does not support speech recognition.</p>
+      )}
+
+      <button onClick={submitCheckIn} disabled={isSubmitting}>
+        {isSubmitting ? 'Saving...' : 'Save Check-In'}
+      </button>
+
+      {formattedHistory.length > 0 && (
+        <div style={{ height: 300, marginTop: 40 }}>
+          <h3>Mood History</h3>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={formattedHistory}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" fontSize={12} />
+              <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} />
+              <Tooltip
+                formatter={(value, name, props) =>
+                  [`${MOOD_LABELS[value]} ${props.payload.description ? ` - ${props.payload.description}` : ''}`, 'Mood']}
+              />
+              <Line
+                type="monotone"
+                dataKey="moodRating"
+                stroke="#8884d8"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>

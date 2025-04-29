@@ -1,114 +1,18 @@
 .checkin-container {
     max-width: 600px;
-    margin: 40px auto;
-    padding: 32px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  .checkin-container h2 {
-    font-size: 26px;
-    text-align: center;
-    font-weight: 600;
-    margin-bottom: 24px;
-    color: #2c3e50;
-  }
-  
-  .checkin-container label {
-    display: block;
-    margin-top: 20px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #444;
-  }
-  
-  .checkin-container input[type="range"] {
-    width: 100%;
-    margin-top: 8px;
+    margin: auto;
+    padding: 20px;
   }
   
   .mood-labels {
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
-    margin-top: 4px;
-    color: #777;
+    margin: 4px 0 12px;
   }
   
-  .checkin-container textarea {
+  textarea {
     width: 100%;
-    padding: 10px;
-    margin-top: 8px;
-    font-size: 14px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    resize: vertical;
-    box-sizing: border-box;
-  }
-  
-  .record-btn {
-    width: 100%;
-    margin-top: 20px;
-    padding: 12px;
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 30px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .record-btn:hover {
-    background-color: #2563eb;
-  }
-  
-  .recording {
-    background-color: #dc2626 !important;
-  }
-  
-  .recording:hover {
-    background-color: #b91c1c !important;
-  }
-  
-  .submit-btn {
-    width: 100%;
-    margin-top: 20px;
-    padding: 12px;
-    background-color: #10b981;
-    color: white;
-    border: none;
-    border-radius: 30px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submit-btn:hover {
-    background-color: #059669;
-  }
-  
-  .audio-preview {
-    margin-top: 16px;
-  }
-  
-  .audio-preview audio {
-    width: 100%;
-  }
-  
-  .chart-container {
-    margin-top: 40px;
-  }
-  
-  .chart-container h3 {
-    text-align: center;
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: #333;
+    height: 80px;
+    margin: 10px 0;
   }
   
