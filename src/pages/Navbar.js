@@ -11,7 +11,7 @@ export default function Navbar() {
           <Link to="/checkin" className="text-white font-medium hover:underline">Check-in</Link>
         </li>
         <li>
-          <Link to="/recommendations" className="text-white font-medium hover:underline">Recommendations</Link>
+          <Link to="/Book" className="text-white font-medium hover:underline">Book</Link>
         </li>
         <li>
           <Link to="/library" className="text-white font-medium hover:underline">Library</Link>

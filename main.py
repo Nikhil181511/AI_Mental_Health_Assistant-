@@ -3,10 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 import ollama  # Ensure ollama is installed and running with the phi model
 from pydantic import BaseModel
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timezone
 import firebase_admin
 from firebase_admin import credentials, firestore
 from typing import List, Dict
+from fastapi import Request
+
+
 
 # Initialize Firebase Admin SDK with your service account credentials
 cred = credentials.Certificate("C:/Users/nikhi/Downloads/wastex-da8fa-firebase-adminsdk-rxbwl-3268440c93.json")
@@ -20,7 +23,7 @@ app = FastAPI()
 # Allow CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Adjust to your frontend origin if needed
+    allow_origins=["http://localhost:3000"],  # React dev server
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -154,3 +157,47 @@ async def get_profile_analysis():
         "ai_summary": ai_summary,
         "recommendations": recommendations
     }
+
+appointments_db = []
+therapists_db = [
+    { "id": 1, "name": "Dr. Priya Naik", "specialty": "Cognitive Behavioral Therapy", "location": "Panaji, Goa", "availability": "Mon-Wed" },
+    { "id": 2, "name": "Dr. Rajesh Kamath", "specialty": "Trauma Therapy", "location": "Margao, Goa", "availability": "Tue-Fri" },
+    { "id": 3, "name": "Dr. Sneha D'Souza", "specialty": "Family Counseling", "location": "Vasco da Gama, Goa", "availability": "Mon-Thu" },
+    { "id": 4, "name": "Dr. Vikram Shetty", "specialty": "Depression & Anxiety", "location": "Mapusa, Goa", "availability": "Wed-Sat" },
+    { "id": 5, "name": "Dr. Anisha Pai", "specialty": "Mindfulness Therapy", "location": "Ponda, Goa", "availability": "Mon, Wed, Fri" },
+    { "id": 6, "name": "Dr. Sunita Verma", "specialty": "Child Psychology", "location": "Calangute, Goa", "availability": "Tue-Thu" },
+    { "id": 7, "name": "Dr. Manoj Prabhu", "specialty": "Addiction Counseling", "location": "Mangalore, Karnataka", "availability": "Mon-Fri" },
+    { "id": 8, "name": "Dr. Leela Kamat", "specialty": "Relationship Therapy", "location": "Panjim, Goa", "availability": "Tue, Thu, Sat" },
+    { "id": 9, "name": "Dr. Rahul Sawant", "specialty": "Stress Management", "location": "Mumbai, Maharashtra", "availability": "Mon-Wed, Fri" }
+]
+
+# =============================
+# Models
+# =============================
+class Appointment(BaseModel):
+    id: Optional[int] = None
+    name: str
+    phone: str
+    datetime: str
+    concern: str
+    therapistId: int
+    therapistName: str
+    status: str = "upcoming"  # upcoming or visited
+
+# =============================
+# Routes
+# =============================
+
+@app.get("/therapists")
+def get_therapists():
+    return therapists_db
+
+@app.get("/appointments")
+def get_appointments():
+    return appointments_db
+
+@app.post("/book")
+def book_appointment(appt: Appointment):
+    appt.id = len(appointments_db) + 1
+    appointments_db.append(appt)
+    return { "message": "Appointment booked", "appointment": appt }
