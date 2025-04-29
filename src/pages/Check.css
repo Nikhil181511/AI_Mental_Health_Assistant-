@@ -221,7 +221,16 @@ body, html, #root {
     }
   
     .checkin-container button:not([title]) {
-      width:100%;
-   }
+      width: 100%;
+    }
+  
+    .checkin-container textarea {
+      height: 100px;
+      font-size: 14px;
+    }
+  
+    .checkin-container h3 {
+      font-size: 20px;
+    }
   }
   

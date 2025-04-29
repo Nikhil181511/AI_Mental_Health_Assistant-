@@ -3,7 +3,6 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import Navbar from './Navbar';
 import './Check.css';
 
 // Firebase imports
@@ -33,6 +32,7 @@ const CheckInPage = () => {
   const [desc, setDesc] = useState('');
   const [checkIns, setCheckIns] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [recommendations, setRecommendations] = useState(null); // To store recommendation data
 
   const {
     transcript,
@@ -83,8 +83,18 @@ const CheckInPage = () => {
     };
 
     try {
+      // Add check-in data to Firestore
       await addDoc(collection(db, "checkins"), newData);
-      alert("✅ Mood check-in saved!");
+
+      // Send the check-in data to the /recommend endpoint for recommendations
+      const response = await axios.post('http://localhost:8000/recommend', {
+        user_mood: desc
+      });
+
+      // Set the recommendation data
+      setRecommendations(response.data);
+
+      alert("✅ Mood check-in saved and recommendation fetched!");
       setDesc('');
       fetchCheckIns();
     } catch (error) {
@@ -106,88 +116,110 @@ const CheckInPage = () => {
   }, []);
 
   return (
-    <>
-      <div className="checkin-container">
-        <h2>How are you feeling right now?</h2>
+    <div className="checkin-container">
+      <h2>How are you feeling right now?</h2>
 
-        <label>
-          Mood Level (1-5): {MOOD_LABELS[moodRating]} {MOOD_ICONS[moodRating]}
-        </label>
+      <label>
+        Mood Level (1-5): {MOOD_LABELS[moodRating]} {MOOD_ICONS[moodRating]}
+      </label>
 
-        <input
-          type="range"
-          min="1"
-          max="5"
-          value={moodRating}
-          onChange={(e) => setMoodRating(Number(e.target.value))}
-        />
+      <input
+        type="range"
+        min="1"
+        max="5"
+        value={moodRating}
+        onChange={(e) => setMoodRating(Number(e.target.value))}
+      />
 
-        <div className="mood-labels">
-          <span>{MOOD_ICONS[1]}</span>
-          <span>{MOOD_ICONS[2]}</span>
-          <span>{MOOD_ICONS[3]}</span>
-          <span>{MOOD_ICONS[4]}</span>
-          <span>{MOOD_ICONS[5]}</span>
-        </div>
-
-        <label>Description:</label>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <textarea
-            value={desc}
-            onChange={(e) => setDesc(e.target.value)}
-            placeholder="Type or speak about your mood..."
-          />
-          <button
-            onClick={listening ? stopListening : startListening}
-            style={{
-              marginLeft: 10,
-              backgroundColor: listening ? 'red' : '#4CAF50',
-              borderRadius: '50%',
-              width: 40,
-              height: 40,
-              color: 'white',
-              border: 'none',
-              cursor: 'pointer'
-            }}
-            title={listening ? 'Stop Listening' : 'Start Listening'}
-          >
-            {listening ? <MicOff size={20} /> : <Mic size={20} />}
-          </button>
-        </div>
-
-        {!browserSupportsSpeechRecognition && (
-          <p>Your browser does not support speech recognition.</p>
-        )}
-
-        <button onClick={submitCheckIn} disabled={isSubmitting}>
-          {isSubmitting ? 'Saving...' : 'Save Check-In'}
-        </button>
-
-        {formattedHistory.length > 0 && (
-          <div style={{ height: 300, marginTop: 40 }}>
-            <h3>Mood History</h3>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={formattedHistory}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" fontSize={12} />
-                <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} />
-                <Tooltip
-                  formatter={(value, name, props) =>
-                    [`${MOOD_LABELS[value]} ${props.payload.description ? ` - ${props.payload.description}` : ''}`, 'Mood']}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="moodRating"
-                  stroke="#8884d8"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        )}
+      <div className="mood-labels">
+        <span>{MOOD_ICONS[1]}</span>
+        <span>{MOOD_ICONS[2]}</span>
+        <span>{MOOD_ICONS[3]}</span>
+        <span>{MOOD_ICONS[4]}</span>
+        <span>{MOOD_ICONS[5]}</span>
       </div>
-    </>
+
+      <label>Description:</label>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <textarea
+          value={desc}
+          onChange={(e) => setDesc(e.target.value)}
+          placeholder="Type or speak about your mood..."
+        />
+        <button
+          onClick={listening ? stopListening : startListening}
+          style={{
+            marginLeft: 10,
+            backgroundColor: listening ? 'red' : '#4CAF50',
+            borderRadius: '50%',
+            width: 40,
+            height: 40,
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer'
+          }}
+          title={listening ? 'Stop Listening' : 'Start Listening'}
+        >
+          {listening ? <MicOff size={20} /> : <Mic size={20} />}
+        </button>
+      </div>
+
+      {!browserSupportsSpeechRecognition && (
+        <p>Your browser does not support speech recognition.</p>
+      )}
+
+      <button onClick={submitCheckIn} disabled={isSubmitting}>
+        {isSubmitting ? 'Saving...' : 'Save Check-In'}
+      </button>
+
+      {formattedHistory.length > 0 && (
+        <div style={{ height: 300, marginTop: 40 }}>
+          <h3>Mood History</h3>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={formattedHistory}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" fontSize={12} />
+              <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} />
+              <Tooltip
+                formatter={(value, name, props) =>
+                  [`${MOOD_LABELS[value]} ${props.payload.description ? ` - ${props.payload.description}` : ''}`, 'Mood']}
+              />
+              <Line
+                type="monotone"
+                dataKey="moodRating"
+                stroke="#8884d8"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {recommendations && (
+        <div className="recommendations-container" style={{ marginTop: 40 }}>
+          <h3>Recommendations</h3>
+          <h4>Videos:</h4>
+          <ul>
+            {recommendations.videos.map((video, index) => (
+              <li key={index}>
+                <a href={video} target="_blank" rel="noopener noreferrer">{video}</a>
+              </li>
+            ))}
+          </ul>
+          <h4>Articles:</h4>
+          <ul>
+            {recommendations.articles.map((article, index) => (
+              <li key={index}>
+                <a href={article} target="_blank" rel="noopener noreferrer">{article}</a>
+              </li>
+            ))}
+          </ul>
+          <h4>Self-care Product:</h4>
+          <p>{recommendations.product}</p>
+        </div>
+      )}
+    </div>
   );
 };
 
