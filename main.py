@@ -23,7 +23,7 @@ app = FastAPI()
 # Allow CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React dev server
+    allow_origins=["*"],  # React dev server
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -171,9 +171,7 @@ therapists_db = [
     { "id": 9, "name": "Dr. Rahul Sawant", "specialty": "Stress Management", "location": "Mumbai, Maharashtra", "availability": "Mon-Wed, Fri" }
 ]
 
-# =============================
-# Models
-# =============================
+
 class Appointment(BaseModel):
     id: Optional[int] = None
     name: str
@@ -183,10 +181,6 @@ class Appointment(BaseModel):
     therapistId: int
     therapistName: str
     status: str = "upcoming"  # upcoming or visited
-
-# =============================
-# Routes
-# =============================
 
 @app.get("/therapists")
 def get_therapists():

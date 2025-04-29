@@ -25,6 +25,9 @@ export default function Navbar() {
         <li>
           <Link to="/profile" className="text-white font-medium hover:underline">Pro</Link>
         </li>
+        <li>
+          <Link to="/Game" className="text-white font-medium hover:underline">Relax</Link>
+        </li>
       </ul>
     </nav>
   );
