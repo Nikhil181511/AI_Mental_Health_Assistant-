@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import './chat.css';
+import Navbar from './Navbar';
+import { Brain } from 'lucide-react';
 
 const AIAssistantPage = () => {
     const [messages, setMessages] = useState([]);
@@ -9,7 +11,7 @@ const AIAssistantPage = () => {
         if (!input.trim()) return;
 
         const userMessage = { sender: "user", text: input };
-        setMessages((prevMessages) => [...prevMessages, userMessage]);
+        setMessages(prev => [...prev, userMessage]);
 
         try {
             const response = await fetch("http://localhost:8000/chat", {
@@ -19,47 +21,49 @@ const AIAssistantPage = () => {
             });
 
             const data = await response.json();
-
             const botMessage = {
                 sender: "bot",
-                text: typeof data.response === "string"
-                    ? data.response
-                    : JSON.stringify(data.response)
+                text: typeof data.response === "string" ? data.response : JSON.stringify(data.response),
             };
 
-            setMessages((prevMessages) => [...prevMessages, botMessage]);
+            setMessages(prev => [...prev, botMessage]);
         } catch (error) {
             console.error("Chatbot Error:", error);
         }
 
-        setInput(""); // ✅ Clear input after sending
+        setInput("");
     };
 
     return (
-        <div className="chatbot-container">
-            <h3>Chat with AI 🤖</h3>
+      <>
+        <div className="ai-chat-fullscreen">
+            <div className="ai-chat-header">
+                <Brain size={32} className="icon" />
+                <span>AI Assistant</span>
+            </div>
 
-            <div className="chatbox">
+            <div className="ai-chat-messages">
                 {messages.map((msg, index) => (
-                    <div key={index} className={msg.sender}>
+                    <div key={index} className={`ai-chat-message ${msg.sender}`}>
                         {msg.text.split('\n').map((line, i) => (
-                            <div key={i} style={{ marginLeft: '1em', textIndent: '-1em' }}>
-                                {line}
-                            </div>
+                            <div key={i}>{line}</div>
                         ))}
                     </div>
                 ))}
             </div>
 
-            <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="How are you feeling today?"
-            />
-            <button className="next" onClick={sendMessage}>Send</button>
+            <div className="ai-chat-input">
+                <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="How are you feeling today?"
+                />
+                <button onClick={sendMessage}>Send</button>
+            </div>
         </div>
-    );
+        </>
+    );  
 };
 
 export default AIAssistantPage;

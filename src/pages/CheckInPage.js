@@ -3,10 +3,14 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import Navbar from './Navbar';
 import './Check.css';
 
 // Firebase imports
 import { db, collection, addDoc, getDocs } from './firebase';
+
+// Lucide Icons
+import { Angry, Frown, Meh, Smile, Laugh, Mic, MicOff } from 'lucide-react';
 
 const MOOD_LABELS = {
   1: "Very Poor",
@@ -16,13 +20,20 @@ const MOOD_LABELS = {
   5: "Very Good"
 };
 
+const MOOD_ICONS = {
+  1: <Angry color="#ff4d4f" size={24} title="Very Poor" />,
+  2: <Frown color="#ff7a45" size={24} title="Poor" />,
+  3: <Meh color="#faad14" size={24} title="Neutral" />,
+  4: <Smile color="#52c41a" size={24} title="Good" />,
+  5: <Laugh color="#1890ff" size={24} title="Very Good" />
+};
+
 const CheckInPage = () => {
   const [moodRating, setMoodRating] = useState(3);
   const [desc, setDesc] = useState('');
   const [checkIns, setCheckIns] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Speech recognition
   const {
     transcript,
     listening,
@@ -95,79 +106,88 @@ const CheckInPage = () => {
   }, []);
 
   return (
-    <div className="checkin-container">
-      <h2>How are you feeling right now?</h2>
+    <>
+      <div className="checkin-container">
+        <h2>How are you feeling right now?</h2>
 
-      <label>Mood Level (1-5): {MOOD_LABELS[moodRating]}</label>
-      <input
-        type="range"
-        min="1"
-        max="5"
-        value={moodRating}
-        onChange={(e) => setMoodRating(Number(e.target.value))}
-      />
-      <div className="mood-labels">
-        <span>1 (Low)</span>
-        <span>5 (High)</span>
-      </div>
+        <label>
+          Mood Level (1-5): {MOOD_LABELS[moodRating]} {MOOD_ICONS[moodRating]}
+        </label>
 
-      <label>Description:</label>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <textarea
-          value={desc}
-          onChange={(e) => setDesc(e.target.value)}
-          placeholder="Type or speak about your mood..."
+        <input
+          type="range"
+          min="1"
+          max="5"
+          value={moodRating}
+          onChange={(e) => setMoodRating(Number(e.target.value))}
         />
-        <button
-          onClick={listening ? stopListening : startListening}
-          style={{
-            marginLeft: 10,
-            backgroundColor: listening ? 'red' : '#4CAF50',
-            borderRadius: '50%',
-            width: 40,
-            height: 40,
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer'
-          }}
-          title={listening ? 'Stop Listening' : 'Start Listening'}
-        >
-          🎤
-        </button>
-      </div>
 
-      {!browserSupportsSpeechRecognition && (
-        <p>Your browser does not support speech recognition.</p>
-      )}
-
-      <button onClick={submitCheckIn} disabled={isSubmitting}>
-        {isSubmitting ? 'Saving...' : 'Save Check-In'}
-      </button>
-
-      {formattedHistory.length > 0 && (
-        <div style={{ height: 300, marginTop: 40 }}>
-          <h3>Mood History</h3>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={formattedHistory}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" fontSize={12} />
-              <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} />
-              <Tooltip
-                formatter={(value, name, props) =>
-                  [`${MOOD_LABELS[value]} ${props.payload.description ? ` - ${props.payload.description}` : ''}`, 'Mood']}
-              />
-              <Line
-                type="monotone"
-                dataKey="moodRating"
-                stroke="#8884d8"
-                strokeWidth={2}
-                dot={{ r: 4 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+        <div className="mood-labels">
+          <span>{MOOD_ICONS[1]}</span>
+          <span>{MOOD_ICONS[2]}</span>
+          <span>{MOOD_ICONS[3]}</span>
+          <span>{MOOD_ICONS[4]}</span>
+          <span>{MOOD_ICONS[5]}</span>
         </div>
-      )}
-    </div>
+
+        <label>Description:</label>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <textarea
+            value={desc}
+            onChange={(e) => setDesc(e.target.value)}
+            placeholder="Type or speak about your mood..."
+          />
+          <button
+            onClick={listening ? stopListening : startListening}
+            style={{
+              marginLeft: 10,
+              backgroundColor: listening ? 'red' : '#4CAF50',
+              borderRadius: '50%',
+              width: 40,
+              height: 40,
+              color: 'white',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+            title={listening ? 'Stop Listening' : 'Start Listening'}
+          >
+            {listening ? <MicOff size={20} /> : <Mic size={20} />}
+          </button>
+        </div>
+
+        {!browserSupportsSpeechRecognition && (
+          <p>Your browser does not support speech recognition.</p>
+        )}
+
+        <button onClick={submitCheckIn} disabled={isSubmitting}>
+          {isSubmitting ? 'Saving...' : 'Save Check-In'}
+        </button>
+
+        {formattedHistory.length > 0 && (
+          <div style={{ height: 300, marginTop: 40 }}>
+            <h3>Mood History</h3>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={formattedHistory}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" fontSize={12} />
+                <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} />
+                <Tooltip
+                  formatter={(value, name, props) =>
+                    [`${MOOD_LABELS[value]} ${props.payload.description ? ` - ${props.payload.description}` : ''}`, 'Mood']}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="moodRating"
+                  stroke="#8884d8"
+                  strokeWidth={2}
+                  dot={{ r: 4 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

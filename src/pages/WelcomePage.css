@@ -1,91 +1,196 @@
-/* Global Reset */
-* {
+/* Reset & Base */
+body, html, #root {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(270deg, #e19d64, #ffffff, #3d79e1);
+    background-size: 600% 600%;
+    animation: flowingBG 20s ease infinite;
+    color: #2c3e50;
+    overflow-x: hidden;
   }
   
-  body {
-    font-family: 'Inter', sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    min-height: 100vh;
+  @keyframes flowingBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  /* Navbar */
+  .navbar {
+    background: linear-gradient(to right, #4e89e8, #83d0c9);
+    padding: 18px 40px;
     display: flex;
-    flex-direction: column;
-    background-color: hsl(200, 60%, 96%); /* Very light blue */
-    color: hsl(200, 10%, 20%); /* Dark blue-grey */
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   }
   
-  :root {
-    --background: hsl(200, 60%, 96%); /* Very light blue */
-    --foreground: hsl(200, 10%, 20%); /* Dark blue-grey */
-    --card: #ffffff; /* White */
-    --card-foreground: hsl(200, 10%, 20%); /* Dark blue-grey */
-    --primary: hsl(200, 68%, 55%); /* Calming Blue */
-    --primary-foreground: #ffffff; /* White */
-    --muted: hsl(200, 30%, 90%); /* Lighter blue-grey */
-    --muted-foreground: hsl(200, 10%, 45%); /* Medium blue-grey */
-    --accent: hsl(266, 43%, 77%); /* Muted Lavender */
-    --accent-foreground: hsl(266, 30%, 35%); /* Darker Lavender/Grey */
-    --radius: 0.5rem;
+  .logo {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 1px;
   }
   
-  body.dark {
-    background-color: hsl(200, 10%, 10%); /* Dark Blue-Grey */
-    color: hsl(200, 15%, 95%); /* Light Blue-Grey */
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 28px;
   }
   
-  body.dark :root {
-    --background: hsl(200, 10%, 10%); /* Dark Blue-Grey */
-    --foreground: hsl(200, 15%, 95%); /* Light Blue-Grey */
-    --card: hsl(200, 10%, 15%); /* Slightly Lighter Dark Blue-Grey */
-    --card-foreground: hsl(200, 15%, 95%); /* Light Blue-Grey */
-    --primary: hsl(200, 68%, 55%); /* Calming Blue */
-    --primary-foreground: hsl(200, 10%, 10%); /* Dark Blue-Grey */
-    --muted: hsl(200, 10%, 25%); /* Medium Dark Blue-Grey */
-    --muted-foreground: hsl(200, 10%, 65%); /* Lighter Muted Blue-Grey */
-    --accent: hsl(266, 43%, 70%); /* Adjusted Lavender */
-    --accent-foreground: hsl(266, 50%, 95%); /* Lighter Lavender */
+  .nav-links li a {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  .nav-links li a::after {
+    content: '';
+    height: 3px;
+    width: 0;
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    background: #ffffff;
+    border-radius: 5px;
+    transition: 0.3s ease;
+  }
+  
+  .nav-links li a:hover::after {
+    width: 100%;
+  }
+  
+  /* Hero Section */
+  .hero-section {
+    position: relative;
+    padding: 100px 40px 60px;
+    text-align: center;
+    background: linear-gradient(to right, #f5fbff, #ffffff);
+    overflow: hidden;
+  }
+  
+  .hero-content h1 {
+    font-size: 42px;
+    font-weight: 700;
+    color: #1a237e;
+    margin-bottom: 20px;
+  }
+  
+  .hero-content p {
+    font-size: 18px;
+    max-width: 720px;
+    margin: auto;
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  .checkin-btn {
+    background: linear-gradient(to right, #4e89e8, #83d0c9);
+    color: #fff;
+    padding: 14px 36px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    margin-top: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 20px rgba(78, 137, 232, 0.3);
+  }
+  
+  .checkin-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(78, 137, 232, 0.4);
+  }
+  
+  /* Ocean Wave (Bottom) */
+  .ocean {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: url('https://www.transparenttextures.com/patterns/waves.png');
+    opacity: 0.05;
+  }
+  
+  /* Card Section */
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+    padding: 60px 40px;
+    background: #f8fafc;
   }
   
   .card {
-    background-color: var(--card);
-    color: var(--card-foreground);
-    border-radius: var(--radius);
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+    padding: 30px 25px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
   }
   
-  .primary-button {
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-    padding: 1rem 2rem;
-    border-radius: var(--radius);
-    border: none;
-    cursor: pointer;
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
   }
   
-  .primary-button:hover {
-    opacity: 0.8;
+  .card h2 {
+    font-size: 22px;
+    margin: 20px 0 12px;
+    color: #1a237e;
   }
   
-  .muted-text {
-    color: var(--muted-foreground);
+  .card p {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 20px;
   }
   
-  .accent-text {
-    color: var(--accent-foreground);
+  /* Card Icons */
+  .card::before {
+    content: '';
+    font-family: 'Lucide';
+    display: block;
+    font-size: 30px;
+    margin-bottom: 12px;
+    color: #4e89e8;
   }
   
-  /* Sidebar (if needed, based on your previous variables) */
-  .sidebar {
-    background-color: var(--sidebar-background);
-    color: var(--sidebar-foreground);
-    padding: 1rem;
-    border-radius: var(--radius);
-  }
   
-  .sidebar-header {
-    color: var(--sidebar-primary-foreground);
-  }
   
-  .sidebar-footer {
-    color: var(--sidebar-accent-foreground);
+  /* Responsive */
+  @media screen and (max-width: 768px) {
+    .navbar {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px;
+    }
+  
+    .nav-links {
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 12px;
+    }
+  
+    .hero-content h1 {
+      font-size: 32px;
+    }
+  
+    .card-container {
+      padding: 40px 20px;
+   }
   }
   
