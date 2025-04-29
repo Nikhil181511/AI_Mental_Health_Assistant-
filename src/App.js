@@ -8,7 +8,7 @@ import LibraryPage from './pages/LibraryPage';
 import BookTherapistPage from './pages/BookTherapistPage';
 import CommunityPage from './pages/CommunityPage';
 import ProfileAnalysisPage from './pages/ProfileAnalysis';
-
+import BookTherapistPages from './pages/BookTherapistPage';
 function App() {
   return (
     <Router>
@@ -22,6 +22,7 @@ function App() {
         <Route path="/book" element={<BookTherapistPage />} />
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/profile" element={<ProfileAnalysisPage />} />
+        <Route path="/Book" element={<BookTherapistPages />} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </Router>
