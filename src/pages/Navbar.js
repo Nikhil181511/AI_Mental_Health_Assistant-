@@ -22,6 +22,9 @@ export default function Navbar() {
         <li>
           <Link to="/community" className="text-white font-medium hover:underline">Community</Link>
         </li>
+        <li>
+          <Link to="/profile" className="text-white font-medium hover:underline">Pro</Link>
+        </li>
       </ul>
     </nav>
   );

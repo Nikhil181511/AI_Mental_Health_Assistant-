@@ -7,11 +7,12 @@ import AIAssistantPage from './pages/AIAssistantPage';
 import LibraryPage from './pages/LibraryPage';
 import BookTherapistPage from './pages/BookTherapistPage';
 import CommunityPage from './pages/CommunityPage';
+import ProfileAnalysisPage from './pages/ProfileAnalysis';
 
 function App() {
   return (
     <Router>
-      <Navbar/>
+      <Navbar />
       <Routes>
         <Route path="/" element={<WelcomePage />} />
         <Route path="/checkin" element={<CheckInPage />} />
@@ -20,6 +21,8 @@ function App() {
         <Route path="/library" element={<LibraryPage />} />
         <Route path="/book" element={<BookTherapistPage />} />
         <Route path="/community" element={<CommunityPage />} />
+        <Route path="/profile" element={<ProfileAnalysisPage />} />
+        <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </Router>
   );
