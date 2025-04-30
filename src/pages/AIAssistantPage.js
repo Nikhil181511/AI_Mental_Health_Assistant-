@@ -1,11 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './chat.css';
 import Navbar from './Navbar';
-import { Brain } from 'lucide-react';
+import { Brain, Mic, MicOff } from 'lucide-react';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const AIAssistantPage = () => {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
+    const [listening, setListening] = useState(false);
+
+    const {
+        transcript,
+        resetTranscript,
+        listening: isListening,
+        browserSupportsSpeechRecognition
+    } = useSpeechRecognition();
+
+    useEffect(() => {
+        if (transcript) {
+            setInput(transcript);
+        }
+    }, [transcript]);
 
     const sendMessage = async () => {
         if (!input.trim()) return;
@@ -32,6 +47,22 @@ const AIAssistantPage = () => {
         }
 
         setInput("");
+        resetTranscript();
+    };
+
+    const handleMicClick = () => {
+        if (!browserSupportsSpeechRecognition) {
+            alert("Speech recognition not supported in your browser.");
+            return;
+        }
+
+        if (isListening) {
+            SpeechRecognition.stopListening();
+            setListening(false);
+        } else {
+            SpeechRecognition.startListening({ continuous: false, language: 'en-IN' });
+            setListening(true);
+        }
     };
 
     return (
@@ -60,10 +91,13 @@ const AIAssistantPage = () => {
                     placeholder="How are you feeling today?"
                 />
                 <button onClick={sendMessage}>Send</button>
+                <button onClick={handleMicClick} title="Speak your mood" className="mic-button">
+                    {isListening ? <MicOff size={20} /> : <Mic size={20} />}
+                </button>
             </div>
         </div>
-        </>
-    );  
+      </>
+    );
 };
 
 export default AIAssistantPage;

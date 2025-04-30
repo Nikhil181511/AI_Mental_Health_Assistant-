@@ -85,3 +85,15 @@ body {
   .icon {
     vertical-align: middle;
 }
+
+.mic-button {
+  background: transparent;
+  border: none;
+  margin-left: 8px;
+  cursor: pointer;
+  color: #555;
+}
+
+.mic-button:hover {
+  color: #000;
+}
