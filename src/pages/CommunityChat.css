@@ -62,7 +62,7 @@ body {
     display: flex;
     flex-direction: column;
     padding: 20px;
-    background: #ffffff;
+    background: linear-gradient(135deg, #1b8cdd81 0%, #ffffff 100%);
     overflow: hidden;
 }
 

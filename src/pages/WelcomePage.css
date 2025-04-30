@@ -1,196 +1,193 @@
-/* Reset & Base */
+/* Base Reset */
 body, html, #root {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(270deg, #e19d64, #ffffff, #3d79e1);
-    background-size: 600% 600%;
-    animation: flowingBG 20s ease infinite;
-    color: #2c3e50;
-    overflow-x: hidden;
-  }
-  
-  @keyframes flowingBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  
-  /* Navbar */
-  .navbar {
-    background: linear-gradient(to right, #4e89e8, #83d0c9);
-    padding: 18px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  }
-  
-  .logo {
-    font-size: 28px;
-    font-weight: 700;
-    color: #ffffff;
-    letter-spacing: 1px;
-  }
-  
-  .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 28px;
-  }
-  
-  .nav-links li a {
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    position: relative;
-  }
-  
-  .nav-links li a::after {
-    content: '';
-    height: 3px;
-    width: 0;
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    background: #ffffff;
-    border-radius: 5px;
-    transition: 0.3s ease;
-  }
-  
-  .nav-links li a:hover::after {
-    width: 100%;
-  }
-  
-  /* Hero Section */
-  .hero-section {
-    position: relative;
-    padding: 100px 40px 60px;
-    text-align: center;
-    background: linear-gradient(to right, #f5fbff, #ffffff);
-    overflow: hidden;
-  }
-  
-  .hero-content h1 {
-    font-size: 42px;
-    font-weight: 700;
-    color: #1a237e;
-    margin-bottom: 20px;
-  }
-  
-  .hero-content p {
-    font-size: 18px;
-    max-width: 720px;
-    margin: auto;
-    color: #555;
-    line-height: 1.6;
-  }
-  
-  .checkin-btn {
-    background: linear-gradient(to right, #4e89e8, #83d0c9);
-    color: #fff;
-    padding: 14px 36px;
-    font-size: 16px;
-    font-weight: 600;
-    border: none;
-    border-radius: 30px;
-    margin-top: 30px;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 8px 20px rgba(78, 137, 232, 0.3);
-  }
-  
-  .checkin-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(78, 137, 232, 0.4);
-  }
-  
-  /* Ocean Wave (Bottom) */
-  .ocean {
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    background: url('https://www.transparenttextures.com/patterns/waves.png');
-    opacity: 0.05;
-  }
-  
-  /* Card Section */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  background-color: #5bace7; /* Light blue background */
+  color: #1a1a1a;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, p {
+  margin: 0 0 20px;
+  color: #1a1a1a;
+}
+
+h1 {
+  font-size: 2.5rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+p {
+  font-size: 1rem;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #045ba2;
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: 1px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 28px;
+}
+
+.nav-links li a {
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-links li a::after {
+  content: '';
+  height: 3px;
+  width: 0;
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  background: #1a1a1a;
+  border-radius: 5px;
+  transition: 0.3s ease;
+}
+
+.nav-links li a:hover::after {
+  width: 100%;
+}
+
+/* Hero Section */
+.hero-section {
+  padding: 80px 40px 60px;
+  text-align: center;
+  background-color: transparent;
+}
+
+.hero-content h1 {
+  font-size: 62px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.hero-content p {
+  font-size: 20px;
+  max-width: 720px;
+  margin: auto;
+  line-height: 1.6;
+}
+
+.checkin-btn {
+  background-color: #050707;
+  color: #ffffff;
+  padding: 24px 46px;
+  font-size: 26px;
+  font-weight: 600;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  margin-top: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.checkin-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+}
+
+.ocean {
+  display: none;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns on larger screens */
+  gap: 32px;
+  padding: 40px 20px;
+  background-color: transparent;
+}
+
+.card {
+  background-color: #67b6f2;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  padding: 30px 25px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e7e7e7;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+  font-size: 22px;
+  margin: 20px 0 12px;
+}
+
+.card p {
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 1024px) {
   .card-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 32px;
-    padding: 60px 40px;
-    background: #f8fafc;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns on medium screens */
+    gap: 24px;
   }
-  
+}
+
+@media screen and (max-width: 768px) {
+  .card-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+    gap: 20px;
+  }
+
   .card {
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
-    padding: 30px 25px;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
+    padding: 25px 20px; /* Adjust card padding on smaller screens */
   }
-  
-  .card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+
+  .checkin-btn {
+    width: 100%;
+    padding: 14px 0;
   }
-  
-  .card h2 {
-    font-size: 22px;
-    margin: 20px 0 12px;
-    color: #1a237e;
+}
+
+@media screen and (max-width: 480px) {
+  .card-container {
+    grid-template-columns: 1fr; /* 1 column on very small screens */
+    gap: 16px;
   }
-  
-  .card p {
-    font-size: 15px;
-    color: #666;
-    margin-bottom: 20px;
-  }
-  
-  /* Card Icons */
-  .card::before {
-    content: '';
-    font-family: 'Lucide';
-    display: block;
-    font-size: 30px;
-    margin-bottom: 12px;
-    color: #4e89e8;
-  }
-  
-  
-  
-  /* Responsive */
-  @media screen and (max-width: 768px) {
-    .navbar {
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 20px;
-    }
-  
-    .nav-links {
-      flex-direction: column;
-      gap: 16px;
-      margin-top: 12px;
-    }
-  
-    .hero-content h1 {
-      font-size: 32px;
-    }
-  
-    .card-container {
-      padding: 40px 20px;
-   }
-  }
-  
+}
+.welcome-page{
+  background: linear-gradient(135deg, #1b8cddbd 0%, #f2f2f3 100%);
+}

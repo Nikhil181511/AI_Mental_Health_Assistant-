@@ -203,7 +203,7 @@ const CheckInPage = () => {
           <ul>
             {recommendations.videos.map((video, index) => (
               <li key={index}>
-                <a href={video} target="_blank" rel="noopener noreferrer">{video}</a>
+                <a href={video.url} target="_blank" rel="noopener noreferrer">{video.title}</a>
               </li>
             ))}
           </ul>
@@ -219,6 +219,7 @@ const CheckInPage = () => {
           <p>{recommendations.product}</p>
         </div>
       )}
+
     </div>
   );
 };

@@ -39,7 +39,6 @@ app.add_middleware(
 )
 
 def format_response_to_bullets(response_text):
-    # Convert plain text to bullet-point format
     lines = response_text.strip().split("\n")
     return "\n".join([f"• {line.strip()}" if not line.startswith("•") else line for line in lines if line.strip()])
 
@@ -47,30 +46,30 @@ def format_response_to_bullets(response_text):
 async def chat(data: dict):
     user_message = data.get("text", "")
 
-    # Mental health assistant behavior
-    system_prompt = (
-        "You are a mental health assistant. "
-        "Behave like a personal/ good friend. "
-        "Give short, practical, and kind advice in 2-3 bullet points. "
-        "Use simple words and avoid long explanations. "
-        "Focus on calming, motivating, or uplifting the user. "
-        "Never give medical advice. Encourage professional help when needed."
+    prompt = (
+        f"You are a compassionate mental health assistant acting like a supportive, caring friend. "
+        f"Provide short, personalized advice in 2-3 bullet points. Be empathetic, use simple words, and encourage calmness. "
+        f"Don't repeat generic phrases. Avoid medical advice.\n\n"
+        f"User: {user_message}\n\n"
+        f"Response:"
     )
 
     try:
-        response = ollama.chat(
-            model="phi",
-            messages=[  # Using Phi model to generate response
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_message},
-            ],
-        )
+        model = genai.GenerativeModel(model_name="models/gemini-1.5-flash")
+        response = model.generate_content(prompt)
 
-        formatted_response = format_response_to_bullets(response["message"]["content"])
+        def format_response_to_bullets(response_text):
+            lines = response_text.strip().split("\n")
+            return "\n".join(
+                [f"• {line.strip().lstrip('*•-')}" for line in lines if line.strip()]
+            )
+
+        formatted_response = format_response_to_bullets(response.text)
         return {"response": formatted_response}
 
     except Exception as e:
-        return {"response": f"Error: Unable to process the request. {str(e)}"}
+        return {"response": f"Error: {str(e)}"}
+
 
 class WellnessCheckIn(BaseModel):
     moodRating: int

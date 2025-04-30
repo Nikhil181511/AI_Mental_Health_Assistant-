@@ -43,7 +43,7 @@ body, html, #root {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: transparent;
+    background: linear-gradient(135deg, #1b8cdd81 0%, #ffffff 100%);
     animation: float 8s ease-in-out infinite;
   }
   

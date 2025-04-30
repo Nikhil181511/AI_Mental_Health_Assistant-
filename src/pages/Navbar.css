@@ -2,7 +2,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to right, #2c3eeb, #4f80ff, #a3c9ff);
+    background: linear-gradient(to right, #3d7dcb, #4f80ff, #a3c9ff);
     padding: 16px 32px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
@@ -22,5 +22,5 @@
   .nav-links a {
     color: white;
     font-weight: 500;
-    text-decoration: none;
+    text-decoration: none;
 }
