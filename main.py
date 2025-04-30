@@ -48,7 +48,7 @@ async def chat(data: dict):
 
     prompt = (
         f"You are a compassionate mental health assistant acting like a supportive, caring friend. "
-        f"Provide short, personalized advice in 2-3 bullet points. Be empathetic, use simple words, and encourage calmness. "
+        f"Provide short and Be empathetic, use simple words, and encourage calmness. "
         f"Don't repeat generic phrases. Avoid medical advice.\n\n"
         f"User: {user_message}\n\n"
         f"Response:"
@@ -208,19 +208,18 @@ from pydantic import BaseModel
 from typing import Optional
 
 
-# Pydantic model to validate the request body
 class MoodRequest(BaseModel):
     user_mood: str
 
-def detect_mood_with_ollama(user_input: str) -> str:
+def detect_mood_with_ollama(user_input: str):
     try:
         prompt = f"What is the user's emotional mood based on this input: '{user_input}'? Reply only with one word (e.g., Sad, Happy, Angry, Anxious, Neutral)."
         result = subprocess.run(
             ['ollama', 'run', 'mistral', prompt],
             capture_output=True,
             text=True,
-            encoding='utf-8',
-            errors='replace',
+            encoding='utf-8',               # ✅ Use UTF-8 encoding
+            errors='replace',               # ✅ Replace invalid characters
             timeout=30
         )
         mood = result.stdout.strip().lower()
@@ -235,7 +234,7 @@ def detect_mood_with_ollama(user_input: str) -> str:
         print(f"[Ollama Error]: {str(e)}")
         return "neutral"
 
-def get_youtube_videos(query: str, limit: int = 2) -> List[str]:
+def get_youtube_videos(query, limit=2):
     try:
         ydl_opts = {
             'quiet': True,
@@ -248,7 +247,7 @@ def get_youtube_videos(query: str, limit: int = 2) -> List[str]:
     except Exception as e:
         return [f"Error fetching YouTube videos: {str(e)}"]
 
-def get_news_articles(query: str, limit: int = 5) -> List[str]:
+def get_news_articles(query, limit=5):
     try:
         response = requests.get(
             f"https://gnews.io/api/v4/search?q={query}&token={GNEWS_API_KEY}&max=10"
@@ -263,7 +262,7 @@ def get_news_articles(query: str, limit: int = 5) -> List[str]:
     except Exception as e:
         return [f"Error fetching articles: {str(e)}"]
 
-def get_self_care_product(mood: str) -> str:
+def get_self_care_product(mood: str):
     try:
         query = f"best self-care products for {mood} 2025"
         google_search_url = f"https://www.google.com/search?q={query.replace(' ', '+')}"

@@ -10,6 +10,8 @@ import CommunityPage from './pages/CommunityPage';
 import ProfileAnalysisPage from './pages/ProfileAnalysis';
 import BookTherapistPages from './pages/BookTherapistPage';
 import MindfulBreathPage from './pages/MindfulBreath';
+import RecommendationsPages from './pages/RecommendationsPage';
+
 function App() {
   return (
     <Router>
@@ -25,6 +27,7 @@ function App() {
         <Route path="/profile" element={<ProfileAnalysisPage />} />
         <Route path="/Book" element={<BookTherapistPages />} />
         <Route path="/Game" element={<MindfulBreathPage />} />
+        <Route path="/Recommend" element={<RecommendationsPages />} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </Router>

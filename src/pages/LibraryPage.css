@@ -194,3 +194,24 @@ body, html, #root {
       font-size:26px;
  }
 }
+.library-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.recommend-button {
+  padding: 0.5rem 1rem;
+  background-color: #0d92df;
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.recommend-button:hover {
+  background-color: #1461ce;
+}
