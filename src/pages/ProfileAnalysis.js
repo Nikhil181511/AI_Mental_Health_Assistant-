@@ -14,14 +14,14 @@ const ProfileAnalysis = () => {
   const chartRef = useRef(null); // For managing canvas destruction
 
   // Fetch profile data from backend on component mount
- useEffect(() => {
-  axios.get('http://localhost:8000/analysis')
-    .then(res => {
-      console.log("Profile data:", res.data); // Check the structure here
-      setProfileData(res.data);
-    })
-    .catch(err => console.error("Error fetching data:", err));
-}, []);
+  useEffect(() => {
+    axios.get('http://localhost:8000/analysis')
+      .then(res => {
+        console.log("Profile data:", res.data); // Check the structure here
+        setProfileData(res.data);
+      })
+      .catch(err => console.error("Error fetching data:", err));
+  }, []);
 
 
   // Handle loading state
@@ -41,15 +41,52 @@ const ProfileAnalysis = () => {
   };
 
   // Data for the Pie chart (Mood Distribution)
+  // Data for the Pie chart (Mood Distribution)
+  // Data for the Pie chart (Mood Distribution)
   const pieChartData = {
     labels: Object.keys(profileData.mood_distribution),
     datasets: [
       {
         data: Object.values(profileData.mood_distribution),
-        backgroundColor: ['#4caf50', '#ff9800', '#f44336'],
-      }
-    ]
+        backgroundColor: [
+          '#4caf50',
+          '#f44336',
+          '#ffeb3b',
+          '#2196f3',
+          '#ff9800',
+        ],
+        hoverBackgroundColor: [
+          '#4caf10',
+          '#f42116',
+          '#ffeb3b',
+          '#2196f3',
+          '#ff9800',
+        ],
+        borderColor: 'rgba(0, 0, 0, 0.1)', // Optional: to create a subtle border effect
+        borderWidth: 1, // Optional: for subtle borders
+      },
+    ],
+    options: {
+      responsive: true,
+      plugins: {
+        tooltip: {
+          enabled: true, // Tooltip enabled on hover
+        },
+      },
+      interaction: {
+        mode: 'nearest', // Hovering nearest element
+        intersect: false, // Keep hovering even if not over the center
+      },
+      elements: {
+        arc: {
+          borderWidth: 2, // Optional: border thickness for the chart segments
+          hoverBorderWidth: 4, // Increase border width on hover for visual effect
+          hoverBorderColor: '#000', // Optional: change border color on hover
+        },
+      },
+    },
   };
+
 
   // Fixing Canvas Reuse by Clearing the Chart Before Rendering
   const renderChart = (canvasId) => {

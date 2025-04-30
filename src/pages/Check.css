@@ -1,5 +1,5 @@
 /* Base setup */
-body, html, #root {
+body, html {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -8,7 +8,10 @@ body, html, #root {
     color: #333;
     overflow-x: hidden;
   }
-  
+  #root{
+    background: linear-gradient(135deg, #389ca7 0%, #e4e8f0 100%);
+
+  }
   /* Main Container */
   .checkin-container {
     max-width: 900px;

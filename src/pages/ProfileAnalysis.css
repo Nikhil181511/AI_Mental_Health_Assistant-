@@ -1,21 +1,23 @@
 /* ProfileAnalysis.css - Professional light theme for mental wellness dashboard */
 
 :root {
-    --primary-color: #5c6bc0;
+    --primary-color: #15257c;
     --primary-light: #8e99f3;
-    --primary-dark: #26418f;
+    --primary-dark: #040f2d;
     --accent-color: #64b5f6;
     --positive: #66bb6a;
     --neutral: #ffb74d;
     --negative: #e57373;
     --text-primary: #424242;
     --text-secondary: #757575;
-    --background: #f5f7fa;
+    --background: linear-gradient(135deg, #1b8cdd81 0%, #ffffff 100%);
     --card-background: #ffffff;
     --border-radius: 12px;
     --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
-  
+  #root{
+    background: linear-gradient(135deg, #1b8cdd81 0%, #ffffff 100%);
+  }
   .profile-analysis {
     font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
     max-width: 90%;
@@ -29,7 +31,7 @@
   .profile-analysis h2 {
     color: var(--primary-color);
     font-weight: 600;
-    font-size: 28px;
+    font-size: 40px;
     margin-bottom: 24px;
     text-align: center;
   }

@@ -8,7 +8,7 @@ body {
     display: flex;
     flex-direction: column;
     height: 85vh;
-    background: #f7f9fc;
+    background: linear-gradient(135deg, #1b8cdd81 0%, #ffffff 100%);
     padding: 20px;
     box-sizing: border-box;
   }
