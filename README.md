@@ -1,145 +1,91 @@
-# 🧠 MindWell AI – AI-Driven Mental Wellness Platform
+# 🧠 MindWell – Your AI-Powered Mental Wellness Companion
 
-**MindWell AI** is a full-stack, AI-powered mental wellness platform that empowers users with tools for mindfulness, emotional tracking, virtual therapy, and smart AI chat assistance — now enhanced with an interactive mental wellness game.
+MindWell is an AI-driven mental health assistant designed to help individuals better understand and manage their emotional well-being. The platform integrates intelligent mood tracking, personalized recommendations, therapeutic content, and supportive community features—all in one seamless experience.
 
 ---
 
-## 🌟 Features
+## 🚀 Features
 
-### 1. 📝 Mood Check-In
-- Log your mood, text reflections, and voice notes.
-- Stored securely in Firebase Realtime Database & Firestore.
-- Visual mood tracking: mood-over-time graph & mood distribution chart.
+### 1. 🌡️ Mood Check-In & Analytics
+- Log your current mood through an intuitive interface.
+- Visualize your emotional journey with a **Mood Level vs Time** graph.
+- Track mental health patterns and identify triggers.
 
-### 2. 🤖 Mental Health AI Assistant
-- Powered by **Gemini 1.5 Pro** using the `gemini-fast` API.
-- Provides short, kind, motivational, and supportive bullet-point responses.
-- Avoids medical claims and encourages professional help when needed.
+### 2. 📚 Mental Health Library & Personalized Recommendations
+- Explore a rich collection of **articles, exercises, and videos** covering a wide range of mental wellness topics.
+- Get **AI-powered personalized content** recommendations (videos, articles, and products) tailored to your current emotional state using **Gemini API** and **Ollama Phi**.
 
-### 3. 🧑‍⚕️ Therapist Booking System
-- Book sessions with therapists via name, phone, and preferred time.
-- Appointments automatically update status post-session.
-- Manual appointment status update via secure API.
+### 3. 💬 Community Chat
+- Engage with others on similar journeys through a **real-time community chat**.
+- Share your experiences, get support, and foster meaningful connections.
 
-### 4. 📊 Wellness Analytics Dashboard
-- Track emotional trends, top moods, and average wellness.
-- Word cloud from mood logs.
-- AI-powered summaries and personalized recommendations.
+### 4. 📄 DocMe – Long-Term Insights
+- Generate a summarized mental health profile and insights over extended periods.
+- Get a **longitudinal overview** of mood trends, common emotional states, and improvements.
 
-### 5. 🎮 Mental Wellness Game *(NEW)*
-- Interactive wellness game to boost mood and mindfulness.
-- Includes breathing exercises, gratitude journaling, and relaxing visuals.
-- Designed to enhance emotional resilience through play.
+### 5. 🤖 AI Smart Mental Health Chatbot
+- Interact with an intelligent mental wellness assistant powered by **Google Gemini**.
+- Get advice, practice guided self-reflection, and learn coping strategies through natural conversation.
+
+### 6. 🗓️ Book Therapy
+- Discover certified mental health professionals.
+- Easily book therapy sessions and manage your appointments.
+
+### 7. 🧘 Relaxation Zone
+- Access a dedicated space for **meditation** and **relaxation exercises**.
+- Improve mindfulness and reduce stress with guided audio and video content.
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Component   | Tech Used                          |
-|-------------|------------------------------------|
-| Frontend    | React.js, Tailwind CSS             |
-| Backend     | FastAPI                            |
-| AI Assistant| Gemini 1.5 Pro via Gemini-fast API |
-| Database    | Firebase Firestore & Realtime DB   |
-| Auth        | (Optional) Firebase Auth           |
+| Category         | Tool/Tech                         |
+|------------------|----------------------------------|
+| Frontend         | React.js                         |
+| Backend          | FastAPI                          |
+| Realtime Database| Firebase (Check-ins & Community) |
+| AI Models        | Gemini API, Ollama Phi           |
+| Hosting          | Firebase / Vercel / Render       |
 
 ---
 
-## 📁 Project Structure
-
-```
-mindwell-ai/
-├── frontend/
-│   ├── pages/
-│   │   ├── BookTherapistPage.jsx
-│   │   ├── CheckInPage.jsx
-│   │   ├── AnalysisPage.jsx
-│   │   ├── WellnessGame.jsx         # NEW
-│   ├── components/
-│   │   └── BreathingGame.jsx        # NEW
-├── main.py                          # FastAPI backend
-├── requirements.txt                 # Python backend dependencies
-├── firebase_config.json             # Firebase service credentials
-└── README.md
-```
+## 🔐 Data & Privacy
+- All personal check-ins and chat messages are securely stored using **Firebase Realtime Database**.
+- Secrets and credentials are safely handled via environment variables. No sensitive data is stored in the public codebase.
 
 ---
 
-## 🚀 Setup Instructions
+## 📦 Setup Instructions
 
-### 🔧 Backend (FastAPI)
-
-1. Clone the repo:
+1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/mindwell-ai.git
-   cd mindwell-ai
+   git clone https://github.com/ECELLPCCE25/Night-Owls.git
    ```
 
-2. Set up a virtual environment:
+2. Navigate to the project directory:
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   cd Night-Owls
    ```
 
-3. Install dependencies:
+3. Install frontend dependencies:
    ```bash
-   pip install -r requirements.txt
+   cd frontend
+   npm install
    ```
 
-4. Add Firebase service account key:
-   - Save your Firebase Admin SDK key as `firebase_config.json`
-
-5. Set up Gemini API Key (Environment Variable):
+4. Start the frontend:
    ```bash
-   export GEMINI_API_KEY=your_api_key_here
+   npm start
    ```
 
-6. Start FastAPI backend:
+5. Run the backend:
    ```bash
    uvicorn main:app --reload
    ```
 
 ---
 
-### 💻 Frontend (React)
-
-1. Navigate to frontend directory:
-   ```bash
-   cd frontend
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start the frontend:
-   ```bash
-   npm start
-   ```
-
----
-
-## 🔐 API Endpoints Summary
-
-| Endpoint             | Method | Description                           |
-|----------------------|--------|---------------------------------------|
-| `/chat`              | POST   | Chat with AI wellness assistant       |
-| `/checkin`           | POST   | Submit a mood check-in                |
-| `/checkins`          | GET    | Fetch user mood history               |
-| `/analysis`          | GET    | Retrieve wellness insights & summaries|
-| `/appointments`      | GET    | Get all therapist appointments        |
-| `/book`              | POST   | Book a therapist session              |
-| `/update-status`     | POST   | Manually update appointment status    |
-
----
-
-## 📊 Future Enhancements
-
-- Firebase Auth for secure logins
-- Therapist admin portal
-- Appointment reminders (email/SMS)
-- Emotion analysis from voice logs
-- IoT health data integration (SpO2, pulse, etc.)
-- Multiplayer wellness games
-
+## 👥 Contributors
+- **Nikhil Savita**
+- **Sakshi Kamble**
+- **Jonathan Raposo**
