@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import './LibraryPage.css';
+import { useNavigate } from 'react-router-dom';
 import { BookOpenText, Video, Activity, Search, Filter } from 'lucide-react';
 
 const sampleContent = [
@@ -118,6 +119,7 @@ const getIcon = (type) => {
 const LibraryPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const navigate = useNavigate();
 
   const categories = useMemo(() => {
     return ['all', ...new Set(sampleContent.map(item => item.category))];
@@ -157,6 +159,9 @@ const LibraryPage = () => {
               ))}
             </select>
           </div>
+          <button className="recommend-button" onClick={() => navigate('/Recommend')}>
+            Go to Recommendations
+          </button>
         </div>
       </div>
 
