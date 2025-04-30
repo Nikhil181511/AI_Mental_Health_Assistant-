@@ -32,7 +32,6 @@ const CheckInPage = () => {
   const [desc, setDesc] = useState('');
   const [checkIns, setCheckIns] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [recommendations, setRecommendations] = useState(null); // To store recommendation data
 
   const {
     transcript,
@@ -85,16 +84,8 @@ const CheckInPage = () => {
     try {
       // Add check-in data to Firestore
       await addDoc(collection(db, "checkins"), newData);
-
-      // Send the check-in data to the /recommend endpoint for recommendations
-      const response = await axios.post('http://localhost:8000/recommend', {
-        user_mood: desc
-      });
-
-      // Set the recommendation data
-      setRecommendations(response.data);
-
-      alert("✅ Mood check-in saved and recommendation fetched!");
+      
+      alert("✅ Mood check-in saved!");
       setDesc('');
       fetchCheckIns();
     } catch (error) {
@@ -195,31 +186,6 @@ const CheckInPage = () => {
           </ResponsiveContainer>
         </div>
       )}
-
-      {recommendations && (
-        <div className="recommendations-container" style={{ marginTop: 40 }}>
-          <h3>Recommendations</h3>
-          <h4>Videos:</h4>
-          <ul>
-            {recommendations.videos.map((video, index) => (
-              <li key={index}>
-                <a href={video.url} target="_blank" rel="noopener noreferrer">{video.title}</a>
-              </li>
-            ))}
-          </ul>
-          <h4>Articles:</h4>
-          <ul>
-            {recommendations.articles.map((article, index) => (
-              <li key={index}>
-                <a href={article} target="_blank" rel="noopener noreferrer">{article}</a>
-              </li>
-            ))}
-          </ul>
-          <h4>Self-care Product:</h4>
-          <p>{recommendations.product}</p>
-        </div>
-      )}
-
     </div>
   );
 };
