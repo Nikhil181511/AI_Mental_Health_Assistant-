@@ -100,7 +100,7 @@ const ProfileAnalysis = () => {
 
   return (
     <div className="profile-analysis">
-      <h2>🧠 Your Mental Wellness Summary</h2>
+      <h2>Your Mental Wellness Summary</h2>
       <div className="summary-card">
         <h3>{profileData.name}</h3>
         <p>Total Check-Ins: {profileData.total_checkins}</p>
