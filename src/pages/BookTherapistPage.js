@@ -38,7 +38,7 @@ const BookTherapistPage = () => {
 
   const fetchTherapists = async () => {
     try {
-      const { data } = await axios.get('http://localhost:8000/therapists');
+      const { data } = await axios.get('https://mh-backend-8w1j.onrender.com/therapists');
       setTherapists(data);
     } catch (err) {
       console.error('Error fetching therapists:', err);
