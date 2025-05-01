@@ -27,7 +27,7 @@ const Recommendations = () => {
         setError(null);
         setResult(null);
         try {
-            const response = await axios.post('http://localhost:8000/recommend', {
+            const response = await axios.post('https://mh-backend-8w1j.onrender.com/recommend', {
                 user_mood: mood || transcript,
             });
             setResult(response.data);
