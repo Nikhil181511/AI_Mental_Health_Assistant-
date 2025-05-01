@@ -15,7 +15,7 @@ const ProfileAnalysis = () => {
 
   // Fetch profile data from backend on component mount
   useEffect(() => {
-    axios.get('http://localhost:8000/analysis')
+    axios.get('https://mh-backend-8w1j.onrender.com/analysis')
       .then(res => {
         console.log("Profile data:", res.data); // Check the structure here
         setProfileData(res.data);
