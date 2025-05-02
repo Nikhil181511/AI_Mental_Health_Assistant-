@@ -29,7 +29,7 @@ const BookTherapistPage = () => {
 
   const fetchAppointments = async () => {
     try {
-      const { data } = await axios.get('http://localhost:8000/appointments');
+      const { data } = await axios.get('https://mh-backend-8w1j.onrender.com/appointments');
       setAppointments(data);
     } catch (err) {
       console.error('Error fetching appointments:', err);
