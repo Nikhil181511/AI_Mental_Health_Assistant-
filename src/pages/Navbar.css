@@ -99,6 +99,13 @@
   right: 0;
 }
 
+/* Force sidebar visibility on all mobile screens */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(0);
+  }
+}
+
 .nav-links-mobile {
   list-style: none;
   padding: 0;
@@ -146,8 +153,12 @@
 /* Additional mobile optimization */
 @media (max-width: 480px) {
   .sidebar {
-    width: 100%;
-    right: -100%;
+    width: 100vw;
+    right: -100vw;
+  }
+  
+  .sidebar-open {
+    right: 0 !important;
   }
   
   .mobile-header {
