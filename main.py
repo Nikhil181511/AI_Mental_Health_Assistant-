@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import HTTPException
 import ollama  
 from pydantic import BaseModel
 from typing import Optional
@@ -8,11 +9,10 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from typing import List, Dict
 from fastapi import Request
-import yt_dlp                      
+import yt_dlp       
+import re               
 import google.generativeai as genai
 import requests
-import json
-import re
 import subprocess
 import random
 
@@ -21,7 +21,7 @@ GNEWS_API_KEY = "f0b10b018e9d9ae45b36fba763a90588"
 
 genai.configure(api_key=GEMINI_KEY)
 # Initialize Firebase Admin SDK with your service account credentials
-cred = credentials.Certificate("C:/Users/nikhi/Downloads/wastex-da8fa-firebase-adminsdk-rxbwl-3268440c93.json")
+cred = credentials.Certificate("C:/Users/nikhi/Downloads/wastex-da8fa-firebase-adminsdk-rxbwl-c7d6d939ac.json")
 firebase_admin.initialize_app(cred)
 
 # Get Firestore client
@@ -108,7 +108,12 @@ def fetch_checkins_from_firestore() -> List[Dict]:
 
 @app.get("/analysis")
 async def get_profile_analysis():
-    checkins = fetch_checkins_from_firestore()
+    try:
+        checkins = fetch_checkins_from_firestore()
+    except Exception as e:
+        # Log the error and return a 500 with a more specific error message
+        print("Error fetching check-ins from Firestore:", str(e))
+        raise HTTPException(status_code=500, detail="Failed to fetch check-ins from Firestore.")
     total_checkins = len(checkins)
     
     if total_checkins == 0:
