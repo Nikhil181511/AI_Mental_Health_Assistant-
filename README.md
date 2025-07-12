@@ -84,7 +84,9 @@ MindWell is an AI-driven mental health assistant designed to help individuals be
    ```
 
 ---
+DEMO: https://drive.google.com/file/d/13t1OhuagFh2BXqwo3JeijMwazL9st0SY/view?usp=sharing
 
+---
 ## 👥 Contributors
 - **Nikhil Savita**
 - **Sakshi Kamble**
