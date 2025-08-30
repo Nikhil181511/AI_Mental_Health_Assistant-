@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 32px;
-  background: linear-gradient(to right, #3d7dcb, #4f80ff, #a3c9ff);
+  background: linear-gradient(to right, #3498db, #2980b9, #74b9ff);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -38,7 +38,7 @@
 /* Mobile Navbar */
 .navbar-mobile {
   display: none;
-  background: linear-gradient(to right, #3d7dcb, #4f80ff, #a3c9ff);
+  background: linear-gradient(to right, #3498db, #2980b9, #74b9ff);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -87,7 +87,7 @@
   right: -280px;
   width: 280px;
   height: 100vh;
-  background: linear-gradient(to bottom, #3d7dcb, #4f80ff, #a3c9ff);
+  background: linear-gradient(to bottom, #3498db, #2980b9, #74b9ff);
   box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
   transition: right 0.3s ease;
   z-index: 999;
@@ -97,6 +97,13 @@
 
 .sidebar-open {
   right: 0;
+}
+
+/* Force sidebar visibility on all mobile screens */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(0);
+  }
 }
 
 .nav-links-mobile {
@@ -146,8 +153,12 @@
 /* Additional mobile optimization */
 @media (max-width: 480px) {
   .sidebar {
-    width: 100%;
-    right: -100%;
+    width: 100vw;
+    right: -100vw;
+  }
+  
+  .sidebar-open {
+    right: 0 !important;
   }
   
   .mobile-header {

@@ -4,12 +4,12 @@ body, html {
     padding: 0;
     height: 100%;
     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(to right, #eef2f3, #ffffff);
-    color: #333;
+    background: linear-gradient(to right, #f8f9fa, #ffffff);
+    color: #2c3e50;
     overflow-x: hidden;
   }
   #root{
-    background: linear-gradient(135deg, #389ca7 0%, #e4e8f0 100%);
+    background: linear-gradient(135deg, #e3f2fd 0%, #f1f8e9 100%);
 
   }
   /* Main Container */
@@ -40,8 +40,8 @@ body, html {
     top: -100px;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, #4e89e8 0%, #7eb8ff 100%);
-    opacity: 0.2;
+    background: radial-gradient(circle, #81c784 0%, #a5d6a7 100%);
+    opacity: 0.15;
   }
   
   .checkin-container::after {
@@ -49,14 +49,14 @@ body, html {
     bottom: -200px;
     width: 400px;
     height: 600px;
-    background: radial-gradient(circle, #ffcc29 0%, #ffe599 100%);
-    opacity: 0.2;
+    background: radial-gradient(circle, #64b5f6 0%, #90caf9 100%);
+    opacity: 0.15;
   }
   
   /* Heading styles */
   .checkin-container h2 {
     font-size: 30px;
-    color: #1a237e;
+    color: #2c3e50;
     text-align: center;
     margin-bottom: 35px;
     font-weight: 600;
@@ -68,7 +68,7 @@ body, html {
     width: 90px;
     height: 4px;
     margin: 14px auto 0;
-    background: linear-gradient(to right, #4e89e8, #83d0c9);
+    background: linear-gradient(to right, #3498db, #27ae60);
     border-radius: 2px;
   }
   
@@ -82,7 +82,7 @@ body, html {
   .checkin-container label {
     font-size: 16px;
     font-weight: 500;
-    color: #333;
+    color: #34495e;
     margin-bottom: 10px;
     display: block;
   }
@@ -91,7 +91,7 @@ body, html {
   .checkin-container input[type="range"] {
     width: 100%;
     height: 14px;
-    background: linear-gradient(to right, #ff8eb4, #ffcc29, #83d0c9, #4e89e8);
+    background: linear-gradient(to right, #e74c3c, #f39c12, #f1c40f, #2ecc71, #3498db);
     border-radius: 10px;
     outline: none;
     cursor: pointer;
@@ -102,9 +102,9 @@ body, html {
     width: 24px;
     height: 24px;
     background: white;
-    border: 3px solid #4e89e8;
+    border: 3px solid #3498db;
     border-radius: 50%;
-    box-shadow: 0 0 8px rgba(78, 137, 232, 0.4);
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.4);
     transition: transform 0.2s ease;
   }
   
@@ -116,7 +116,7 @@ body, html {
     display: flex;
     justify-content: space-between;
     font-size: 13px;
-    color: #888;
+    color: #7f8c8d;
     margin-top: 5px;
   }
   
@@ -126,17 +126,17 @@ body, html {
     height: 120px;
     padding: 15px;
     border-radius: 12px;
-    border: 1.5px solid #dcdcdc;
+    border: 1.5px solid #bdc3c7;
     resize: none;
     font-size: 16px;
-    color: #444;
+    color: #2c3e50;
     box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
     transition: 0.3s;
   }
   
   .checkin-container textarea:focus {
-    border-color: #4e89e8;
-    box-shadow: 0 0 12px rgba(78, 137, 232, 0.2);
+    border-color: #3498db;
+    box-shadow: 0 0 12px rgba(52, 152, 219, 0.2);
   }
   
   /* Microphone animation */
@@ -153,7 +153,7 @@ body, html {
   /* Save button */
   .checkin-container button:not([title]) {
     display: inline-block;
-    background: linear-gradient(45deg, #4e89e8, #83d0c9);
+    background: linear-gradient(45deg, #3498db, #27ae60);
     color: #fff;
     padding: 14px 30px;
     border-radius: 30px;
@@ -163,16 +163,16 @@ body, html {
     margin-top: 20px;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 10px 25px rgba(78, 137, 232, 0.3);
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
   }
   
   .checkin-container button:not([title]):hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(78, 137, 232, 0.4);
+    box-shadow: 0 12px 25px rgba(52, 152, 219, 0.4);
   }
   
   .checkin-container button:not([title]):disabled {
-    background: #c0d7f4;
+    background: #95a5a6;
     cursor: not-allowed;
     box-shadow: none;
     transform: none;

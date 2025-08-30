@@ -167,8 +167,8 @@ const LibraryPage = () => {
 
       {filteredContent.length > 0 ? (
         <div className="content-list">
-          {filteredContent.map(item => (
-            <div key={item.id} className="content-card">
+          {filteredContent.map((item, idx) => (
+            <div key={item.id + '-' + idx} className="content-card">
               <div className="content-header">
                 {getIcon(item.type)}
                 <h2>{item.title}</h2>

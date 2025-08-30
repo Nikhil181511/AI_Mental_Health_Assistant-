@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import HTTPException
-import ollama  
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime, timezone
@@ -16,12 +15,12 @@ import requests
 import subprocess
 import random
 
-GEMINI_KEY = "AIzaSyASuqtC0x-oMcRmmIDwY9h5_K-eDXnAoVI"
+GEMINI_KEY = "AIzaSyAGBcadOlnb9aVqTxE1q7PeM3rHDYjxb7g"
 GNEWS_API_KEY = "f0b10b018e9d9ae45b36fba763a90588"
 
 genai.configure(api_key=GEMINI_KEY)
 # Initialize Firebase Admin SDK with your service account credentials
-cred = credentials.Certificate("C:/Users/nikhi/Downloads/wastex-da8fa-firebase-adminsdk-rxbwl-c7d6d939ac.json")
+cred = credentials.Certificate("wastex-da8fa-firebase-adminsdk-rxbwl-eb4cfc3f76.json")
 firebase_admin.initialize_app(cred)
 
 # Get Firestore client
@@ -32,7 +31,7 @@ app = FastAPI()
 # Allow CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # React dev server
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -55,7 +54,7 @@ async def chat(data: dict):
     )
 
     try:
-        model = genai.GenerativeModel(model_name="models/gemini-1.5-flash")
+        model = genai.GenerativeModel(model_name="models/gemini-2.0-flash")
         response = model.generate_content(prompt)
 
         def format_response_to_bullets(response_text):
@@ -224,7 +223,7 @@ def detect_mood_with_ollama(user_input: str):
             capture_output=True,
             text=True,
             encoding='utf-8',               # ✅ Use UTF-8 encoding
-            errors='replace',               # ✅ Replace invalid characters
+            errors='replace',              
             timeout=30
         )
         mood = result.stdout.strip().lower()

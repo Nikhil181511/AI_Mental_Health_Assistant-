@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { collection, addDoc, query, onSnapshot, orderBy } from 'firebase/firestore';
-import { db } from './firebase'; 
+import { db } from './firebase';
 import './CommunityChat.css';
 
 const CommunityChat = () => {
     const communities = [
-      { id: 1, name: 'Healthy India' },
-      { id: 2, name: 'Doctor 1' },
-      { id: 3, name: 'Doctor 2' },
-      { id: 4, name: 'Ways to reduce stress' },
-      { id: 5, name: 'How to stay Motivated' },// Keeping the "Reports" group as is
-  ];
+        { id: 1, name: 'Healthy India' },
+        { id: 2, name: 'Doctor 1' },
+        { id: 3, name: 'Doctor 2' },
+        { id: 4, name: 'Ways to reduce stress' },
+        { id: 5, name: 'How to stay Motivated' },// Keeping the "Reports" group as is
+    ];
     const [selectedCommunity, setSelectedCommunity] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -61,21 +61,23 @@ const CommunityChat = () => {
     };
 
     return (
-        <div className="community-chat">
-            <div className="sidebar">
-                <h2>Communities</h2>
-                <ul>
-                    {communities.map((community) => (
-                        <li
-                            key={community.id}
-                            onClick={() => handleSelectCommunity(community)}
-                            className={selectedCommunity?.id === community.id ? 'active' : ''}
-                        >
-                            {community.name}
-                        </li>
-                    ))}
-                </ul>
-            </div>
+
+            <div className="community-chat">
+                <div className="sidebar1">
+                    <h2>Communities</h2>
+                    <ul>
+                        {communities.map((community) => (
+                            <li
+                                key={community.id}
+                                onClick={() => handleSelectCommunity(community)}
+                                className={selectedCommunity?.id === community.id ? 'active' : ''}
+                            >
+                                {community.name}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
 
             <div className="chat-container">
                 {selectedCommunity ? (
@@ -109,6 +111,7 @@ const CommunityChat = () => {
                 )}
             </div>
         </div>
+
     );
 };
 

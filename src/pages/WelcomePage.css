@@ -3,33 +3,39 @@ body, html, #root {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'Inter', sans-serif;
-  background-color: #5bace7; /* Light blue background */
-  color: #1a1a1a;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #2d3748;
   overflow-x: hidden;
+}
+
+.welcome-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 50%, #e8f5e8 100%);
 }
 
 h1, h2, h3, p {
   margin: 0 0 20px;
-  color: #1a1a1a;
 }
 
 h1 {
   font-size: 2.5rem;
   text-align: center;
   font-weight: 700;
+  color: #2c3e50;
 }
 
 h2 {
   font-size: 1.5rem;
   font-weight: 600;
   text-align: center;
+  color: #34495e;
 }
 
 p {
   font-size: 1rem;
   text-align: center;
   line-height: 1.6;
+  color: #5a6c7d;
 }
 
 /* Navbar */
@@ -85,109 +91,204 @@ p {
 
 /* Hero Section */
 .hero-section {
-  padding: 80px 40px 60px;
+  padding: 100px 40px 80px;
   text-align: center;
-  background-color: transparent;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 0 0 50px 50px;
+  margin-bottom: 60px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .hero-content h1 {
-  font-size: 62px;
-  font-weight: 700;
-  margin-bottom: 20px;
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hero-content p {
-  font-size: 20px;
-  max-width: 720px;
-  margin: auto;
-  line-height: 1.6;
+  font-size: 1.3rem;
+  max-width: 700px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+  color: #2c3e50;
+  font-weight: 400;
 }
 
 .checkin-btn {
-  background-color: #050707;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
   color: #ffffff;
-  padding: 24px 46px;
-  font-size: 26px;
+  padding: 20px 50px;
+  font-size: 1.2rem;
   font-weight: 600;
-  border: 1px solid #ccc;
-  border-radius: 30px;
+  border: none;
+  border-radius: 50px;
   margin-top: 30px;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .checkin-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(52, 152, 219, 0.4);
+  background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
 }
 
 .ocean {
   display: none;
 }
 
+/* Features Section Title */
+.welcome-page > h1 {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 60px 0 40px;
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .card-container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 columns on larger screens */
-  gap: 32px;
-  padding: 40px 20px;
-  background-color: transparent;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .card {
-  background-color: #67b6f2;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  padding: 30px 25px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  padding: 40px 30px;
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #e7e7e7;
+  transition: all 0.4s ease;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.card:hover::before {
+  transform: scaleX(1);
 }
 
 .card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 1);
+}
+
+.card svg {
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.card:hover svg {
+  transform: scale(1.1);
+  color: #2980b9 !important;
 }
 
 .card h2 {
-  font-size: 22px;
-  margin: 20px 0 12px;
+  font-size: 1.4rem;
+  margin: 20px 0 15px;
+  color: #2c3e50;
+  font-weight: 700;
 }
 
 .card p {
-  font-size: 15px;
-  margin-bottom: 20px;
+  font-size: 1rem;
+  margin-bottom: 0;
+  color: #5a6c7d;
+  line-height: 1.6;
 }
 
 /* Responsive Adjustments */
 @media screen and (max-width: 1024px) {
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+  
   .card-container {
-    grid-template-columns: repeat(3, 1fr); /* 3 columns on medium screens */
-    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 30px 20px;
   }
 }
 
 @media screen and (max-width: 768px) {
+  .hero-section {
+    padding: 80px 20px 60px;
+  }
+  
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-content p {
+    font-size: 1.1rem;
+  }
+  
   .card-container {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
+    padding: 20px;
   }
 
   .card {
-    padding: 25px 20px; /* Adjust card padding on smaller screens */
+    padding: 30px 20px;
   }
 
   .checkin-btn {
-    width: 100%;
-    padding: 14px 0;
+    width: 90%;
+    padding: 18px 0;
+    font-size: 1.1rem;
+  }
+  
+  .welcome-page > h1 {
+    font-size: 2.5rem;
+    margin: 40px 0 30px;
   }
 }
 
 @media screen and (max-width: 480px) {
-  .card-container {
-    grid-template-columns: 1fr; /* 1 column on very small screens */
-    gap: 16px;
+  .hero-content h1 {
+    font-size: 2rem;
   }
-}
-.welcome-page{
-  background: linear-gradient(135deg, #1b8cddbd 0%, #f2f2f3 100%);
+  
+  .card-container {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  .card {
+    padding: 25px 15px;
+  }
+  
+  .welcome-page > h1 {
+    font-size: 2rem;
+  }
 }

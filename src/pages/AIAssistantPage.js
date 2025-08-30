@@ -88,6 +88,11 @@ const AIAssistantPage = () => {
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                            sendMessage();
+                        }
+                    }}
                     placeholder="How are you feeling today?"
                 />
                 <button onClick={sendMessage}>Send</button>

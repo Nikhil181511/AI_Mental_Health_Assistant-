@@ -6,11 +6,11 @@ import RecommendationsPage from './pages/RecommendationsPage';
 import AIAssistantPage from './pages/AIAssistantPage';
 import LibraryPage from './pages/LibraryPage';
 import BookTherapistPage from './pages/BookTherapistPage';
-import CommunityPage from './pages/CommunityPage';
 import ProfileAnalysisPage from './pages/ProfileAnalysis';
 import BookTherapistPages from './pages/BookTherapistPage';
 import MindfulBreathPage from './pages/MindfulBreath';
 import RecommendationsPages from './pages/RecommendationsPage';
+import CommunityChat from './pages/CommunityPage';
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function App() {
         <Route path="/assistant" element={<AIAssistantPage />} />
         <Route path="/library" element={<LibraryPage />} />
         <Route path="/book" element={<BookTherapistPage />} />
-        <Route path="/community" element={<CommunityPage />} />
+        <Route path="/community" element={<CommunityChat />} />
         <Route path="/profile" element={<ProfileAnalysisPage />} />
         <Route path="/Book" element={<BookTherapistPages />} />
         <Route path="/Game" element={<MindfulBreathPage />} />

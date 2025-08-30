@@ -11,6 +11,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcEleme
 
 const ProfileAnalysis = () => {
   const [profileData, setProfileData] = useState(null);
+  const [error, setError] = useState(null);
   const chartRef = useRef(null); // For managing canvas destruction
 
   // Fetch profile data from backend on component mount
@@ -20,12 +21,22 @@ const ProfileAnalysis = () => {
         console.log("Profile data:", res.data); // Check the structure here
         setProfileData(res.data);
       })
-      .catch(err => console.error("Error fetching data:", err));
+      .catch(err => {
+        console.error("Error fetching data:", err);
+        setError("Unable to load your profile analysis. Please try again later or check your connection.");
+      });
   }, []);
 
-
-  // Handle loading state
+  // Handle loading and error state
+  if (error) return <div className="error-message">{error}</div>;
   if (!profileData) return <div>Loading...</div>;
+  if (profileData && profileData.message === "No check-ins available") {
+    return (
+      <div className="no-data-message">
+        No check-ins available. Please complete a wellness check-in to see your profile analysis.
+      </div>
+    );
+  }
 
   // Data for the Line chart (Mood Over Time)
   const lineChartData = {
@@ -41,8 +52,7 @@ const ProfileAnalysis = () => {
   };
 
   // Data for the Pie chart (Mood Distribution)
-  // Data for the Pie chart (Mood Distribution)
-  // Data for the Pie chart (Mood Distribution)
+
   const pieChartData = {
     labels: Object.keys(profileData.mood_distribution),
     datasets: [
