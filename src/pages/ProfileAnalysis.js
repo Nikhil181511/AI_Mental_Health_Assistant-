@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Line, Pie } from 'react-chartjs-2';
 import axios from 'axios';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useNavigate } from 'react-router-dom';
+import { auth } from './firebase';
 import './ProfileAnalysis.css';
 
 // Chart.js imports
@@ -10,30 +13,48 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Title, Tooltip, Legend);
 
 const ProfileAnalysis = () => {
+  const [user, loading, error] = useAuthState(auth);
+  const navigate = useNavigate();
   const [profileData, setProfileData] = useState(null);
-  const [error, setError] = useState(null);
+  const [analysisError, setAnalysisError] = useState(null);
   const chartRef = useRef(null); // For managing canvas destruction
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/login');
+    }
+  }, [user, loading, navigate]);
 
   // Fetch profile data from backend on component mount
   useEffect(() => {
-    axios.get('http://localhost:8000/analysis')
-      .then(res => {
-        console.log("Profile data:", res.data); // Check the structure here
-        setProfileData(res.data);
-      })
-      .catch(err => {
-        console.error("Error fetching data:", err);
-        setError("Unable to load your profile analysis. Please try again later or check your connection.");
-      });
-  }, []);
+    if (user) {
+      // Pass user ID to get user-specific analysis
+      axios.get(`http://localhost:8000/analysis?user_id=${user.uid}`)
+        .then(res => {
+          console.log("Profile data:", res.data); // Check the structure here
+          setProfileData(res.data);
+        })
+        .catch(err => {
+          console.error("Error fetching data:", err);
+          setAnalysisError("Unable to load your profile analysis. Please try again later or check your connection.");
+        });
+    }
+  }, [user]);
 
   // Handle loading and error state
-  if (error) return <div className="error-message">{error}</div>;
-  if (!profileData) return <div>Loading...</div>;
+  if (loading) return <div className="loading-container">Loading...</div>;
+  if (!user) return null;
+  if (analysisError) return <div className="error-message">{analysisError}</div>;
+  if (!profileData) return <div className="loading-analysis">Loading your analysis...</div>;
   if (profileData && profileData.message === "No check-ins available") {
     return (
       <div className="no-data-message">
-        No check-ins available. Please complete a wellness check-in to see your profile analysis.
+        <h3>No check-ins available</h3>
+        <p>Please complete a wellness check-in to see your profile analysis.</p>
+        <button onClick={() => navigate('/checkin')} className="checkin-btn">
+          Go to Check-in
+        </button>
       </div>
     );
   }
@@ -111,12 +132,15 @@ const ProfileAnalysis = () => {
   return (
     <div className="profile-analysis">
       <h2>Your Mental Wellness Summary</h2>
+      <div className="user-welcome">
+        <p>Welcome, {user.displayName || user.email}!</p>
+      </div>
       <div className="summary-card">
         <h3>{profileData.name}</h3>
         <p>Total Check-Ins: {profileData.total_checkins}</p>
         <p>Overall Mood: {profileData.overall_mood}</p>
         <p>Last Check-In: {profileData.last_checkin}</p>
-        <p>Wellness Score: {profileData.wellness_score} / 10</p>
+        <p>Wellness Score: {profileData.wellness_score.toFixed(1)} / 5</p>
       </div>
 
       <div className="charts">

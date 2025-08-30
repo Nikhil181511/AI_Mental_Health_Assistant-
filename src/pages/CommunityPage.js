@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { collection, addDoc, query, onSnapshot, orderBy } from 'firebase/firestore';
-import { db } from './firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db } from './firebase';
 import './CommunityChat.css';
 
 const CommunityChat = () => {
+    const [user, loading, error] = useAuthState(auth);
     const communities = [
         { id: 1, name: 'Healthy India' },
         { id: 2, name: 'Doctor 1' },
@@ -16,7 +18,7 @@ const CommunityChat = () => {
     const [newMessage, setNewMessage] = useState('');
 
     useEffect(() => {
-        if (selectedCommunity) {
+        if (selectedCommunity && user) {
             const q = query(collection(db, 'messages'), orderBy('timestamp', 'asc'));
             const unsubscribe = onSnapshot(q, (snapshot) => {
                 const fetchedMessages = snapshot.docs
@@ -26,30 +28,43 @@ const CommunityChat = () => {
             });
             return () => unsubscribe();
         }
-    }, [selectedCommunity]);
+    }, [selectedCommunity, user]);
+
+    // Show loading or error if user authentication is pending
+    if (loading) return <div className="loading-container">Loading...</div>;
+    if (error) return <div className="error-message">Error: {error.message}</div>;
+    if (!user) return <div className="error-message">Please log in to access the community chat.</div>;
 
     const handleSelectCommunity = (community) => {
         setSelectedCommunity(community);
     };
 
     const handleSendMessage = async () => {
-        if (newMessage.trim() !== '') {
+        if (newMessage.trim() !== '' && user) {
             try {
+                // Get user's display name or email as fallback
+                const senderName = user.displayName || user.email?.split('@')[0] || 'Anonymous User';
+                
                 const messageData = {
                     community: selectedCommunity.name,
                     text: newMessage,
-                    sender: selectedCommunity.name === 'Healthy India' ? 'Announcement' : 'You',
+                    sender: selectedCommunity.name === 'Healthy India' ? 'Announcement' : senderName,
+                    senderEmail: user.email,
+                    userId: user.uid,
                     timestamp: new Date()
                 };
 
                 if (selectedCommunity.name === 'Healthy India') {
+                    // Send announcement to all communities
                     for (const community of communities) {
                         await addDoc(collection(db, 'messages'), {
                             ...messageData,
-                            community: community.name
+                            community: community.name,
+                            sender: 'Announcement' // Force announcement for Healthy India
                         });
                     }
                 } else {
+                    // Send regular user message
                     await addDoc(collection(db, 'messages'), messageData);
                 }
 
@@ -88,8 +103,11 @@ const CommunityChat = () => {
 
                         <div className="chat-messages">
                             {messages.map((msg) => (
-                                <div key={msg.id} className={`chat-message ${msg.sender === 'Announcement' ? 'announcement' : ''}`}>
+                                <div key={msg.id} className={`chat-message ${msg.sender === 'Announcement' ? 'announcement' : ''} ${msg.userId === user?.uid ? 'own-message' : ''}`}>
                                     <strong>{msg.sender}:</strong> {msg.text}
+                                    <span className="message-time">
+                                        {msg.timestamp?.toDate ? msg.timestamp.toDate().toLocaleTimeString() : ''}
+                                    </span>
                                 </div>
                             ))}
                         </div>
@@ -100,6 +118,11 @@ const CommunityChat = () => {
                                 placeholder="Type a message..."
                                 value={newMessage}
                                 onChange={(e) => setNewMessage(e.target.value)}
+                                onKeyPress={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSendMessage();
+                                    }
+                                }}
                             />
                             <button onClick={handleSendMessage}>Send</button>
                         </div>

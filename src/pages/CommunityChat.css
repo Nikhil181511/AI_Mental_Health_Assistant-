@@ -199,6 +199,68 @@ body {
     box-shadow: 0 4px 15px rgba(231, 76, 60, 0.2);
 }
 
+.chat-message.own-message {
+    background: linear-gradient(135deg, #d5f4e6, #a8e6cf);
+    border-left: 4px solid #27ae60;
+    margin-left: 20px;
+    position: relative;
+}
+
+.chat-message.own-message::after {
+    content: "You";
+    position: absolute;
+    top: -8px;
+    right: 10px;
+    background: #27ae60;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.chat-message strong {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.message-time {
+    float: right;
+    font-size: 0.75rem;
+    color: rgba(44, 62, 80, 0.6);
+    margin-left: 15px;
+    font-style: italic;
+}
+
+.loading-container,
+.error-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    margin: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.loading-container {
+    font-size: 1.2rem;
+    color: #3498db;
+    font-weight: 600;
+}
+
+.error-message {
+    font-size: 1.1rem;
+    color: #e74c3c;
+    font-weight: 600;
+    text-align: center;
+    padding: 20px;
+}
+
 .chat-input {
     display: flex;
     gap: 15px;

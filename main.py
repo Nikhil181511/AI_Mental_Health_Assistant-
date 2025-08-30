@@ -76,6 +76,8 @@ class WellnessCheckIn(BaseModel):
     description: Optional[str] = None
     voiceUrl: Optional[str] = None
     timestamp: int
+    userId: Optional[str] = None  # Add user ID for user-dependent storage
+    userEmail: Optional[str] = None  # Add user email for reference
 
 # Dummy data storage (In production, you should use a database)
 checkins = []
@@ -97,8 +99,63 @@ async def get_checkins():
     # Return all check-ins as a list of wellness check-ins
     return checkins
 
-def fetch_checkins_from_firestore() -> List[Dict]:
-    checkins_ref = firestore_db.collection('checkins')  # Adjust the collection name if needed
+def generate_ai_summary(checkins, overall_mood, wellness_score):
+    """Generate AI-powered summary based on user's check-in patterns"""
+    try:
+        total_checkins = len(checkins)
+        if wellness_score >= 4:
+            return f"🌟 You're doing great! With {total_checkins} check-ins, your overall mood is {overall_mood} and your wellness score of {wellness_score:.1f}/5 shows positive mental health. Keep up the good work!"
+        elif wellness_score >= 3:
+            return f"📈 You're maintaining steady mental wellness. With {total_checkins} check-ins and a {overall_mood} overall mood, you're on a good path. Consider exploring ways to boost your mood further."
+        else:
+            return f"💙 Your {total_checkins} check-ins show you're actively working on your mental health. Your current {overall_mood} mood suggests there's room for improvement. Remember, seeking help is a sign of strength."
+    except Exception as e:
+        return "Your mental wellness journey is unique. Keep tracking your moods to better understand your patterns."
+
+def generate_recommendations(overall_mood, wellness_score):
+    """Generate personalized recommendations based on mood and wellness score"""
+    recommendations = []
+    
+    if wellness_score >= 4:
+        recommendations = [
+            "Continue your current self-care routine",
+            "Share your wellness strategies with others",
+            "Try new mindfulness techniques to maintain balance",
+            "Consider setting new wellness goals"
+        ]
+    elif wellness_score >= 3:
+        recommendations = [
+            "Establish a regular sleep schedule",
+            "Try 10 minutes of daily meditation",
+            "Engage in moderate exercise 3 times a week",
+            "Practice gratitude journaling"
+        ]
+    else:
+        recommendations = [
+            "Consider speaking with a mental health professional",
+            "Start with small daily self-care activities",
+            "Practice deep breathing exercises",
+            "Connect with supportive friends or family",
+            "Try gentle activities like walking or listening to music"
+        ]
+    
+    # Add mood-specific recommendations
+    if "Poor" in overall_mood or "Very Poor" in overall_mood:
+        recommendations.append("Consider professional counseling support")
+        recommendations.append("Engage in activities that bring you joy")
+    elif "Good" in overall_mood or "Very Good" in overall_mood:
+        recommendations.append("Maintain your positive habits")
+        recommendations.append("Help others to boost your own well-being")
+    
+    return recommendations
+
+def fetch_checkins_from_firestore(user_id: str = None) -> List[Dict]:
+    checkins_ref = firestore_db.collection('checkins')
+    
+    # Filter by user ID if provided
+    if user_id:
+        checkins_ref = checkins_ref.where('userId', '==', user_id)
+    
     checkins_snapshot = checkins_ref.stream()
     checkins = []
     for doc in checkins_snapshot:
@@ -106,13 +163,17 @@ def fetch_checkins_from_firestore() -> List[Dict]:
     return checkins
 
 @app.get("/analysis")
-async def get_profile_analysis():
+async def get_profile_analysis(user_id: str = None):
+    if not user_id:
+        raise HTTPException(status_code=400, detail="User ID is required")
+    
     try:
-        checkins = fetch_checkins_from_firestore()
+        checkins = fetch_checkins_from_firestore(user_id)
     except Exception as e:
         # Log the error and return a 500 with a more specific error message
         print("Error fetching check-ins from Firestore:", str(e))
         raise HTTPException(status_code=500, detail="Failed to fetch check-ins from Firestore.")
+    
     total_checkins = len(checkins)
     
     if total_checkins == 0:
@@ -129,7 +190,7 @@ async def get_profile_analysis():
     # Deriving the overall mood as the most common mood
     overall_mood = max(mood_counts, key=mood_counts.get)
     
-    # Deriving the wellness score as average mood rating
+    # Deriving the wellness score as average mood rating (out of 5)
     wellness_score = total_mood_rating / total_checkins if total_checkins else 0
     
     # Convert timestamps to dates and map moods to them
@@ -138,17 +199,21 @@ async def get_profile_analysis():
         for checkin in checkins
     ]
     
+    # Sort mood_over_time by date
+    mood_over_time.sort(key=lambda x: x["date"])
+    
     # Mood distribution
     mood_distribution = {mood: count for mood, count in mood_counts.items()}
     
     # Word Cloud (basic approach, using descriptions)
     word_cloud = []
     for checkin in checkins:
-        word_cloud.extend(checkin["description"].split())
+        if checkin.get("description"):
+            word_cloud.extend(checkin["description"].split())
     
-    # AI Summary and recommendations (basic placeholders here)
-    ai_summary = "Your mental wellness is generally stable. Consider regular check-ins."
-    recommendations = ["Exercise regularly", "Meditate daily"]
+    # Generate AI Summary based on user's mood patterns
+    ai_summary = generate_ai_summary(checkins, overall_mood, wellness_score)
+    recommendations = generate_recommendations(overall_mood, wellness_score)
     
     # Returning profile analysis data
     return {
@@ -160,12 +225,12 @@ async def get_profile_analysis():
         "mood_over_time": mood_over_time,
         "mood_distribution": mood_distribution,
         "voice_insights": {
-            "most_common": "Neutral",
-            "spike_date": "2025-04-02",
-            "spike_reason": "Stressful day",
-            "trend": "Improving"
+            "most_common": overall_mood,
+            "spike_date": mood_over_time[-1]["date"] if mood_over_time else "N/A",
+            "spike_reason": "Recent mood entry",
+            "trend": "Stable" if wellness_score >= 3 else "Needs attention"
         },
-        "word_cloud": word_cloud,
+        "word_cloud": word_cloud[:20],  # Limit to top 20 words
         "ai_summary": ai_summary,
         "recommendations": recommendations
     }

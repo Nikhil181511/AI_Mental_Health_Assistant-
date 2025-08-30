@@ -188,6 +188,12 @@ const Recommendations = () => {
                         resetTranscript();
                     }}
                     placeholder={preLoadedData ? "Update your mood or get new recommendations..." : "How are you feeling today?"}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            getRecommendations();
+                        }
+                    }}
                 />
                 <button onClick={getRecommendations} disabled={isLoadingRecommendations}>
                     {isLoadingRecommendations ? 'Loading...' : 'Get Help'}
