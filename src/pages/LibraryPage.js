@@ -160,7 +160,7 @@ const LibraryPage = () => {
             </select>
           </div>
           <button className="recommend-button" onClick={() => navigate('/Recommend')}>
-            Go to Recommendations
+            📊 Get Personalized Recommendations
           </button>
         </div>
       </div>

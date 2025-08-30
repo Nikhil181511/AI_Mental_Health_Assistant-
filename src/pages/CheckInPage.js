@@ -3,10 +3,12 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useNavigate } from 'react-router-dom';
 import './Check.css';
 
 // Firebase imports
-import { db, collection, addDoc, getDocs } from './firebase';
+import { db, auth, collection, addDoc, getDocs, query, where } from './firebase';
 
 // Lucide Icons
 import { Angry, Frown, Meh, Smile, Laugh, Mic, MicOff } from 'lucide-react';
@@ -28,6 +30,8 @@ const MOOD_ICONS = {
 };
 
 const CheckInPage = () => {
+  const [user, loading, error] = useAuthState(auth);
+  const navigate = useNavigate();
   const [moodRating, setMoodRating] = useState(3);
   const [desc, setDesc] = useState('');
   const [checkIns, setCheckIns] = useState([]);
@@ -39,6 +43,13 @@ const CheckInPage = () => {
     resetTranscript,
     browserSupportsSpeechRecognition
   } = useSpeechRecognition();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/login');
+    }
+  }, [user, loading, navigate]);
 
   useEffect(() => {
     if (transcript) {
@@ -56,8 +67,15 @@ const CheckInPage = () => {
   };
 
   const fetchCheckIns = async () => {
+    if (!user) return;
+    
     try {
-      const querySnapshot = await getDocs(collection(db, "checkins"));
+      // Query only check-ins for the current user
+      const q = query(
+        collection(db, "checkins"), 
+        where("userId", "==", user.uid)
+      );
+      const querySnapshot = await getDocs(q);
       const entries = querySnapshot.docs.map(doc => {
         const data = doc.data();
         return {
@@ -73,8 +91,16 @@ const CheckInPage = () => {
   };
 
   const submitCheckIn = async () => {
+    if (!user) {
+      alert("Please login to save check-ins");
+      navigate('/login');
+      return;
+    }
+
     setIsSubmitting(true);
     const newData = {
+      userId: user.uid, // Add user ID to the check-in data
+      userEmail: user.email, // Optional: store user email for reference
       moodRating,
       moodDescription: MOOD_LABELS[moodRating],
       description: desc,
@@ -82,8 +108,19 @@ const CheckInPage = () => {
     };
 
     try {
-      // Add check-in data to Firestore
+      // Add check-in data to Firestore with user ID
       await addDoc(collection(db, "checkins"), newData);
+      
+      // Store latest mood data for recommendations
+      const moodData = {
+        mood: `${MOOD_LABELS[moodRating]} - ${desc}`.trim(),
+        moodDescription: MOOD_LABELS[moodRating],
+        description: desc,
+        moodRating: moodRating,
+        timestamp: Date.now(),
+        userId: user.uid
+      };
+      localStorage.setItem('latestMoodData', JSON.stringify(moodData));
       
       alert("✅ Mood check-in saved!");
       setDesc('');
@@ -103,12 +140,21 @@ const CheckInPage = () => {
   }, [checkIns]);
 
   useEffect(() => {
-    fetchCheckIns();
-  }, []);
+    if (user) {
+      fetchCheckIns();
+    }
+  }, [user]);
+
+  // Show loading while checking authentication
+  if (loading) return <div className="loading-container">Loading...</div>;
+
+  // Don't render if user is not authenticated
+  if (!user) return null;
 
   return (
     <div className="checkin-container">
       <h2>How are you feeling right now?</h2>
+      <p className="welcome-message">Welcome, {user.displayName || user.email}!</p>
 
       <label>
         Mood Level (1-5): {MOOD_LABELS[moodRating]} {MOOD_ICONS[moodRating]}
@@ -165,7 +211,7 @@ const CheckInPage = () => {
 
       {formattedHistory.length > 0 && (
         <div style={{ height: 300, marginTop: 40 }}>
-          <h3>Mood History</h3>
+          <h3>Your Mood History</h3>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={formattedHistory}>
               <CartesianGrid strokeDasharray="3 3" />
