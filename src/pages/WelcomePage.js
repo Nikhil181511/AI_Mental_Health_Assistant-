@@ -20,7 +20,7 @@ function WelcomePage() {
         <div className="hero-content">
           <h1>Welcome to MindWell AI</h1>
           <p>Your daily companion for emotional wellness, mindful check-ins, and AI-powered support tailored to you.</p>
-          <Link to="/checkin">
+          <Link to="/login">
             <button className="checkin-btn">Get Started</button>
           </Link>
         </div>

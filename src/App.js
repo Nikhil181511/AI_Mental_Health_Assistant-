@@ -1,5 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import WelcomePage from './pages/WelcomePage';
+import LoginPage from './pages/LoginPage';
 import Navbar from './pages/Navbar';
 import CheckInPage from './pages/CheckInPage';
 import RecommendationsPage from './pages/RecommendationsPage';
@@ -12,12 +13,17 @@ import MindfulBreathPage from './pages/MindfulBreath';
 import RecommendationsPages from './pages/RecommendationsPage';
 import CommunityChat from './pages/CommunityPage';
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const hideNavbarRoutes = ['/', '/login'];
+  const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname);
+
   return (
-    <Router>
-      <Navbar />
+    <>
+      {shouldShowNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<WelcomePage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/checkin" element={<CheckInPage />} />
         <Route path="/recommendations" element={<RecommendationsPage />} />
         <Route path="/assistant" element={<AIAssistantPage />} />
@@ -30,6 +36,14 @@ function App() {
         <Route path="/Recommend" element={<RecommendationsPages />} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }

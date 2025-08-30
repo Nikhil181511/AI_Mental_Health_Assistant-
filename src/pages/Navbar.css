@@ -35,6 +35,37 @@
   transform: translateY(-2px);
 }
 
+/* Logout Button - Desktop */
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  backdrop-filter: blur(10px);
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.logout-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.logout-btn:hover svg {
+  transform: translateX(2px);
+}
+
 /* Mobile Navbar */
 .navbar-mobile {
   display: none;
@@ -129,6 +160,45 @@
 
 .nav-link-mobile:last-child {
   border-bottom: none;
+}
+
+/* Logout Button - Mobile */
+.logout-item {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+}
+
+.logout-btn-mobile {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  border: none;
+  color: white;
+  padding: 16px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  border-radius: 12px;
+  margin: 0 16px 20px 16px;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.logout-btn-mobile:hover {
+  background: linear-gradient(135deg, #c0392b, #a93226);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+.logout-btn-mobile svg {
+  transition: transform 0.3s ease;
+}
+
+.logout-btn-mobile:hover svg {
+  transform: translateX(3px);
 }
 
 /* Responsive Design */

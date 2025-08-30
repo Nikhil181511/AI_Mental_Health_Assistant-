@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { auth } from './firebase';
 import './Navbar.css';
 
 export default function Navbar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -11,6 +14,16 @@ export default function Navbar() {
 
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/');
+      closeSidebar();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   return (
@@ -21,9 +34,7 @@ export default function Navbar() {
           MindWell AI
         </div>
         <ul className="nav-links-desktop">
-          <li>
-            <Link to="/" className="nav-link">Home</Link>
-          </li>
+         
           <li>
             <Link to="/checkin" className="nav-link">Check-in</Link>
           </li>
@@ -44,6 +55,16 @@ export default function Navbar() {
           </li>
           <li>
             <Link to="/Game" className="nav-link">Relax</Link>
+          </li>
+          <li>
+            <button onClick={handleLogout} className="logout-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16,17 21,12 16,7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              Logout
+            </button>
           </li>
         </ul>
       </nav>
@@ -109,6 +130,16 @@ export default function Navbar() {
           </li>
           <li>
             <Link to="/Game" className="nav-link-mobile" onClick={closeSidebar}>Relax</Link>
+          </li>
+          <li className="logout-item">
+            <button onClick={handleLogout} className="logout-btn-mobile">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16,17 21,12 16,7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              Logout
+            </button>
           </li>
         </ul>
       </div>
