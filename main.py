@@ -99,16 +99,32 @@ async def get_checkins():
     # Return all check-ins as a list of wellness check-ins
     return checkins
 
+
 def generate_ai_summary(checkins, overall_mood, wellness_score):
-    """Generate AI-powered summary based on user's check-in patterns"""
+    """Generate AI-powered summary using Gemini LLM based on user's check-in patterns"""
     try:
         total_checkins = len(checkins)
-        if wellness_score >= 4:
-            return f"🌟 You're doing great! With {total_checkins} check-ins, your overall mood is {overall_mood} and your wellness score of {wellness_score:.1f}/5 shows positive mental health. Keep up the good work!"
-        elif wellness_score >= 3:
-            return f"📈 You're maintaining steady mental wellness. With {total_checkins} check-ins and a {overall_mood} overall mood, you're on a good path. Consider exploring ways to boost your mood further."
-        else:
-            return f"💙 Your {total_checkins} check-ins show you're actively working on your mental health. Your current {overall_mood} mood suggests there's room for improvement. Remember, seeking help is a sign of strength."
+        recent_checkins = checkins[-5:] if total_checkins > 5 else checkins
+        recent_entries = "\n".join([
+            f"Date: {datetime.utcfromtimestamp(c['timestamp']/1000).strftime('%Y-%m-%d')}, Mood: {c['moodDescription']}, Rating: {c['moodRating']}, Note: {c.get('description','')}"
+            for c in recent_checkins
+        ])
+        prompt = (
+            "You are a mental health assistant. Summarize the user's mental wellness journey in a supportive, professional, and empathetic tone. "
+            "Highlight strengths, areas for improvement, and encourage positive steps. "
+            "Do not give medical advice.\n"
+            "Keep it short and also concise."
+            "Give point form summary"
+            "Do not give any extra information directly start with summary"
+            f"Total check-ins: {total_checkins}\n"
+            f"Most common mood: {overall_mood}\n"
+            f"Wellness score (avg mood rating, out of 5): {wellness_score:.1f}\n"
+            f"Recent check-ins:\n{recent_entries}\n"
+            "Summary:"
+        )
+        model = genai.GenerativeModel(model_name="models/gemini-2.0-flash")
+        response = model.generate_content(prompt)
+        return response.text.strip()
     except Exception as e:
         return "Your mental wellness journey is unique. Keep tracking your moods to better understand your patterns."
 
@@ -205,11 +221,27 @@ async def get_profile_analysis(user_id: str = None):
     # Mood distribution
     mood_distribution = {mood: count for mood, count in mood_counts.items()}
     
-    # Word Cloud (basic approach, using descriptions)
+    # Word Cloud: filter out stopwords and punctuation, focus on sentiment keywords
+    import string
+    stopwords = set([
+        "i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself", "yourselves",
+        "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they", "them", "their", "theirs", "themselves",
+        "what", "which", "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be", "been", "being",
+        "have", "has", "had", "having", "do", "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while",
+        "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before", "after", "above", "below",
+        "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again", "further", "then", "once", "here", "there", "when", "where", "why", "how",
+        "all", "any", "both", "each", "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very",
+        "can", "will", "just", "don", "should", "now", "today", "yesterday", "tomorrow", "was", "were", "had", "has", "did", "does", "do"
+    ])
     word_cloud = []
     for checkin in checkins:
         if checkin.get("description"):
-            word_cloud.extend(checkin["description"].split())
+            words = checkin["description"].split()
+            for word in words:
+                # Remove punctuation and lowercase
+                clean_word = word.strip(string.punctuation).lower()
+                if clean_word and clean_word not in stopwords and len(clean_word) > 2:
+                    word_cloud.append(clean_word)
     
     # Generate AI Summary based on user's mood patterns
     ai_summary = generate_ai_summary(checkins, overall_mood, wellness_score)
@@ -287,7 +319,7 @@ def detect_mood_with_ollama(user_input: str):
             ['ollama', 'run', 'mistral', prompt],
             capture_output=True,
             text=True,
-            encoding='utf-8',               # ✅ Use UTF-8 encoding
+            encoding='utf-8',              
             errors='replace',              
             timeout=30
         )

@@ -233,7 +233,7 @@ const BookTherapistPage = () => {
             const apptDate = new Date(appt.datetime);
             return (
               <div key={appt.id} className="appointment-card upcoming-history pro-appt-card">
-                <div className="appt-status-tag upcoming-tag">Upcoming</div>
+                <div className="appt-status-tag upcoming-tag"></div>
                 <div className="appt-details-row">
                   <span className="appt-label highlight-label"><b>Therapist: </b></span>
                   <span className="appt-value">{therapist?.name || 'No therapist selected'}</span>
@@ -243,7 +243,7 @@ const BookTherapistPage = () => {
                   <span className="appt-value">{appt.name}</span>
                 </div>
                 <div className="appt-details-row">
-                  <span className="appt-label highlight-label"><b>Time: </b></span>
+                  <span className="appt-label highlight-label"><b>Date & Time: </b></span>
                   <span className="appt-value">{apptDate.toLocaleString()}</span>
                 </div>
                 <div className="appt-details-row">
@@ -263,7 +263,7 @@ const BookTherapistPage = () => {
             const apptDate = new Date(appt.datetime);
             return (
               <div key={appt.id} className="appointment-card completed-history pro-appt-card">
-                <div className="appt-status-tag completed-tag">Completed</div>
+                <div className="appt-status-tag completed-tag"></div>
                 <div className="appt-details-row">
                   <span className="appt-label highlight-label"><b>Therapist: </b></span>
                   <span className="appt-value">{therapist?.name || 'No therapist selected'}</span>
@@ -273,7 +273,7 @@ const BookTherapistPage = () => {
                   <span className="appt-value">{appt.name}</span>
                 </div>
                 <div className="appt-details-row">
-                  <span className="appt-label highlight-label"><b>Time: </b></span>
+                  <span className="appt-label highlight-label"><b>Date & Time: </b></span>
                   <span className="appt-value">{apptDate.toLocaleString()}</span>
                 </div>
                 <div className="appt-details-row">

@@ -168,7 +168,16 @@ const ProfileAnalysis = () => {
 
       <div className="ai-summary">
         <h4>🧠 AI Summary</h4>
-        <p>{profileData.ai_summary}</p>
+        <ul className="ai-summary-list">
+          {profileData.ai_summary
+            .split(/\n\*/g) // Split on newlines followed by *
+            .map(point => point.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')) // Bold
+            .map(point => point.trim())
+            .filter(Boolean)
+            .map((point, idx) => (
+              <li key={idx} dangerouslySetInnerHTML={{ __html: point }} />
+            ))}
+        </ul>
       </div>
 
       <div className="recommendations">
