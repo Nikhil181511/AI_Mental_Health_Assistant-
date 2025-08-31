@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db, collection, addDoc, query, where, getDocs } from './firebase';
 import './Book.css';
 
 const BookTherapistPage = () => {
+  const [user, loadingUser] = useAuthState(auth);
   const [form, setForm] = useState({ 
     name: '', 
     phone: '', 
@@ -17,6 +20,10 @@ const BookTherapistPage = () => {
 
   // Fetch data on mount
   useEffect(() => {
+    if (!user && !loadingUser) {
+      setLoading(false);
+      return;
+    }
     Promise.all([
       fetchAppointments(),
       fetchTherapists()
@@ -29,8 +36,12 @@ const BookTherapistPage = () => {
 
   const fetchAppointments = async () => {
     try {
-      const { data } = await axios.get('http://localhost:8000/appointments');
-      setAppointments(data);
+      if (!user) return setAppointments([]);
+      // Fetch only appointments for current user from Firestore
+      const q = query(collection(db, 'appointments'), where('userId', '==', user.uid));
+      const querySnapshot = await getDocs(q);
+      const userAppointments = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setAppointments(userAppointments);
     } catch (err) {
       console.error('Error fetching appointments:', err);
     }
@@ -65,17 +76,18 @@ const BookTherapistPage = () => {
     
     setIsBooking(true);
     try {
+      if (!user) throw new Error('User not authenticated');
       // Find selected therapist to include name in the booking data
       const selectedTherapist = therapists.find(t => t.id === form.therapistId);
-      
-      // Add therapist name to the form data to ensure it's available for display later
+      // Add therapist name, userId, userEmail to the booking data
       const bookingData = {
         ...form,
         therapistName: selectedTherapist?.name || 'Unknown therapist',
-        status: 'upcoming' // Ensure status is set for new appointments
+        status: 'upcoming',
+        userId: user.uid,
+        userEmail: user.email
       };
-      
-      await axios.post('http://localhost:8000/book', bookingData);
+      await addDoc(collection(db, 'appointments'), bookingData);
       alert('Appointment booked successfully!');
       setForm({ name: '', phone: '', datetime: '', concern: '', therapistId: '' });
       fetchAppointments(); // Refresh after booking
@@ -112,8 +124,11 @@ const BookTherapistPage = () => {
   const allAppointments = appointments
     .sort((a, b) => new Date(b.datetime) - new Date(a.datetime)); // Most recent first
 
-  if (loading) {
+  if (loadingUser || loading) {
     return <div className="loading-container">Loading...</div>;
+  }
+  if (!user) {
+    return <div className="error-message">Please log in to book a therapist.</div>;
   }
 
   return (

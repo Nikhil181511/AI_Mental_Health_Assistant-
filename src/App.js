@@ -40,11 +40,14 @@ function AppContent() {
   );
 }
 
+
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <>
+      <Router>
+        <AppContent />
+      </Router>
+    </>
   );
 }
 

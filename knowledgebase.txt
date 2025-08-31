@@ -1,0 +1,262 @@
+# MindWell Website Knowledge Base
+
+## Getting Started
+
+- Visit the homepage and click "Login" or "Sign Up".
+
+- You may use Google authentication or enter your email and password.
+
+- If you face issues logging in, check your internet connection or reset your password.
+
+All personal data is securely stored and private.
+
+## Frequently Asked Questions (FAQ)
+
+1. Q: I forgot my password. How do I reset it?
+
+A: Use the "Forgot Password" link on the login screen (if enabled) or sign in with Google as an alternative.
+
+2. Q: Why can't I see my past check-ins?
+
+A: Make sure you're logged into the same account you used earlier. If you recently logged in, wait a few seconds for data to sync, then refresh.
+
+3. Q: Can I edit a check-in after saving?
+
+A: Direct editing isn't supported yet. Add a new check-in to reflect changes.
+
+4. Q: Recommendations show "neutral" even when I'm sad. Why?
+
+A: Speech or text might not have had enough emotional cues. Try adding more detail (e.g., "I feel sad and tired today").
+
+5. Q: How do I book a therapist?
+
+A: Go to Book Therapist, select a therapist card, fill the form, and click Book Appointment.
+
+6. Q: Why is the Book button disabled?
+
+A: You must select a therapist and fill all mandatory fields.
+
+7. Q: Community chat shows no messages.
+
+A: Confirm you're logged in and a community is selected. Refresh if needed.
+
+8. Q: How often is Profile Analysis updated?
+
+A: Each time you add a new check-in and re-open or refresh the DocuMe page.
+
+9. Q: Is my data shared with other users?
+
+A: No. Each user's data is isolated by secure user ID filtering.
+
+10. Q: What browsers are supported?
+
+A: Latest versions of Chrome, Edge, Firefox; Safari partially; older browsers may have reduced functionality.
+
+11. Q: Speech recognition doesn’t start.
+
+A: Confirm microphone permissions and use Chrome or Edge (desktop).
+
+12. Q: How do I log out?
+
+A: Click Logout in the navbar; this clears your authenticated session.
+
+13. Q: Can I delete my data?
+
+A: Feature not yet available. Contact support for manual removal.
+
+## Data Privacy & Security
+
+- Authentication: Managed via Firebase Authentication (secure tokens).
+
+- Storage: Mood check-ins, appointments, and chat metadata stored in Firestore with userId association.
+
+- Isolation: All queries filter by the authenticated user's ID; users cannot access others' records.
+
+- Sensitive Data: Only minimal wellness descriptors are stored; no clinical diagnoses are recorded.
+
+- Encryption: Data encrypted at rest and in transit by Firebase infrastructure.
+
+- AI Processing: Recommendations and summaries are generated on demand; no long-term model-side retention of personal content is intended.
+
+- Voice Input: Transcribed locally via browser APIs; only resulting text is used.
+
+- Deletion Policy: Full self-service deletion pending; reach support for interim requests.
+
+- Third Parties: External APIs (videos, articles) are queried without sending your personal identifiers.
+
+## Mobile Experience & Accessibility
+
+- Mobile Support: Responsive layout for modern smartphones (≥360px width).
+
+- Best Devices: Chrome on Android, Safari/Chrome on iOS (speech features may vary).
+
+- Accessibility: High-contrast design, scalable text (browser zoom supported), semantic HTML in progress.
+
+- Keyboard Use: Enter submits (Recommendations); Shift+Enter adds a newline (where applicable).
+
+- Screen Readers: Core navigation labeled; ongoing improvements planned.
+
+- Performance Tips: Stable network improves AI & Firestore fetch speed.
+
+## Supported Browsers
+
+- Fully Supported: Chrome (latest), Edge (latest)
+
+- Good: Firefox (latest) – speech recognition may vary
+
+- Partial: Safari (limited speech & some styling)
+
+- Not Recommended: Internet Explorer / very old versions of any browser
+
+## Limitations & Known Constraints
+
+- Editing or deleting past check-ins not yet available.
+
+- Appointment cancellation / reschedule not yet implemented.
+
+- No offline mode; requires active internet connection.
+
+- Speech recognition depends on browser support.
+
+- Data export and self-service deletion pending future release.
+
+- AI responses are supportive, not medical advice.
+
+- Therapist list is static (demo) unless backend integration expanded.
+
+## Support & Contact
+
+## If Your Question Isn’t Answered
+Q: How can I reach a human for help?
+A: If the assistant cannot answer your question or something is unclear, please feel free to contact our support team directly at nikhilsavita186@gmail.com. We're here to help!
+If the assistant cannot answer or something seems unclear, please contact: nikhilsavita186@gmail.com
+
+---
+
+This knowledge base powers the MindWell assistant to guide users across authentication, wellness tracking, insights, community, and support flows.
+
+1. Mood Check-In
+
+- Go to the "Check-in" page.
+
+- Select your mood level using the slider.
+
+- Optionally, describe your feelings in the text area or use the microphone button for voice input.
+
+- Click "Save Check-In" to record your mood.
+
+- View your mood history and trends in the graph below.
+
+2. AI Assistant
+
+- Navigate to the "AI Assistant" page.
+
+- Type your question or use the microphone to speak.
+
+- Click "Send" to get advice or coping strategies from the AI.
+
+- If the AI response is unclear, try rephrasing your question.
+
+3. Recommendations
+
+- Go to the "Recommendations" page.
+
+- Enter your current mood or use voice input.
+
+- Click "Get Help" to receive personalized videos, articles, and product suggestions.
+
+4. Book a Therapist
+
+- Visit the "Book Therapist" page.
+
+- Browse available therapists and select one.
+
+- Fill out the booking form with your details and concerns.
+
+- Submit to book an appointment.
+
+- View and manage your appointments in the same section.
+
+5. Community Chat
+
+- Go to the "Community" page.
+
+- Select a community from the sidebar.
+
+- Send messages to chat with others or view announcements.
+
+- Use the input box and click "Send" to participate.
+
+6. DocuMe (Profile Analysis)
+
+- Access the "DocuMe" page for long-term insights.
+
+- View your check-in stats, mood distribution, word cloud, and AI-generated summary.
+
+- Get actionable recommendations for wellness.
+
+7. Mindfulness Library
+
+- Browse articles, guides, and exercises to help with stress and anxiety.
+
+8. Relaxation Zone
+
+- Use guided breathing exercises and mindfulness games to relax.
+
+## Logging Out
+
+- Click on the "Logout" button in the navbar/sidebar.
+
+- Confirm to log out securely.
+
+## Common Issues & Troubleshooting
+
+- Login Problems:
+
+- Ensure correct credentials and stable internet.
+
+- Try password reset or Google login if available.
+
+- Speech Recognition Not Working:
+
+- Make sure your browser supports speech recognition.
+
+- Allow microphone access when prompted.
+
+- Data Not Saving:
+
+- Check your internet connection.
+
+- Refresh the page and try again.
+
+- Appointment Booking Fails:
+
+- Ensure all required fields are filled.
+
+- Try again later if the server is busy.
+
+- AI/Recommendations Not Loading:
+
+- Wait a few moments and retry.
+
+- Check your internet connection.
+
+- Community Chat Issues:
+
+- Refresh the page if messages do not appear.
+
+- Ensure you are logged in.
+
+- Profile Analysis Not Updating:
+
+- Make sure you have recent check-ins.
+
+- Data may take a few minutes to sync. 
+
+## Tips
+
+- For best experience, use the latest version of Chrome or Edge.
+
+- Enable notifications for reminders and updates.
+
+- All personal data is securely stored and private.
