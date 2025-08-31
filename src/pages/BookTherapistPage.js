@@ -232,12 +232,24 @@ const BookTherapistPage = () => {
             const therapist = therapists.find(t => t.id === appt.therapistId);
             const apptDate = new Date(appt.datetime);
             return (
-              <div key={appt.id} className="appointment-card upcoming-history">
-                <div className="appt-status-tag upcoming-tag"></div>
-                <p><strong>Therapist:</strong> {therapist?.name || 'No therapist selected'}</p>
-                <p><strong>Name:</strong> {appt.name}</p>
-                <p><strong>Time:</strong> {apptDate.toLocaleString()}</p>
-                <p><strong>Concerns:</strong> {appt.concern}</p>
+              <div key={appt.id} className="appointment-card upcoming-history pro-appt-card">
+                <div className="appt-status-tag upcoming-tag">Upcoming</div>
+                <div className="appt-details-row">
+                  <span className="appt-label highlight-label"><b>Therapist: </b></span>
+                  <span className="appt-value">{therapist?.name || 'No therapist selected'}</span>
+                </div>
+                <div className="appt-details-row">
+                  <span className="appt-label highlight-label"><b>Name: </b></span>
+                  <span className="appt-value">{appt.name}</span>
+                </div>
+                <div className="appt-details-row">
+                  <span className="appt-label highlight-label"><b>Time: </b></span>
+                  <span className="appt-value">{apptDate.toLocaleString()}</span>
+                </div>
+                <div className="appt-details-row">
+                  <span className="appt-label highlight-label"><b>Concerns: </b></span>
+                  <span className="appt-value">{appt.concern}</span>
+                </div>
               </div>
             );
           })
@@ -250,12 +262,24 @@ const BookTherapistPage = () => {
             const therapist = therapists.find(t => t.id === appt.therapistId);
             const apptDate = new Date(appt.datetime);
             return (
-              <div key={appt.id} className="appointment-card completed-history">
-                <div className="appt-status-tag completed-tag"></div>
-                <p><strong>Therapist:</strong> {therapist?.name || 'No therapist selected'}</p>
-                <p><strong>Name:</strong> {appt.name}</p>
-                <p><strong>Time:</strong> {apptDate.toLocaleString()}</p>
-                <p><strong>Concerns:</strong> {appt.concern}</p>
+              <div key={appt.id} className="appointment-card completed-history pro-appt-card">
+                <div className="appt-status-tag completed-tag">Completed</div>
+                <div className="appt-details-row">
+                  <span className="appt-label highlight-label"><b>Therapist: </b></span>
+                  <span className="appt-value">{therapist?.name || 'No therapist selected'}</span>
+                </div>
+                <div className="appt-details-row">
+                  <span className="appt-label highlight-label"><b>Name: </b></span>
+                  <span className="appt-value">{appt.name}</span>
+                </div>
+                <div className="appt-details-row">
+                  <span className="appt-label highlight-label"><b>Time: </b></span>
+                  <span className="appt-value">{apptDate.toLocaleString()}</span>
+                </div>
+                <div className="appt-details-row">
+                  <span className="appt-label highlight-label"><b>Concerns: </b></span>
+                  <span className="appt-value">{appt.concern}</span>
+                </div>
               </div>
             );
           })
