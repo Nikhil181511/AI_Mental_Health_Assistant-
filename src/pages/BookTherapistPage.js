@@ -224,23 +224,43 @@ const BookTherapistPage = () => {
         }
       </div>
 
-      {/* All Appointments */}
+      {/* Appointment History - Upcoming and Completed */}
       <div className="appointments-section">
-        <h3>Appointments Booked</h3>
-        {allAppointments.length ? (
-          allAppointments.map((appt) => {
+        <h3>Upcoming Appointments</h3>
+        {allAppointments.filter(appt => new Date(appt.datetime) > new Date()).length ? (
+          allAppointments.filter(appt => new Date(appt.datetime) > new Date()).map((appt) => {
             const therapist = therapists.find(t => t.id === appt.therapistId);
+            const apptDate = new Date(appt.datetime);
             return (
-              <div key={appt.id} className="appointment-card">
+              <div key={appt.id} className="appointment-card upcoming-history">
+                <div className="appt-status-tag upcoming-tag"></div>
                 <p><strong>Therapist:</strong> {therapist?.name || 'No therapist selected'}</p>
                 <p><strong>Name:</strong> {appt.name}</p>
-                <p><strong>Time:</strong> {new Date(appt.datetime).toLocaleString()}</p>
+                <p><strong>Time:</strong> {apptDate.toLocaleString()}</p>
                 <p><strong>Concerns:</strong> {appt.concern}</p>
               </div>
             );
           })
         ) : (
-          <p>No appointments booked</p>
+          <p>No upcoming appointments</p>
+        )}
+        <h3 style={{marginTop: '40px'}}>Completed Appointments</h3>
+        {allAppointments.filter(appt => new Date(appt.datetime) <= new Date()).length ? (
+          allAppointments.filter(appt => new Date(appt.datetime) <= new Date()).map((appt) => {
+            const therapist = therapists.find(t => t.id === appt.therapistId);
+            const apptDate = new Date(appt.datetime);
+            return (
+              <div key={appt.id} className="appointment-card completed-history">
+                <div className="appt-status-tag completed-tag"></div>
+                <p><strong>Therapist:</strong> {therapist?.name || 'No therapist selected'}</p>
+                <p><strong>Name:</strong> {appt.name}</p>
+                <p><strong>Time:</strong> {apptDate.toLocaleString()}</p>
+                <p><strong>Concerns:</strong> {appt.concern}</p>
+              </div>
+            );
+          })
+        ) : (
+          <p>No completed appointments</p>
         )}
       </div>
     </div>
