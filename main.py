@@ -44,13 +44,25 @@ def format_response_to_bullets(response_text):
 @app.post("/chat")
 async def chat(data: dict):
     user_message = data.get("text", "")
+    user_mood = data.get("mood", None)
+    chat_history = data.get("history", [])  # List of previous messages
+
+    # Build chat history string for prompt
+    history_str = ""
+    if chat_history and isinstance(chat_history, list):
+        for msg in chat_history[-5:]:  # Use last 5 exchanges
+            sender = msg.get("sender", "user")
+            text = msg.get("text", "")
+            history_str += f"{sender.capitalize()}: {text}\n"
 
     prompt = (
-        f"You are a compassionate mental health assistant acting like a supportive, caring friend. "
-        f"Provide short and Be empathetic, use simple words, and encourage calmness. "
-        f"Don't repeat generic phrases. Avoid medical advice.\n\n"
-        f"User: {user_message}\n\n"
-        f"Response:"
+        "You are a compassionate mental health assistant acting like a supportive, caring friend. "
+        + (f"The user's current mood is: {user_mood}. Please be gentle and talk to them nicely. " if user_mood else "")
+        + "Provide short and Be empathetic, use simple words, and encourage calmness. "
+        "Don't repeat generic phrases. Avoid medical advice.\n\n"
+        + (f"Recent conversation:\n{history_str}\n" if history_str else "")
+        + f"User: {user_message}\n\n"
+        "Response:"
     )
 
     try:

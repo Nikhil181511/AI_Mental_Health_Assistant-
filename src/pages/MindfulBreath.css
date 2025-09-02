@@ -92,6 +92,75 @@ body {
   padding: 30px;
 }
 
+/* Music selector styles */
+.music-selector {
+  margin-bottom: 25px;
+  padding: 20px;
+  background: rgba(39, 174, 96, 0.05);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(39, 174, 96, 0.1);
+  backdrop-filter: blur(5px);
+}
+
+.music-selector label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 15px;
+}
+
+.music-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.music-select {
+  padding: 12px 16px;
+  border: 1px solid var(--input-border);
+  background: white;
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+  min-width: 200px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.music-select:focus {
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+}
+
+.music-btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+  background: linear-gradient(135deg, var(--accent-green), #219a52);
+  color: white;
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.music-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+  background: linear-gradient(135deg, #219a52, #1e8449);
+}
+
+.music-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(39, 174, 96, 0.3);
+}
+
 .settings-container {
   margin-bottom: 25px;
   padding: 20px;
@@ -331,8 +400,52 @@ body {
 .card-footer {
   padding: 25px 30px;
   border-top: 1px solid rgba(226, 232, 240, 0.5);
-  text-align: center;
   background: linear-gradient(135deg, rgba(52, 152, 219, 0.02), rgba(39, 174, 96, 0.02));
+}
+
+.footer-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: nowrap;
+}
+
+.music-selector-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.music-selector-footer label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.music-selector-footer .music-select {
+  padding: 10px 14px;
+  border: 1px solid var(--input-border);
+  background: white;
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+  min-width: 180px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.music-selector-footer .music-select:focus {
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+}
+
+.session-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .btn {
@@ -384,6 +497,31 @@ body {
   box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
 }
 
+.btn.pause {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  color: white;
+  box-shadow: 0 8px 25px rgba(243, 156, 18, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn.pause:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(243, 156, 18, 0.6);
+  background: linear-gradient(135deg, #e67e22, #d35400);
+}
+
+.btn.pause:active {
+  transform: translateY(1px);
+  box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+}
+
+.pause-message {
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-style: italic;
+  margin-top: 8px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .card {
@@ -421,6 +559,55 @@ body {
     font-size: 14px;
     margin: 5px;
     min-width: 100px;
+  }
+  
+  .music-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .music-select {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .music-btn {
+    width: 100%;
+  }
+  
+  .footer-controls {
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .music-selector-footer {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+  
+  .music-selector-footer .music-select {
+    min-width: 120px;
+    width: auto;
+    flex: 1;
+  }
+  
+  .session-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .session-controls .btn {
+    width: auto;
+    min-width: 100px;
+    flex: 1;
   }
 }
 

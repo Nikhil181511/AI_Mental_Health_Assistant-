@@ -70,7 +70,6 @@ const CheckInPage = () => {
     if (!user) return;
     
     try {
-      // Query only check-ins for the current user
       const q = query(
         collection(db, "checkins"), 
         where("userId", "==", user.uid)
@@ -122,7 +121,7 @@ const CheckInPage = () => {
       };
       localStorage.setItem('latestMoodData', JSON.stringify(moodData));
       
-      alert("✅ Mood check-in saved!");
+      alert("Mood check-in saved!");
       setDesc('');
       fetchCheckIns();
     } catch (error) {

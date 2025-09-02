@@ -28,11 +28,14 @@ const AIAssistantPage = () => {
         const userMessage = { sender: "user", text: input };
         setMessages(prev => [...prev, userMessage]);
 
+        // Prepare last 5 messages as history
+        const history = [...messages, userMessage].slice(-5);
+
         try {
             const response = await fetch("http://localhost:8000/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ text: input }),
+                body: JSON.stringify({ text: input, history }),
             });
 
             const data = await response.json();
