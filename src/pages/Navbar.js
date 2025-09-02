@@ -108,9 +108,6 @@ export default function Navbar() {
       <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <ul className="nav-links-mobile">
           <li>
-            <Link to="/" className="nav-link-mobile" onClick={closeSidebar}>Home</Link>
-          </li>
-          <li>
             <Link to="/checkin" className="nav-link-mobile" onClick={closeSidebar}>Check-in</Link>
           </li>
           <li>

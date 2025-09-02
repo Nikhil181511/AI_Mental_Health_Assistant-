@@ -40,7 +40,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   padding: 8px 16px;
@@ -53,7 +53,7 @@
 }
 
 .logout-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(51, 11, 11, 0.523);
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
