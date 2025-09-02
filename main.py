@@ -16,16 +16,10 @@ import re
 import subprocess
 import random
 
-GEMINI_KEY = "AIzaSyASuqtC0x-oMcRmmIDwY9h5_K-eDXnAoVI"
-GNEWS_API_KEY = "f0b10b018e9d9ae45b36fba763a90588"
+
 
 genai.configure(api_key=GEMINI_KEY)
 # Initialize Firebase Admin SDK with your service account credentials
-cred = credentials.Certificate("C:/Users/nikhi/Downloads/wastex-da8fa-firebase-adminsdk-rxbwl-3268440c93.json")
-firebase_admin.initialize_app(cred)
-
-# Get Firestore client
-firestore_db = firestore.client()
 
 app = FastAPI()
 
