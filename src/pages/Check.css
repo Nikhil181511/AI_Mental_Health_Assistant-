@@ -236,4 +236,131 @@ body, html {
       font-size: 20px;
     }
   }
+
+/* === FLAT MODE OVERRIDES (remove container/card look) === */
+.checkin-container {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 60px clamp(20px,6vw,80px) 80px !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* New refined welcome & layout tweaks */
+.welcome-message {
+  margin-top: -10px;
+  margin-bottom: 38px;
+  text-align: center;
+  font-size: 17px;
+  color: #455a64;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.mood-level-label { display: block; font-weight: 600; margin-top: 10px; margin-bottom: 8px; letter-spacing: .3px; }
+.mood-level-text { opacity: .75; margin-right: 6px; }
+.mood-current { color: #2c3e50; font-weight: 600; }
+
+.textarea-row { display: flex; align-items: stretch; gap: 12px; margin-top: 10px; }
+.textarea-row textarea { flex: 1; }
+
+.mic-btn { 
+  background: linear-gradient(135deg,#3498db,#27ae60);
+  border: none; color: #fff; width: 46px; height: 46px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(52,152,219,.35); transition: all .3s ease; 
+}
+.mic-btn.active { background: linear-gradient(135deg,#e53935,#d81b60); box-shadow: 0 6px 18px rgba(229,57,53,.35); }
+.mic-btn:hover { transform: translateY(-3px); }
+.mic-btn:active { transform: translateY(-1px); }
+
+.save-checkin-btn { margin-top: 28px; }
+
+.history-block { height: 320px; margin-top: 60px; position: relative; }
+.history-block h3 { margin-top: 0; margin-bottom: 24px; text-align: center; font-size: 22px; letter-spacing: .5px; }
+
+/* Reduce vertical separation in flat mode */
+.checkin-container label { margin-top: 6px; }
+.mood-labels { margin-top: 2px; margin-bottom: 14px; }
+.checkin-container textarea { margin-top: 4px; }
+
+/* Center constraint & breathing space like other flat pages */
+body, #root { display: flex; flex-direction: column; min-height: 100vh; }
+#root > .checkin-container { flex: 1 0 auto; }
+
+/* Optional subtle section dividers */
+.checkin-container h3::before { background: linear-gradient(to right, rgba(0,0,0,0), rgba(44,62,80,.22), rgba(0,0,0,0)); }
+
+@media screen and (max-width: 768px) {
+  .welcome-message { font-size: 15.5px; margin-bottom: 30px; }
+  .history-block { margin-top: 50px; height: 300px; }
+  .mic-btn { width: 44px; height: 44px; }
+}
+@media screen and (max-width: 480px) {
+  .textarea-row { flex-direction: column; }
+  .mic-btn { align-self: flex-start; }
+  .history-block { margin-top: 45px; }
+}
+
+/* Remove decorative floating radial blobs */
+.checkin-container::before,
+.checkin-container::after { display: none !important; }
+
+/* Headings spacing & no underline bar effect if too card-like */
+.checkin-container h2 { margin-top: 0 !important; margin-bottom: 50px !important; }
+.checkin-container h2::after { height: 3px; opacity: .35; }
+
+/* Inner chart panels flatten */
+.checkin-container > div > div { 
+  background: transparent !important; 
+  box-shadow: none !important; 
+  border: none !important; 
+  padding: 0 0 50px !important; 
+  margin-top: 40px !important; 
+  transform: none !important; 
+}
+.checkin-container > div > div:hover { transform: none !important; }
+
+/* Textarea flattening */
+.checkin-container textarea { 
+  box-shadow: none !important; 
+  border: 1px solid #c7d2da !important; 
+  background: rgba(255,255,255,0.6) !important; 
+  backdrop-filter: blur(2px); 
+}
+
+/* Buttons keep style but no heavy elevation */
+.checkin-container button:not([title]) { box-shadow: none !important; }
+.checkin-container button:not([title]):hover { box-shadow: none !important; transform: translateY(-2px); }
+
+/* Section separators for logical grouping */
+.checkin-container h3 { position: relative; padding-top: 35px; margin-top: 40px; }
+.checkin-container h3::before { 
+  content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 1px; 
+  background: linear-gradient(to right, rgba(0,0,0,0), rgba(44,62,80,0.18), rgba(0,0,0,0));
+}
+.checkin-container h3:first-of-type { margin-top: 0; padding-top: 0; }
+.checkin-container h3:first-of-type::before { display: none; }
+
+/* Range slider keep modern look but slimmer */
+.checkin-container input[type="range"] { height: 10px !important; }
+
+/* Mobile adjustments for flat mode */
+@media screen and (max-width: 768px) {
+  .checkin-container { padding: 50px 30px 60px !important; margin: 0 !important; }
+  .checkin-container > div > div { margin-top: 30px !important; padding-bottom: 40px !important; }
+  .checkin-container h2 { margin-bottom: 40px !important; }
+}
+@media screen and (max-width: 480px) {
+  .checkin-container { padding: 45px 22px 55px !important; }
+  .checkin-container h2 { font-size: 26px !important; }
+}
+/* Print: simplify */
+@media print { 
+  .checkin-container { padding: 0 !important; }
+  .checkin-container h2::after { display: none !important; }
+  .checkin-container h3::before { display: none !important; }
+}
+/* === END FLAT MODE OVERRIDES === */
   

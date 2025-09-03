@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import './chat.css';
-import Navbar from './Navbar';
 import { Brain, Mic, MicOff } from 'lucide-react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 

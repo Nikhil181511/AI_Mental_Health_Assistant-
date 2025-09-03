@@ -613,3 +613,246 @@ body {
   color: #2980b9;
   font-weight: 700;
 }
+
+
+.profile-analysis, 
+.analysis-card,
+.summary-card,
+.chart,
+.insights,
+.word-cloud,
+.ai-summary,
+.recommendations,
+.stat-item,
+.user-welcome,
+.no-data-message,
+.loading-container,
+.loading-analysis,
+.profile-analysis div:first-child:only-child {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Remove hover elevation effects */
+.analysis-card:hover,
+.summary-card:hover,
+.chart:hover,
+.insights:hover,
+.word-cloud:hover,
+.ai-summary:hover,
+.recommendations:hover,
+.stat-item:hover,
+.recommendations li:hover,
+.recommendation-list li:hover { 
+  transform: none !important; 
+  box-shadow: none !important; 
+  background: none !important; 
+}
+
+/* Adjust top-level container to be full-width, breathing space */
+.profile-analysis {
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 50px 6vw 80px !important;
+  border-radius: 0 !important;
+}
+
+/* Headings refinement */
+.profile-analysis h2 { text-shadow: none !important; margin-top: 0; }
+.summary-card h3,
+.analysis-card h3,
+.insights h4,
+.word-cloud h4,
+.ai-summary h4,
+.recommendations h4,
+.chart h4 { 
+  border: none !important; 
+  padding: 0 !important; 
+  text-align: left !important; 
+  margin: 0 0 18px !important; 
+}
+
+/* Grid spacing tweaks for openness */
+.analysis-grid { gap: 40px !important; }
+.summary-card { padding: 0 0 40px !important; margin-bottom: 10px !important; }
+.charts { gap: 50px !important; margin: 40px 0 60px !important; }
+.chart { padding: 0 !important; }
+.insights, .word-cloud, .ai-summary, .recommendations { padding: 0 0 45px !important; margin-bottom: 10px !important; }
+.stat-item { padding: 0 0 25px !important; }
+
+/* Recommendation list: revert to native list styling */
+.recommendation-list, .recommendations ul { list-style: disc !important; padding-left: 1.4rem !important; }
+.recommendation-list li, .recommendations li { 
+  background: none !important; 
+  border: none !important; 
+  border-left: none !important; 
+  margin: 6px 0 !important; 
+  padding: 4px 0 !important; 
+  box-shadow: none !important; 
+  transition: none !important; 
+}
+
+/* Word cloud paragraph strip decorative background */
+.word-cloud p { background: none !important; padding: 0 !important; }
+
+/* Loading & no data minimalist */
+.no-data-message, .loading-container, .loading-analysis { padding: 40px 10px !important; }
+
+/* Mobile adjustments remain consistent with flat style */
+@media (max-width: 768px) {
+  .profile-analysis { padding: 40px 5vw 60px !important; }
+  .charts { gap: 35px !important; margin: 30px 0 50px !important; }
+  .analysis-grid { gap: 30px !important; }
+}
+
+@media (max-width: 480px) {
+  .profile-analysis { padding: 35px 5vw 50px !important; }
+  .charts { gap: 28px !important; }
+}
+
+/* Print still clean */
+@media print {
+  .profile-analysis { padding: 10mm !important; }
+  .charts { gap: 20px !important; }
+}
+/* === END FLAT THEME OVERRIDES === */
+/* === LAYOUT & ALIGNMENT REFINEMENT (post-flat) === */
+/* Goal: Better readable width, consistent vertical rhythm, responsive grids */
+.profile-analysis { 
+  max-width: 1320px !important; 
+  margin-left: auto !important; 
+  margin-right: auto !important; 
+  padding-left: clamp(24px,6vw,70px) !important; 
+  padding-right: clamp(24px,6vw,70px) !important; 
+}
+
+/* Headings spacing */
+.profile-analysis h2 { margin-bottom: 48px !important; }
+.analysis-card h3, .summary-card h3, .insights h4, .word-cloud h4, .ai-summary h4, .recommendations h4, .chart h4 {
+  margin-top: 0 !important;
+  margin-bottom: 20px !important;
+  letter-spacing: .5px;
+}
+
+/* Unified section spacing */
+.summary-card, .analysis-card, .insights, .word-cloud, .ai-summary, .recommendations, .charts, .stats-overview {
+  margin-bottom: 56px !important;
+}
+.summary-card:last-child, .analysis-card:last-child, .insights:last-child, .word-cloud:last-child, .ai-summary:last-child, .recommendations:last-child, .charts:last-child, .stats-overview:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Grid improvements for medium screens */
+.analysis-grid { 
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important; 
+  align-items: start; 
+  gap: 48px !important; 
+}
+.charts { 
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important; 
+  gap: 60px !important; 
+}
+
+/* Stats grid refinement */
+.stats-overview { 
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) !important; 
+  gap: 32px !important; 
+  margin-top: 10px !important; 
+}
+.stat-item { padding-bottom: 8px !important; }
+.stat-number { line-height: 1.1; }
+
+/* Recommendation list tighter vertical rhythm */
+.recommendation-list, .recommendations ul { margin: 6px 0 0 !important; }
+.recommendation-list li, .recommendations li { margin: 4px 0 !important; }
+
+/* Word cloud paragraph refinement */
+.word-cloud p { 
+  text-align: center !important; 
+  font-size: 1.05rem !important; 
+  line-height: 1.65 !important; 
+  max-width: 900px; 
+  margin: 0 auto; 
+}
+
+/* Responsive adjustments layering on top of earlier media queries */
+@media (max-width: 1024px) {
+  .charts { gap: 42px !important; }
+  .analysis-grid { gap: 40px !important; }
+}
+@media (max-width: 768px) {
+  .profile-analysis h2 { font-size: 2.2rem !important; margin-bottom: 40px !important; }
+  .analysis-grid, .charts { gap: 38px !important; }
+  .summary-card, .analysis-card, .insights, .word-cloud, .ai-summary, .recommendations { margin-bottom: 48px !important; }
+}
+@media (max-width: 540px) {
+  .charts { gap: 32px !important; }
+  .analysis-grid { gap: 32px !important; }
+  .profile-analysis { padding-left: 18px !important; padding-right: 18px !important; }
+}
+@media (max-width: 400px) {
+  .profile-analysis h2 { font-size: 1.9rem !important; }
+  .stat-number { font-size: 2.1rem !important; }
+}
+/* === END LAYOUT & ALIGNMENT REFINEMENT === */
+/* === SECTION SEPARATORS (subtle dividers) === */
+/* Apply relative positioning for pseudo-element lines */
+.profile-analysis > .summary-card,
+.profile-analysis > .analysis-grid,
+.profile-analysis > .charts,
+.profile-analysis > .insights,
+.profile-analysis > .word-cloud,
+.profile-analysis > .ai-summary,
+.profile-analysis > .recommendations,
+.profile-analysis > .stats-overview { position: relative; }
+
+/* Gradient hairline above each section (except when preceding element is export/user welcome) */
+.profile-analysis > .summary-card::before,
+.profile-analysis > .analysis-grid::before,
+.profile-analysis > .charts::before,
+.profile-analysis > .insights::before,
+.profile-analysis > .word-cloud::before,
+.profile-analysis > .ai-summary::before,
+.profile-analysis > .recommendations::before,
+.profile-analysis > .stats-overview::before {
+  content: "";
+  position: absolute;
+  top: -28px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, rgba(0,0,0,0), rgba(44,62,80,0.18), rgba(0,0,0,0));
+  pointer-events: none;
+}
+
+/* Add extra spacing before first analytic block only */
+.profile-analysis > .summary-card:first-of-type::before,
+.profile-analysis > .analysis-grid:first-of-type::before,
+.profile-analysis > .charts:first-of-type::before,
+.profile-analysis > .insights:first-of-type::before,
+.profile-analysis > .word-cloud:first-of-type::before,
+.profile-analysis > .ai-summary:first-of-type::before,
+.profile-analysis > .recommendations:first-of-type::before,
+.profile-analysis > .stats-overview:first-of-type::before {
+  top: -8px; /* shorter offset if it's the first of its kind */
+}
+
+/* Compact vertical rhythm when divider added */
+.summary-card, .analysis-grid, .charts, .insights, .word-cloud, .ai-summary, .recommendations, .stats-overview {
+  padding-top: 6px !important;
+}
+
+/* Print: hide decorative separators */
+@media print { 
+  .profile-analysis > .summary-card::before,
+  .profile-analysis > .analysis-grid::before,
+  .profile-analysis > .charts::before,
+  .profile-analysis > .insights::before,
+  .profile-analysis > .word-cloud::before,
+  .profile-analysis > .ai-summary::before,
+  .profile-analysis > .recommendations::before,
+  .profile-analysis > .stats-overview::before { display: none; }
+}
+/* === END SECTION SEPARATORS === */

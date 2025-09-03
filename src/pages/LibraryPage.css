@@ -255,3 +255,103 @@ body, html, #root {
 .recommend-button:hover {
   background-color: #2980b9;
 }
+/* === FLAT MODE OVERRIDES (remove container/card look) === */
+.library-container { 
+  background: linear-gradient(135deg, #e3f2fd 0%, #f8fafc 70%, #f1f8e9 100%) !important; 
+  animation: none !important; 
+  padding: 70px clamp(26px,6vw,90px) 90px !important; 
+  align-items: stretch !important; 
+}
+.library-container::before,
+.library-container::after { display: none !important; }
+
+/* Remove card chrome */
+.library-card, .content-card { 
+  background: transparent !important; 
+  box-shadow: none !important; 
+  border-radius: 0 !important; 
+  backdrop-filter: none !important; 
+  border: none !important; 
+  transition: none !important; 
+}
+.library-card { max-width: 1320px !important; margin: 0 auto 55px !important; padding: 0 !important; text-align: left !important; }
+.library-card h1 { font-size: 2.6rem; margin-bottom: 14px; }
+.library-card p { margin: 0 0 8px; }
+
+/* Controls layout centered within readable width */
+.library-controls { max-width: 1320px; margin: 40px auto 10px; padding: 0; }
+.search-box input, .category-filter select { box-shadow: none !important; background: #fff !important; }
+
+/* Content grid wider & airy */
+.content-list { max-width: 1320px !important; padding: 0 !important; gap: 55px !important; margin-top: 60px !important; }
+
+/* Individual items flattened */
+.content-card { padding: 0 0 42px 0 !important; position: relative; }
+.content-card::before { display: none !important; }
+.content-card:hover { transform: none !important; }
+
+/* Add subtle separators between cards */
+.content-card:not(:first-child) { margin-top: 22px; }
+.content-card:not(:last-child)::after { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px; background: linear-gradient(to right, rgba(0,0,0,0), rgba(44,62,80,0.15), rgba(0,0,0,0)); }
+
+/* Header spacing adjustments */
+.content-header { margin-bottom: 10px !important; }
+.content-header h2 { font-size: 1.05rem !important; letter-spacing: .4px; }
+.content-card p { margin: 10px 0 14px 0 !important; }
+
+/* Link button style simplified */
+.content-card a { background: none !important; border: none !important; padding: 0 !important; color: #1d6fa5 !important; border-radius: 0 !important; font-weight: 600; position: relative; }
+.content-card a::after { content: ""; position: absolute; left: 0; bottom: -2px; width: 100%; height: 2px; background: linear-gradient(90deg,#3498db,#27ae60); transform: scaleX(0); transform-origin: left; transition: transform .3s ease; }
+.content-card a:hover { color: #0e4d73 !important; }
+.content-card a:hover::after { transform: scaleX(1); }
+
+/* Recommend button flatten */
+.recommend-button { box-shadow: none !important; border-radius: 24px !important; }
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .library-card h1 { font-size: 2.2rem; }
+  .content-list { gap: 45px !important; }
+}
+@media (max-width: 600px) {
+  .library-container { padding: 60px 30px 70px !important; }
+  .content-list { gap: 40px !important; }
+  .library-card h1 { font-size: 1.95rem; }
+  .content-card { padding-bottom: 36px !important; }
+}
+@media (max-width: 420px) {
+  .library-container { padding: 55px 22px 65px !important; }
+  .library-card h1 { font-size: 1.8rem; }
+}
+/* Print cleanup */
+@media print {
+  .library-container { padding: 0 !important; }
+  .content-card:not(:last-child)::after { background: #aaa; opacity: .4; }
+}
+
+.content-list { gap: 40px !important; }
+.content-card {
+  background: rgba(255,255,255,0.65) !important;
+  border: 1px solid rgba(44,62,80,0.18) !important;
+  border-radius: 16px !important;
+  padding: 28px 26px 34px !important;
+  backdrop-filter: blur(4px) saturate(140%);
+  -webkit-backdrop-filter: blur(4px) saturate(140%);
+}
+.content-card:hover {
+  background: rgba(255,255,255,0.82) !important;
+  border-color: rgba(44,62,80,0.28) !important;
+}
+/* Remove gradient separators now that cards have borders */
+.content-card:not(:last-child)::after { display: none !important; }
+.content-card:not(:first-child) { margin-top: 0; }
+/* Header spacing inside card */
+.content-header { margin-bottom: 14px !important; }
+.content-card p { margin: 12px 0 18px 0 !important; }
+/* Link underline animation preserved */
+.content-card a { padding: 0 0 2px 0 !important; }
+/* Compact on small screens */
+@media (max-width: 600px) {
+  .content-card { padding: 22px 20px 26px !important; }
+  .content-list { gap: 28px !important; }
+}

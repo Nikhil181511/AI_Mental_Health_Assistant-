@@ -152,11 +152,11 @@ const CheckInPage = () => {
 
   return (
     <div className="checkin-container">
-      <h2>How are you feeling right now?</h2>
-      <p className="welcome-message">Welcome, {user.displayName || user.email}!</p>
+      <h2>Your Mood Check‑In</h2>
+      <p className="welcome-message">Hi {user.displayName || user.email}, lets start the day with a checkin.</p>
 
-      <label>
-        Mood Level (1-5): {MOOD_LABELS[moodRating]} {MOOD_ICONS[moodRating]}
+      <label className="mood-level-label">
+        <span className="mood-level-text">Mood Level:</span> <span className="mood-current">{MOOD_LABELS[moodRating]}</span> {MOOD_ICONS[moodRating]}
       </label>
 
       <input
@@ -176,7 +176,7 @@ const CheckInPage = () => {
       </div>
 
       <label>Description:</label>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div className="textarea-row">
         <textarea
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
@@ -184,16 +184,7 @@ const CheckInPage = () => {
         />
         <button
           onClick={listening ? stopListening : startListening}
-          style={{
-            marginLeft: 10,
-            backgroundColor: listening ? 'red' : '#4CAF50',
-            borderRadius: '50%',
-            width: 40,
-            height: 40,
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer'
-          }}
+          className={`mic-btn ${listening ? 'active' : ''}`}
           title={listening ? 'Stop Listening' : 'Start Listening'}
         >
           {listening ? <MicOff size={20} /> : <Mic size={20} />}
@@ -204,12 +195,12 @@ const CheckInPage = () => {
         <p>Your browser does not support speech recognition.</p>
       )}
 
-      <button onClick={submitCheckIn} disabled={isSubmitting}>
+      <button className="save-checkin-btn" onClick={submitCheckIn} disabled={isSubmitting}>
         {isSubmitting ? 'Saving...' : 'Save Check-In'}
       </button>
 
       {formattedHistory.length > 0 && (
-        <div style={{ height: 300, marginTop: 40 }}>
+        <div className="history-block">
           <h3>Your Mood History</h3>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={formattedHistory}>

@@ -26,25 +26,114 @@ body {
   
   .therapist-booking-page {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 30px;
-    background: var(--card-bg);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    box-shadow: var(--box-shadow);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 100%;
+  max-width: 1600px; /* center content on large screens */
+  margin: 0 auto;
+    padding: clamp(14px,1.8vw,30px) clamp(16px,2.4vw,48px) clamp(24px,3vw,60px);
+    background: transparent;
+    backdrop-filter: none;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
     color: var(--text-primary);
-    line-height: 1.6;
+    line-height: 1.55;
+    box-sizing: border-box;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* allow page to scroll normally so form isn't clipped */
+    overflow: visible;
+  }
+
+  /* Center key content blocks with a comfortable max width */
+  .booking-form,
+  .therapists-section,
+  .appointments-section {
+    max-width: 1180px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Desktop layout: side-by-side therapists list + booking form */
+  @media (min-width: 1200px) {
+    .therapist-booking-page {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      column-gap: clamp(24px,2.2vw,42px);
+      row-gap: clamp(24px,2.2vw,42px);
+      align-items: start;
+    }
+    .therapists-section,
+    .booking-form,
+    .appointments-section {
+      max-width: unset; /* let grid control width */
+      margin: 0; /* managed by grid */
+    }
+    .therapists-section { 
+      grid-column: 1 / span 8; 
+      display: block; /* allow natural height */
+    }
+    .therapists-section h3 { margin-top: 0; }
+    .therapists-grid { 
+      max-height: none; 
+      overflow: visible; 
+      padding-right: 0; 
+    }
+    .booking-form { 
+      grid-column: 9 / span 4; 
+      position: sticky; 
+      top: clamp(80px,6vh,110px); 
+      align-self: start; 
+    }
+    .appointments-section { 
+      grid-column: 1 / span 12; 
+      margin-top: 10px; 
+      max-height: none; 
+      overflow: visible; 
+      padding-right: 0;
+    }
+  }
+
+  /* Ultra-wide screens: slightly increase card density */
+  @media (min-width: 1600px) {
+    .therapists-grid { grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); }
   }
   
   .therapist-booking-page h2 {
     color: var(--primary-blue);
     font-weight: 600;
-    font-size: 2.5rem;
-    margin-bottom: 30px;
+    font-size: clamp(2rem,4vw,2.5rem);
+    margin: 0 0 28px;
     text-align: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-shadow: none;
+    position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+    letter-spacing: .5px;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  justify-self: center;
+  }
+
+  .therapist-booking-page h2::before,
+  .therapist-booking-page h2::after {
+    content: "";
+    flex: 1 1 140px; /* stretch lines so text truly centers */
+    height: 2px;
+    background: linear-gradient(90deg, rgba(41,128,185,0) 0%, rgba(41,128,185,.55) 50%, rgba(41,128,185,0) 100%);
+  }
+
+  @media (min-width: 1200px) {
+    .therapist-booking-page h2 { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 780px) {
+    .therapist-booking-page h2 { gap: 12px; font-size: clamp(1.7rem,6vw,2.2rem); }
+    .therapist-booking-page h2::before,
+    .therapist-booking-page h2::after { flex-basis: 60px; }
   }
   
   .therapist-booking-page h3 {
@@ -344,20 +433,27 @@ body {
   
   /* Appointments section */
   .appointments-section {
-    background: var(--card-bg);
-    backdrop-filter: blur(5px);
-    border-radius: var(--border-radius);
-    padding: 25px;
-    margin-bottom: 25px;
-    box-shadow: var(--box-shadow);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: transparent;
+    backdrop-filter: none;
+    border-radius: 0;
+    padding: 10px 0 5px;
+    margin: 10px 0 20px;
+    box-shadow: none;
+    border: none;
+    transition: none;
+    position: relative;
+  }
+  .appointments-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(41,128,185,0) 0%, rgba(41,128,185,0.35) 50%, rgba(41,128,185,0) 100%);
   }
   
-  .appointments-section:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-  }
+  /* hover effect removed in flat style */
   
   .appointment-card {
     border-radius: 12px;
