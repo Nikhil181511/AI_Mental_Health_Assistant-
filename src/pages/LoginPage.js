@@ -28,11 +28,9 @@ function LoginPage() {
 
     try {
       if (isLogin) {
-        // Login with email and password
         await signInWithEmailAndPassword(auth, email, password);
         navigate('/checkin');
       } else {
-        // Register with email and password
         if (password !== confirmPassword) {
           setError('Passwords do not match');
           setLoading(false);

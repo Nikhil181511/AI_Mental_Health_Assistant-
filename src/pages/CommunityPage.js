@@ -6,12 +6,18 @@ import './CommunityChat.css';
 
 const CommunityChat = () => {
     const [user, loading, error] = useAuthState(auth);
+    // Updated with more realistic wellness / support communities
     const communities = [
-        { id: 1, name: 'Healthy India' },
-        { id: 2, name: 'Doctor 1' },
-        { id: 3, name: 'Doctor 2' },
-        { id: 4, name: 'Ways to reduce stress' },
-        { id: 5, name: 'How to stay Motivated' },// Keeping the "Reports" group as is
+        { id: 1, name: 'Announcements' }, // Broadcast to all channels
+        { id: 2, name: 'Mindfulness & Meditation' },
+        { id: 3, name: 'Stress Relief & Relaxation' },
+        { id: 4, name: 'Anxiety Support' },
+        { id: 5, name: 'Sleep Improvement' },
+        { id: 6, name: 'Mood & Motivation' },
+        { id: 7, name: 'Habits & Productivity' },
+        { id: 8, name: 'Movement & Exercise' },
+        { id: 9, name: 'Nutrition & Wellness' },
+        { id: 10, name: 'Open Community Chat' },
     ];
     const [selectedCommunity, setSelectedCommunity] = useState(null);
     const [messages, setMessages] = useState([]);
@@ -45,26 +51,27 @@ const CommunityChat = () => {
                 // Get user's display name or email as fallback
                 const senderName = user.displayName || user.email?.split('@')[0] || 'Anonymous User';
                 
+                const isAnnouncementChannel = selectedCommunity.name === 'Announcements';
+
                 const messageData = {
                     community: selectedCommunity.name,
                     text: newMessage,
-                    sender: selectedCommunity.name === 'Healthy India' ? 'Announcement' : senderName,
+                    sender: isAnnouncementChannel ? 'Announcement' : senderName,
                     senderEmail: user.email,
                     userId: user.uid,
                     timestamp: new Date()
                 };
 
-                if (selectedCommunity.name === 'Healthy India') {
-                    // Send announcement to all communities
+                if (isAnnouncementChannel) {
+                    // Broadcast the announcement to every community (including itself)
                     for (const community of communities) {
                         await addDoc(collection(db, 'messages'), {
                             ...messageData,
                             community: community.name,
-                            sender: 'Announcement' // Force announcement for Healthy India
+                            sender: 'Announcement'
                         });
                     }
                 } else {
-                    // Send regular user message
                     await addDoc(collection(db, 'messages'), messageData);
                 }
 

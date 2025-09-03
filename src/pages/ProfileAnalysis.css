@@ -43,6 +43,42 @@ body {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
+    .export-bar {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 10px 0 25px;
+      flex-wrap: wrap;
+    }
+
+    .export-btn {
+      background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(52,152,219,0.25);
+      transition: all .3s ease;
+    }
+
+    .export-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(52,152,219,0.35); }
+    .export-btn:active { transform: translateY(0); }
+
+    @media print {
+      body, html { background: #fff !important; }
+      .profile-analysis { box-shadow: none; background: #fff; margin: 0; padding: 10mm; }
+      .export-bar, .checkin-btn { display: none !important; }
+      .charts { grid-template-columns: 1fr 1fr; }
+      .chart, .summary-card, .insights, .word-cloud, .ai-summary, .recommendations { break-inside: avoid; page-break-inside: avoid; }
+    }
+
   .user-welcome {
     text-align: center;
     margin-bottom: 30px;

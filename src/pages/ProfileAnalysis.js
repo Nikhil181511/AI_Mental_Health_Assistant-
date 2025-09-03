@@ -5,6 +5,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import { auth } from './firebase';
 import './ProfileAnalysis.css';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 // Chart.js imports
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
@@ -18,6 +20,7 @@ const ProfileAnalysis = () => {
   const [profileData, setProfileData] = useState(null);
   const [analysisError, setAnalysisError] = useState(null);
   const chartRef = useRef(null); // For managing canvas destruction
+  const reportRef = useRef(null); // For export
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -129,9 +132,49 @@ const ProfileAnalysis = () => {
     }
   };
 
+  const exportAsPNG = async () => {
+    if (!reportRef.current) return;
+    const canvas = await html2canvas(reportRef.current, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+    const link = document.createElement('a');
+    link.download = 'mindwell_report.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  };
+
+  const exportAsPDF = async () => {
+    if (!reportRef.current) return;
+    const canvas = await html2canvas(reportRef.current, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = pageWidth;
+    const imgHeight = canvas.height * (imgWidth / canvas.width);
+    let heightLeft = imgHeight;
+    let position = 0;
+    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+    pdf.save('mindwell_report.pdf');
+  };
+
+  const printReport = () => {
+    window.print();
+  };
+
   return (
-    <div className="profile-analysis">
+    <div className="profile-analysis" ref={reportRef}>
       <h2>Your Mental Wellness Summary</h2>
+      <div className="export-bar">
+        <button className="export-btn" onClick={exportAsPDF}>Download PDF</button>
+        <button className="export-btn" onClick={exportAsPNG}>Download PNG</button>
+        <button className="export-btn" onClick={printReport}>Print</button>
+      </div>
       <div className="user-welcome">
         <p>Welcome, {user.displayName || user.email}!</p>
       </div>

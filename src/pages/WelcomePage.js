@@ -14,6 +14,11 @@ import './WelcomePage.css';
 function WelcomePage() {
   return (
     <div className="welcome-page">
+      
+      {/* Images Section */}
+      <section className="images-section">
+        <div className="fade-overlay"></div>
+      </section>
 
       {/* Hero Section */}
       <section className="hero-section">
@@ -24,11 +29,10 @@ function WelcomePage() {
             <button className="checkin-btn">Get Started</button>
           </Link>
         </div>
-        <div className="ocean"></div>
       </section>
 
       {/* Features Section */}
-      <h1>Our Features</h1>
+      <h1 className="features-title">Our Features</h1>
       <section className="card-container" id="features">
         <div className="card">
           <BrainCircuit size={32} color="#4e89e8" />
