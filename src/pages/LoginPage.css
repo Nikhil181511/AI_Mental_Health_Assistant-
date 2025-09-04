@@ -10,9 +10,36 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Lake background override */
+.login-page.bg-lake {
+  position: relative;
+  background: linear-gradient(135deg, rgba(227,242,253,0.55) 0%, rgba(248,249,250,0.5) 45%, rgba(232,245,232,0.55) 100%),
+              url('../asserts/jasper-lake1.webp') center/cover no-repeat;
+  background-attachment: fixed;
+}
+
+/* Subtle dark-to-light readable overlay */
+.login-page.bg-lake::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.55) 45%, rgba(255,255,255,0.7) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Raise content above overlay */
+.login-page.bg-lake > .login-container { position: relative; z-index: 1; }
+
 .login-container {
   width: 100%;
   max-width: 450px;
+}
+
+.login-page.flat-enabled .login-container {
+  max-width: 560px; /* slightly wider since card removed */
+  background: none;
+  padding: clamp(28px,4vw,48px) clamp(22px,3vw,42px) 60px;
 }
 
 .login-card {
@@ -38,7 +65,8 @@
 
 .login-header {
   text-align: center;
-  margin-bottom: 30px;
+  /* Increased to create more breathing room */
+  margin-bottom: 44px;
 }
 
 .login-header h1 {
@@ -60,7 +88,8 @@
   background: rgba(52, 152, 219, 0.05);
   border-radius: 12px;
   padding: 4px;
-  margin-bottom: 25px;
+  /* More separation from form fields */
+  margin-bottom: 38px;
   border: 1px solid rgba(52, 152, 219, 0.1);
 }
 
@@ -103,11 +132,13 @@
 }
 
 .auth-form {
-  margin-bottom: 25px;
+  /* Allow social buttons & divider to sit further down */
+  margin-bottom: 32px;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  /* Looser vertical rhythm between inputs */
+  margin-bottom: 26px;
 }
 
 .form-group label {
@@ -222,7 +253,8 @@
 .divider {
   position: relative;
   text-align: center;
-  margin: 25px 0;
+  /* Push social login & password links apart */
+  margin: 40px 0;
 }
 
 .divider::before {
@@ -245,7 +277,8 @@
 
 .login-footer {
   text-align: center;
-  margin-top: 25px;
+  /* More space before footer links */
+  margin-top: 42px;
 }
 
 .login-footer p {
@@ -290,13 +323,17 @@
     padding: 30px 25px;
   }
   
-  .login-header h1 {
-    font-size: 1.8rem;
-  }
+  .login-header h1 { font-size: 1.8rem; }
   
-  .login-header p {
-    font-size: 14px;
-  }
+  .login-header p { font-size: 14px; }
+
+  /* Slightly reduce the added desktop spacing on smaller screens */
+  .login-header { margin-bottom: 34px; }
+  .auth-tabs { margin-bottom: 30px; }
+  .auth-form { margin-bottom: 28px; }
+  .form-group { margin-bottom: 22px; }
+  .divider { margin: 34px 0; }
+  .login-footer { margin-top: 34px; }
   
   .tab-btn {
     padding: 10px 12px;
@@ -331,4 +368,173 @@
   .tab-btn {
     width: 100%;
   }
+}
+
+
+
+/* Only apply flat gradient if not using bg-lake image */
+.login-page.flat-enabled:not(.bg-lake) {
+  background: linear-gradient(135deg, #eef5fb 0%, #f9fbfc 50%, #eefaf0 100%);
+}
+
+/* When both flat-enabled and bg-lake, reassert image background (override order) */
+.login-page.flat-enabled.bg-lake {
+  background: linear-gradient(135deg, rgba(227,242,253,0.35) 0%, rgba(248,249,250,0.3) 40%, rgba(232,245,232,0.35) 100%),
+              url('../asserts/jasper-lake1.webp') center/cover no-repeat;
+  background-attachment: fixed;
+}
+
+/* Lighten overlay to show more of image */
+.login-page.bg-lake::after {
+  background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.28) 45%, rgba(255,255,255,0.4) 100%);
+}
+
+.login-page.flat-enabled .login-card {
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+  border: none;
+  padding: clamp(34px,4.5vw,50px) clamp(26px,3.5vw,46px);
+  animation: none;
+}
+
+.login-page.flat-enabled .login-header h1 {
+  text-shadow: none;
+  background: linear-gradient(120deg,#3498db,#2c82c9,#27ae60);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.login-page.flat-enabled .login-header p { color: #4a5b66; }
+
+/* Tabs flattened */
+.login-page.flat-enabled .auth-tabs {
+  background: transparent;
+  border: none;
+  padding: 0;
+  gap: 10px;
+}
+
+.login-page.flat-enabled .tab-btn {
+  background: transparent;
+  border-radius: 0;
+  position: relative;
+  padding: 12px 4px;
+  color: #5a6c7d;
+  font-weight: 600;
+  letter-spacing: .3px;
+}
+
+.login-page.flat-enabled .tab-btn.active {
+  background: transparent;
+  color: #1f6fa5;
+  box-shadow: none;
+}
+
+.login-page.flat-enabled .tab-btn.active::after,
+.login-page.flat-enabled .tab-btn:not(.active):hover::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg,#3498db,#27ae60);
+  border-radius: 2px;
+  transform: scaleX(1);
+}
+
+.login-page.flat-enabled .tab-btn:not(.active)::after { transform: scaleX(0); }
+
+.login-page.flat-enabled .tab-btn:not(.active):hover { color: #3498db; }
+
+/* Inputs more minimal */
+.login-page.flat-enabled .input-container input {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(0,0,0,0.12);
+  border-radius: 0;
+  padding: 14px 10px 10px 42px;
+  font-size: 15px;
+  transition: border-color .3s, background-color .3s;
+}
+
+.login-page.flat-enabled .input-container input:focus {
+  border-bottom-color: #3498db;
+  box-shadow: none;
+  background: rgba(52,152,219,0.06);
+}
+
+.login-page.flat-enabled .input-icon { color: #7b8a95; }
+
+/* Buttons simplified */
+.login-page.flat-enabled .auth-btn.primary {
+  background: linear-gradient(90deg,#3498db,#2f8ccc);
+  box-shadow: none;
+  border-radius: 14px;
+  letter-spacing: .5px;
+}
+
+.login-page.flat-enabled .auth-btn.primary:hover:not(:disabled) {
+  background: linear-gradient(90deg,#2c82c9,#256ea9);
+  transform: translateY(-2px);
+}
+
+.login-page.flat-enabled .auth-btn.google {
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #ffffff;
+}
+
+.login-page.flat-enabled .auth-btn.google:hover:not(:disabled) {
+  border-color: #3498db;
+  background: #f5f9fc;
+}
+
+/* Error flattened */
+.login-page.flat-enabled .error-message {
+  background: #ffecec;
+  border: 1px solid #f5c2c0;
+  color: #c0392b;
+  box-shadow: none;
+}
+
+/* Divider minimal */
+.login-page.flat-enabled .divider::before {
+  background: linear-gradient(to right,transparent,#b9c9d4,transparent);
+}
+
+.login-page.flat-enabled .divider span {
+  background: transparent;
+  color: #7b8a95;
+}
+
+/* Links */
+.login-page.flat-enabled .link-btn { color: #1f6fa5; }
+.login-page.flat-enabled .link-btn:hover { color: #3498db; }
+
+.login-page.flat-enabled .back-link { color: #7b8a95; }
+.login-page.flat-enabled .back-link:hover { color: #3498db; }
+
+/* Footer text */
+.login-page.flat-enabled .login-footer p { color: #556771; }
+
+/* Password toggle */
+.login-page.flat-enabled .password-toggle { color: #7b8a95; }
+.login-page.flat-enabled .password-toggle:hover { color: #3498db; }
+
+/* Focus visibility */
+.login-page.flat-enabled button:focus-visible,
+.login-page.flat-enabled input:focus-visible {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+/* Responsive tweaks for flat mode */
+@media (max-width: 600px) {
+  .login-page.flat-enabled .login-card { padding: 28px 22px; }
+  .login-page.flat-enabled .login-header h1 { font-size: 1.9rem; }
+  .login-page.flat-enabled .tab-btn { padding: 10px 2px; }
 }

@@ -24,7 +24,8 @@ body, html, #root {
     #ede7f6 100%
   );
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto; /* allow vertical scroll */
 }
 
 /* Animated Background Orbs - Lighter and Softer */
@@ -75,13 +76,14 @@ body, html, #root {
     rgba(206, 147, 216, 0.2) 100%
   ),
   url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover;
-  background-attachment: fixed;
+  /* Removed background-attachment: fixed to prevent scroll lock/jank on mobile */
   background-blend-mode: overlay;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   animation: fadeIn 1.5s ease-out;
+  will-change: transform; /* smoother scroll */
 }
 
 @keyframes fadeIn {
@@ -350,8 +352,7 @@ body, html, #root {
 /* Responsive Design */
 @media screen and (max-width: 1024px) {
   .images-section {
-    height: 60vh;
-    background-attachment: scroll;
+  height: 60vh;
   }
 
   .hero-content h1 {
@@ -371,7 +372,7 @@ body, html, #root {
 
 @media screen and (max-width: 768px) {
   .images-section {
-    height: 50vh;
+  height: 50vh;
   }
 
   .hero-section {
@@ -411,7 +412,7 @@ body, html, #root {
 
 @media screen and (max-width: 480px) {
   .images-section {
-    height: 45vh;
+  height: 45vh;
   }
 
   .hero-content h1 {
@@ -462,7 +463,6 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom Scrollbar - Lighter Colors */
 ::-webkit-scrollbar {
   width: 12px;
 }

@@ -65,9 +65,8 @@ function LoginPage() {
   };
 
   return (
-    <div className="login-page">
+    <div className="login-page flat-enabled bg-lake">
       <div className="login-container">
-        <div className="login-card">
           <div className="login-header">
             <h1>Welcome to MindWell AI</h1>
             <p>{isLogin ? 'Sign in to continue your wellness journey' : 'Create your account and start your wellness journey'}</p>
@@ -195,7 +194,6 @@ function LoginPage() {
               ← Back to Home
             </Link>
           </div>
-        </div>
       </div>
     </div>
   );

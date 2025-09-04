@@ -161,52 +161,60 @@ const MindfulBreath = () => {
 
   return (
     <div className="mindful-container">
-      <div className="card">
-        <div className="card-header">
-          <div className="card-title">
-            <Clock className="clock-icon" />
-            Mindful Breath
-          </div>
-          <div className="card-description">Practice mindful breathing with this exercise.</div>
+      {/* Heading */}
+      <div className="card-header">
+        <div className="card-title">
+          <Clock className="clock-icon" />
+          Mindful Breath
         </div>
-        <div className="card-content">
-          {showSettings && (
-            <div className="settings-container">
-              <label htmlFor="duration" className="settings-label">Set meditation length (minutes):</label>
-              <input 
-                type="number" 
-                id="duration" 
-                className="duration-input" 
-                value={duration} 
-                onChange={handleDurationChange} 
-                min="1" 
-                max="60"
+        <div className="card-description">Practice mindful breathing with this exercise.</div>
+      </div>
+
+      <div className="card-content">
+        {/* Timer Settings */}
+        {showSettings && (
+          <div className="settings-container">
+            <label htmlFor="duration" className="settings-label">Set meditation length (minutes):</label>
+            <input
+              type="number"
+              id="duration"
+              className="duration-input"
+              value={duration}
+              onChange={handleDurationChange}
+              min="1"
+              max="60"
+            />
+            <div className="duration-slider">
+              <input
+                type="range"
+                min="1"
+                max="30"
+                value={duration}
+                onChange={handleDurationChange}
+                className="slider"
               />
-              <div className="duration-slider">
-                <input
-                  type="range"
-                  min="1"
-                  max="30"
-                  value={duration}
-                  onChange={handleDurationChange}
-                  className="slider"
-                />
-                <div className="range-labels">
-                  <span>1 min</span>
-                  <span>15 min</span>
-                  <span>30 min</span>
-                </div>
+              <div className="range-labels">
+                <span>1 min</span>
+                <span>15 min</span>
+                <span>30 min</span>
               </div>
             </div>
-          )}
-          <BreathingCircle isExpanding={isExpanding} />
-          <div className="text-center">
-            <p className="inhale-exhale">{isPaused ? 'Paused' : (isExpanding ? 'Inhale' : 'Exhale')}</p>
-            <p>Cycles: {cycles}</p>
-            {isPaused && <p className="pause-message">Session paused - click Resume to continue</p>}
           </div>
-          <div className="separator" />
-          <div className="progress-section">
+        )}
+
+        {/* Breathing Sphere */}
+        <BreathingCircle isExpanding={isExpanding} />
+
+        {/* Inhale / Exhale Indicator */}
+        <div className="text-center status-block">
+          <p className="inhale-exhale">{isPaused ? 'Paused' : (isExpanding ? 'Inhale' : 'Exhale')}</p>
+          <p>Cycles: {cycles}</p>
+          {isPaused && <p className="pause-message">Session paused - click Resume to continue</p>}
+        </div>
+
+        {/* Session Time + Start / Pause Controls */}
+        <div className="session-time-controls">
+          <div className="progress-section compact">
             <div className="time-display">
               <p className="time-label">Session time: {formatTime(seconds)}</p>
               {isGameRunning && (
@@ -217,37 +225,31 @@ const MindfulBreath = () => {
               <div className="progress-bar" style={{ width: `${progress}%` }}></div>
             </div>
           </div>
-        </div>
-        <div className="card-footer">
-          <div className="footer-controls">
-            {/* Music selector */}
-            <div className="music-selector-footer">
-              <label htmlFor="music-select">Background Music:</label>
-              <select id="music-select" className="music-select" value={selectedTrack} onChange={handleTrackChange}>
-                {MUSIC_TRACKS.map(track => (
-                  <option key={track.url} value={track.url}>{track.label}</option>
-                ))}
-              </select>
-              {/* Hidden audio element */}
-              {selectedTrack && (
-                <audio ref={audioRef} src={selectedTrack} loop />
-              )}
-            </div>
-            
-            {/* Start/Stop button */}
-            <div className="session-controls">
-              {!isGameRunning ? (
-                <button className="btn start" onClick={handleStartGame}>Start Session</button>
-              ) : (
-                <>
-                  <button className="btn pause" onClick={handlePauseResumeGame}>
-                    {isPaused ? 'Resume' : 'Pause'}
-                  </button>
-                  <button className="btn stop" onClick={handleStopGame}>Stop Session</button>
-                </>
-              )}
-            </div>
+          <div className="session-controls inline">
+            {!isGameRunning ? (
+              <button className="btn start" onClick={handleStartGame}>Start Session</button>
+            ) : (
+              <>
+                <button className="btn pause" onClick={handlePauseResumeGame}>
+                  {isPaused ? 'Resume' : 'Pause'}
+                </button>
+                <button className="btn stop" onClick={handleStopGame}>Stop Session</button>
+              </>
+            )}
           </div>
+        </div>
+
+        {/* Music Selector (kept for functionality) */}
+        <div className="music-selector-footer inline">
+          <label htmlFor="music-select">Background Music:</label>
+            <select id="music-select" className="music-select" value={selectedTrack} onChange={handleTrackChange}>
+              {MUSIC_TRACKS.map(track => (
+                <option key={track.url} value={track.url}>{track.label}</option>
+              ))}
+            </select>
+            {selectedTrack && (
+              <audio ref={audioRef} src={selectedTrack} loop />
+            )}
         </div>
       </div>
     </div>

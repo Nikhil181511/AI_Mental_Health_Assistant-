@@ -542,10 +542,18 @@ body {
       font-size: 2rem;
     }
     
+    /* Show two therapist cards per row on typical phones */
     .therapists-grid {
-      grid-template-columns: 1fr;
-      max-height: 400px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-height: 420px;
+      gap: 14px;
     }
+
+    /* Slightly bigger form feel */
+    .booking-form { padding: 26px 24px; }
+    .form-field label { font-size: 16px; }
+    .form-input, .form-textarea { font-size: 17px; padding: 16px 22px; }
+    .submit-button { font-size: 17px; padding: 16px 28px; }
     
     .booking-form,
     .appointments-section,
@@ -576,9 +584,12 @@ body {
       padding: 15px;
     }
     
-    .therapist-booking-page h2 {
+  .therapist-booking-page h2 {
       font-size: 1.8rem;
     }
+
+  /* Very small phones: fall back to single column for readability */
+  .therapists-grid { grid-template-columns: 1fr; }
     
     .therapist-card {
       flex-direction: column;
