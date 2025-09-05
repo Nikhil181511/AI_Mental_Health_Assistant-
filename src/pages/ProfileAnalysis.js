@@ -134,7 +134,12 @@ const ProfileAnalysis = () => {
 
   const exportAsPNG = async () => {
     if (!reportRef.current) return;
-    const canvas = await html2canvas(reportRef.current, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+  // Temporarily hide export controls so they don't appear in the image
+  const exportBar = reportRef.current.querySelector('.export-bar');
+  let prevDisplay;
+  if (exportBar) { prevDisplay = exportBar.style.display; exportBar.style.display = 'none'; }
+  const canvas = await html2canvas(reportRef.current, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+  if (exportBar) { exportBar.style.display = prevDisplay || ''; }
     const link = document.createElement('a');
     link.download = 'mindwell_report.png';
     link.href = canvas.toDataURL('image/png');
@@ -143,23 +148,63 @@ const ProfileAnalysis = () => {
 
   const exportAsPDF = async () => {
     if (!reportRef.current) return;
-    const canvas = await html2canvas(reportRef.current, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
-    const imgData = canvas.toDataURL('image/png');
+  // Hide export buttons during capture so they aren't included in PDF
+  const exportBar = reportRef.current.querySelector('.export-bar');
+  let prevDisplay;
+  if (exportBar) { prevDisplay = exportBar.style.display; exportBar.style.display = 'none'; }
+  const canvas = await html2canvas(reportRef.current, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+  if (exportBar) { exportBar.style.display = prevDisplay || ''; }
     const pdf = new jsPDF('p', 'mm', 'a4');
+
+    // Moderate margins (in mm)
+    const margin = 15; // ~0.6 inch
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pageWidth;
-    const imgHeight = canvas.height * (imgWidth / canvas.width);
-    let heightLeft = imgHeight;
-    let position = 0;
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+    const usableWidth = pageWidth - margin * 2;
+    const usableHeight = pageHeight - margin * 2;
+
+    // Scale ratio so the canvas width fits inside usable width
+    const scaleRatio = usableWidth / canvas.width;
+    const scaledHeight = canvas.height * scaleRatio;
+
+    // If the whole thing fits on one page, just add directly
+    if (scaledHeight <= usableHeight) {
+      const imgDataSingle = canvas.toDataURL('image/png');
+      pdf.addImage(imgDataSingle, 'PNG', margin, margin, usableWidth, scaledHeight);
+      pdf.save('mindwell_report.pdf');
+      return;
     }
+
+    // Multi-page: slice the canvas into page-height chunks
+    const sliceHeightPx = Math.floor(usableHeight / scaleRatio); // height in original canvas pixels per page
+    let yOffset = 0;
+    let pageIndex = 0;
+
+    while (yOffset < canvas.height) {
+      const sliceCanvas = document.createElement('canvas');
+      sliceCanvas.width = canvas.width;
+      sliceCanvas.height = Math.min(sliceHeightPx, canvas.height - yOffset);
+      const sliceCtx = sliceCanvas.getContext('2d');
+      // Draw portion of original canvas into slice
+      sliceCtx.drawImage(
+        canvas,
+        0,
+        yOffset,
+        canvas.width,
+        sliceCanvas.height,
+        0,
+        0,
+        canvas.width,
+        sliceCanvas.height
+      );
+      const imgData = sliceCanvas.toDataURL('image/png');
+      if (pageIndex > 0) pdf.addPage();
+      const sliceScaledHeight = sliceCanvas.height * scaleRatio;
+      pdf.addImage(imgData, 'PNG', margin, margin, usableWidth, sliceScaledHeight);
+      yOffset += sliceHeightPx;
+      pageIndex += 1;
+    }
+
     pdf.save('mindwell_report.pdf');
   };
 
@@ -168,7 +213,7 @@ const ProfileAnalysis = () => {
   };
 
   return (
-    <div className="profile-analysis" ref={reportRef}>
+  <div className="profile-analysis" ref={reportRef}>
       <h2>Your Mental Wellness Summary</h2>
       <div className="export-bar">
         <button className="export-btn" onClick={exportAsPDF}>Download PDF</button>

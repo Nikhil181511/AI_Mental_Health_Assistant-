@@ -607,7 +607,7 @@ body {
 .ai-summary-list li {
   margin-bottom: 10px;
   font-size: 1rem;
-  color: #2c3e50;
+  color: var(--text-secondary);
 }
 .ai-summary-list strong {
   color: #2980b9;
@@ -733,7 +733,7 @@ body {
 .analysis-card h3, .summary-card h3, .insights h4, .word-cloud h4, .ai-summary h4, .recommendations h4, .chart h4 {
   margin-top: 0 !important;
   margin-bottom: 20px !important;
-  letter-spacing: .5px;
+  letter-spacing: normal !important; /* Removed custom spacing to fix gap between first two letters */
 }
 
 /* Unified section spacing */
@@ -770,11 +770,23 @@ body {
 
 /* Word cloud paragraph refinement */
 .word-cloud p { 
-  text-align: center !important; 
   font-size: 1.05rem !important; 
   line-height: 1.65 !important; 
   max-width: 900px; 
   margin: 0 auto; 
+  color: var(--text-secondary) !important; /* unified text color */
+  font-weight: 400 !important; /* normal weight for softer look */
+  opacity: 1; /* valid opacity */
+}
+
+/* Unified body text styling across analysis sections */
+.insights p,
+.word-cloud p,
+.recommendations li {
+  color: var(--text-secondary) !important;
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+  font-weight: 400 !important;
 }
 
 /* Responsive adjustments layering on top of earlier media queries */
