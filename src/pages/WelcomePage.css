@@ -25,7 +25,7 @@ body, html, #root {
   );
   position: relative;
   overflow-x: hidden;
-  overflow-y: auto; /* allow vertical scroll */
+  overflow-y: auto;
 }
 
 /* Animated Background Orbs - Lighter and Softer */
@@ -76,14 +76,13 @@ body, html, #root {
     rgba(206, 147, 216, 0.2) 100%
   ),
   url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover;
-  /* Removed background-attachment: fixed to prevent scroll lock/jank on mobile */
   background-blend-mode: overlay;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   animation: fadeIn 1.5s ease-out;
-  will-change: transform; /* smoother scroll */
+  will-change: transform;
 }
 
 @keyframes fadeIn {
@@ -226,62 +225,114 @@ body, html, #root {
   animation: slideUp 1s ease-out 0.8s both;
 }
 
-/* Modern Card Container - Transparent Background */
-.card-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 40px;
-  padding: 0 60px 120px;
-  max-width: 1500px;
+/* NEW: Alternating Features Container */
+.features-container {
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 0 40px 120px;
   position: relative;
   z-index: 2;
   background: transparent;
 }
 
-/* Ultra Transparent Glass Cards */
-.card {
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.25) 0%, 
-    rgba(255, 255, 255, 0.15) 100%
-  );
-  backdrop-filter: blur(20px);
-  border-radius: 30px;
-  padding: 45px 35px;
-  text-align: center;
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  position: relative;
-  overflow: hidden;
-  animation: cardFadeIn 0.8s ease-out backwards;
-  box-shadow: 0 10px 40px rgba(156, 136, 255, 0.08);
+.feature-row {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  margin-bottom: 100px;
+  animation: featureFadeIn 0.8s ease-out backwards;
 }
 
-.card:nth-child(1) { animation-delay: 0.1s; }
-.card:nth-child(2) { animation-delay: 0.2s; }
-.card:nth-child(3) { animation-delay: 0.3s; }
-.card:nth-child(4) { animation-delay: 0.4s; }
-.card:nth-child(5) { animation-delay: 0.5s; }
-.card:nth-child(6) { animation-delay: 0.6s; }
-.card:nth-child(7) { animation-delay: 0.7s; }
+.feature-row:nth-child(1) { animation-delay: 0.1s; }
+.feature-row:nth-child(2) { animation-delay: 0.2s; }
+.feature-row:nth-child(3) { animation-delay: 0.3s; }
+.feature-row:nth-child(4) { animation-delay: 0.4s; }
+.feature-row:nth-child(5) { animation-delay: 0.5s; }
+.feature-row:nth-child(6) { animation-delay: 0.6s; }
+.feature-row:nth-child(7) { animation-delay: 0.7s; }
 
-@keyframes cardFadeIn {
+@keyframes featureFadeIn {
   from {
     opacity: 0;
-    transform: translateY(30px) scale(0.9);
+    transform: translateY(40px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
-/* Softer Gradient Border Animation */
-.card::before {
+/* Alternate layout for even rows */
+.feature-row.reverse {
+  flex-direction: row-reverse;
+}
+
+.feature-image {
+  flex: 1;
+  max-width: 500px;
+  height: 350px;
+  border-radius: 25px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+  box-shadow: 0 15px 40px rgba(156, 136, 255, 0.15);
+}
+
+.feature-image::before {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 30px;
+  background: linear-gradient(135deg, 
+    rgba(156, 136, 255, 0.2) 0%, 
+    rgba(129, 212, 250, 0.15) 50%,
+    rgba(206, 147, 216, 0.2) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.feature-image:hover::before {
+  opacity: 1;
+}
+
+.feature-image:hover {
+  transform: scale(1.03);
+  box-shadow: 0 25px 60px rgba(156, 136, 255, 0.25);
+}
+
+.feature-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.feature-image:hover img {
+  transform: scale(1.1);
+}
+
+.feature-content {
+  flex: 1;
+  padding: 40px;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0) 100%
+  );
+  backdrop-filter: blur(20px);
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+  box-shadow: 0 10px 40px rgba(156, 136, 255, 0.08);
+}
+
+.feature-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 25px;
   padding: 2px;
   background: linear-gradient(45deg, 
     #9c88ff, #74b9ff, #81ecec, #a29bfe, #9c88ff
@@ -305,13 +356,12 @@ body, html, #root {
   }
 }
 
-.card:hover::before {
+.feature-content:hover::before {
   opacity: 0.6;
 }
 
-/* Card Hover Effects - Subtle */
-.card:hover {
-  transform: translateY(-12px) scale(1.02);
+.feature-content:hover {
+  transform: translateY(-8px);
   background: linear-gradient(135deg, 
     rgba(255, 255, 255, 0.35) 0%, 
     rgba(255, 255, 255, 0.25) 100%
@@ -321,48 +371,66 @@ body, html, #root {
     0 0 80px rgba(156, 136, 255, 0.05) inset;
 }
 
-/* Icon Styling */
-.card svg {
+.feature-icon {
   margin-bottom: 25px;
   transition: all 0.4s ease;
   filter: drop-shadow(0 5px 15px rgba(156, 136, 255, 0.2));
 }
 
-.card:hover svg {
+.feature-content:hover .feature-icon {
   transform: scale(1.15) rotate(3deg);
   filter: drop-shadow(0 8px 25px rgba(156, 136, 255, 0.3));
 }
 
-.card h2 {
-  font-size: 1.6rem;
+.feature-content h2 {
+  font-size: 2rem;
   margin: 25px 0 20px;
   color: #4a4a6e;
   font-weight: 800;
   letter-spacing: -0.5px;
 }
 
-.card p {
-  font-size: 1.05rem;
-  margin-bottom: 0;
+.feature-content p {
+  font-size: 1.15rem;
   color: #6a6a8e;
   line-height: 1.7;
   font-weight: 400;
+  margin: 0;
 }
 
 /* Responsive Design */
 @media screen and (max-width: 1024px) {
   .images-section {
-  height: 60vh;
+    height: 60vh;
   }
 
   .hero-content h1 {
     font-size: 3.2rem;
   }
   
-  .card-container {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    padding: 0 40px 80px;
+  .features-container {
+    padding: 0 30px 80px;
+  }
+
+  .feature-row {
+    gap: 50px;
+    margin-bottom: 80px;
+  }
+
+  .feature-image {
+    height: 300px;
+  }
+
+  .feature-content {
+    padding: 35px 30px;
+  }
+
+  .feature-content h2 {
+    font-size: 1.8rem;
+  }
+
+  .feature-content p {
+    font-size: 1.1rem;
   }
 
   .features-title {
@@ -372,7 +440,7 @@ body, html, #root {
 
 @media screen and (max-width: 768px) {
   .images-section {
-  height: 50vh;
+    height: 50vh;
   }
 
   .hero-section {
@@ -388,14 +456,33 @@ body, html, #root {
     font-size: 1.2rem;
   }
   
-  .card-container {
-    grid-template-columns: 1fr;
-    gap: 25px;
+  .features-container {
     padding: 0 25px 60px;
   }
 
-  .card {
-    padding: 35px 25px;
+  .feature-row,
+  .feature-row.reverse {
+    flex-direction: column;
+    gap: 30px;
+    margin-bottom: 60px;
+    text-align: center;
+  }
+
+  .feature-image {
+    max-width: 100%;
+    height: 250px;
+  }
+
+  .feature-content {
+    padding: 30px 25px;
+  }
+
+  .feature-content h2 {
+    font-size: 1.6rem;
+  }
+
+  .feature-content p {
+    font-size: 1.05rem;
   }
 
   .checkin-btn {
@@ -412,7 +499,7 @@ body, html, #root {
 
 @media screen and (max-width: 480px) {
   .images-section {
-  height: 45vh;
+    height: 45vh;
   }
 
   .hero-content h1 {
@@ -424,21 +511,29 @@ body, html, #root {
     padding: 0 10px;
   }
   
-  .card-container {
-    gap: 20px;
+  .features-container {
     padding: 0 20px 50px;
   }
   
-  .card {
-    padding: 30px 20px;
+  .feature-row {
+    gap: 25px;
+    margin-bottom: 50px;
+  }
+
+  .feature-image {
+    height: 200px;
     border-radius: 20px;
   }
 
-  .card h2 {
+  .feature-content {
+    padding: 10px 0;
+  }
+
+  .feature-content h2 {
     font-size: 1.4rem;
   }
 
-  .card p {
+  .feature-content p {
     font-size: 0.95rem;
   }
   

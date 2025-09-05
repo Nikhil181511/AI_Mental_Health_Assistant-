@@ -138,11 +138,26 @@ const CheckInPage = () => {
     }));
   }, [checkIns]);
 
+  // Submit on Enter (without Shift) in description textarea
+  const handleDescKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (!isSubmitting) submitCheckIn();
+    }
+  };
+
   useEffect(() => {
     if (user) {
       fetchCheckIns();
     }
   }, [user]);
+
+  // Page-specific background class (must appear before any conditional return to satisfy hooks rules)
+  useEffect(() => {
+    const rootEl = document.getElementById('root');
+    if (rootEl) rootEl.classList.add('checkin-bg');
+    return () => { if (rootEl) rootEl.classList.remove('checkin-bg'); };
+  }, []);
 
   // Show loading while checking authentication
   if (loading) return <div className="loading-container">Loading...</div>;
@@ -180,6 +195,7 @@ const CheckInPage = () => {
         <textarea
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
+          onKeyDown={handleDescKeyDown}
           placeholder="Type or speak about your mood..."
         />
         <button
@@ -202,24 +218,26 @@ const CheckInPage = () => {
       {formattedHistory.length > 0 && (
         <div className="history-block">
           <h3>Your Mood History</h3>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={formattedHistory}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" fontSize={12} />
-              <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} />
-              <Tooltip
-                formatter={(value, name, props) =>
-                  [`${MOOD_LABELS[value]} ${props.payload.description ? ` - ${props.payload.description}` : ''}`, 'Mood']}
-              />
-              <Line
-                type="monotone"
-                dataKey="moodRating"
-                stroke="#8884d8"
-                strokeWidth={2}
-                dot={{ r: 4 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <div className="history-chart-box">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={formattedHistory}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" fontSize={12} />
+                <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} />
+                <Tooltip
+                  formatter={(value, name, props) =>
+                    [`${MOOD_LABELS[value]} ${props.payload.description ? ` - ${props.payload.description}` : ''}`, 'Mood']}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="moodRating"
+                  stroke="#8884d8"
+                  strokeWidth={2}
+                  dot={{ r: 4 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       )}
     </div>

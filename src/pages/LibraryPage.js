@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import './LibraryPage.css';
 import { useNavigate } from 'react-router-dom';
 import { BookOpenText, Video, Activity, Search, Filter } from 'lucide-react';
@@ -23,7 +23,7 @@ const sampleContent = [
   { id: '17', type: 'article', title: 'Daily Gratitude Practice', description: 'Reflect on positive aspects of your day.', category: 'Mindfulness', url: 'https://positivepsychology.com/gratitude-exercises/' },
   { id: '18', type: 'video', title: 'Time Management for Stress Relief', description: 'Learn how organizing your time reduces stress.', category: 'Stress', url: 'https://www.verywellmind.com/time-management-to-reduce-stress-3144729' },
   { id: '19', type: 'exercise', title: 'CBT for Depression', description: 'Using CBT techniques to manage depressive thoughts.', category: 'CBT', content: 'https://www.nhs.uk/mental-health/talking-therapies-medicine-treatments/talking-therapies/cognitive-behavioural-therapy-cbt/' },
-  { id: '20', type: 'video', title: 'Finding Meaning in Adversity', description: 'Turn tough experiences into growth opportunities.', category: 'Resilience', url: 'https://www.psychologytoday.com/us/blog/the-clarity/202002/finding-meaning-in-adversity' },
+  { id: '20', type: 'video', title: 'Finding Meaning in Adversity', description: 'Turn tough experiences into growth opportunities.', category: 'Resilience', url: 'https://youtube.com/shorts/JyCsjiksric?si=1V9mMu-bhE8FvOQ5' },
   { id: '21', type: 'article', title: 'Understanding Generalized Anxiety Disorder (GAD)', description: 'Learn more about the symptoms, causes, and treatments of GAD.', category: 'Anxiety', url: 'https://www.nimh.nih.gov/health/topics/generalized-anxiety-disorder-gad' },
   { id: '22', type: 'exercise', title: 'Box Breathing Technique', description: 'A powerful breathing exercise to calm your nervous system.', category: 'Mindfulness', content: 'https://www.healthline.com/health/box-breathing' },
   { id: '23', type: 'video', title: 'Stress Relief Yoga', description: 'Simple yoga flow for reducing stress and anxiety.', category: 'Stress', url: 'https://www.youtube.com/watch?v=bJJWArRfKa0' },
@@ -118,21 +118,70 @@ const getIcon = (type) => {
 
 const LibraryPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const navigate = useNavigate();
+  // Re-introduced category filtering (without an 'All' option)
+  const categories = useMemo(() => Array.from(new Set(sampleContent.map(i => i.category))).sort(), []);
+  const [selectedCategory, setSelectedCategory] = useState('');
 
-  const categories = useMemo(() => {
-    return ['all', ...new Set(sampleContent.map(item => item.category))];
-  }, []);
+  // Initialize default category (first in sorted list) if none selected
+  useEffect(() => {
+    if (!selectedCategory && categories.length > 0) {
+      setSelectedCategory(categories[0]);
+    }
+  }, [categories, selectedCategory]);
+  const navigate = useNavigate();
 
   const filteredContent = useMemo(() => {
     return sampleContent.filter(item => {
-      const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+      const term = searchTerm.toLowerCase();
+      const matchesCategory = selectedCategory ? item.category === selectedCategory : true;
+      const matchesSearch = (
+        item.title.toLowerCase().includes(term) ||
+        item.description.toLowerCase().includes(term)
+      );
+      return matchesCategory && matchesSearch;
     });
   }, [searchTerm, selectedCategory]);
+
+  // Full sets & counts
+  const allArticles = useMemo(() => filteredContent.filter(i => i.type === 'article'), [filteredContent]);
+  const allVideos = useMemo(() => filteredContent.filter(i => i.type === 'video'), [filteredContent]);
+  const allExercises = useMemo(() => filteredContent.filter(i => i.type === 'exercise'), [filteredContent]);
+
+  // Display only top 5 of each
+  const articles = allArticles.slice(0, 5);
+  const videos = allVideos.slice(0, 5);
+  const exercises = allExercises.slice(0, 5);
+
+  const renderSection = (title, list, emptyLabel, typeKey) => (
+    <section className={`library-section bg-section ${typeKey}-section`} aria-labelledby={title.replace(/\s+/g,'-').toLowerCase()}>
+      <header className="library-section-header">
+        <h2 id={title.replace(/\s+/g,'-').toLowerCase()}>{title}</h2>
+        <span className="count-badge">{list.length}</span>
+      </header>
+      {list.length === 0 ? (
+        <p className="empty-hint">{emptyLabel}</p>
+      ) : (
+        <div className="content-list tiered">
+          {list.map((item, idx) => (
+            <div key={item.id + '-' + idx} className="content-card">
+              <div className="content-header">
+                {getIcon(item.type)}
+                <h3>{item.title}</h3>
+              </div>
+              <p>{item.description}</p>
+              {item.type === 'video' || item.type === 'article' ? (
+                <a href={item.url} target="_blank" rel="noopener noreferrer">
+                  {item.type === 'video' ? 'Watch Video' : 'Read Article'}
+                </a>
+              ) : (
+                <a href={item.content} target="_blank" rel="noopener noreferrer">Start Exercise</a>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
 
   return (
     <div className="library-container">
@@ -151,11 +200,14 @@ const LibraryPage = () => {
           </div>
           <div className="category-filter">
             <Filter className="icon" />
-            <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              aria-label="Filter by category"
+            >
+              {/* No 'All' option per request */}
               {categories.map(cat => (
-                <option key={cat} value={cat}>
-                  {cat === 'all' ? 'All Categories' : cat}
-                </option>
+                <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
           </div>
@@ -163,29 +215,22 @@ const LibraryPage = () => {
             📊 Get Personalized Recommendations
           </button>
         </div>
+        <div className="resource-stats" aria-label="Resource counts">
+          <div className="stat total">Total: <strong>{filteredContent.length}</strong></div>
+          <div className="stat articles">Articles: <strong>{allArticles.length}</strong></div>
+            <div className="stat videos">Videos: <strong>{allVideos.length}</strong></div>
+            <div className="stat exercises">Exercises: <strong>{allExercises.length}</strong></div>
+        </div>
       </div>
 
-      {filteredContent.length > 0 ? (
-        <div className="content-list">
-          {filteredContent.map((item, idx) => (
-            <div key={item.id + '-' + idx} className="content-card">
-              <div className="content-header">
-                {getIcon(item.type)}
-                <h2>{item.title}</h2>
-              </div>
-              <p>{item.description}</p>
-              {item.type === 'video' || item.type === 'article' ? (
-                <a href={item.url} target="_blank" rel="noopener noreferrer">
-                  {item.type === 'video' ? 'Watch Video' : 'Read Article'}
-                </a>
-              ) : (
-                <a href={item.content} target="_blank" rel="noopener noreferrer">Start Exercise</a>
-              )}
-            </div>
-          ))}
-        </div>
-      ) : (
+      {filteredContent.length === 0 ? (
         <p>No results found.</p>
+      ) : (
+        <div className="library-sections-wrapper">
+          {renderSection('Articles', articles, 'No matching articles', 'articles')}
+          {renderSection('Videos', videos, 'No matching videos', 'videos')}
+          {renderSection('Exercises', exercises, 'No matching exercises', 'exercises')}
+        </div>
       )}
     </div>
   );

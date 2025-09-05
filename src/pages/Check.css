@@ -8,9 +8,16 @@ body, html {
     color: #2c3e50;
     overflow-x: hidden;
   }
-  #root{
-    background: linear-gradient(135deg, #e3f2fd 0%, #f1f8e9 100%);
+  /* Page-specific background class added dynamically for Check-In page */
+  #root.checkin-bg {
+    background:
+      linear-gradient(135deg, rgba(253,227,239,0.30) 0%, rgba(241,248,233,0.30) 100%),
+      url('../asserts/Contact-scaled.jpg') center center / cover no-repeat  !important;
+  }
 
+  /* Mobile performance: drop fixed parallax */
+  @media (max-width: 700px) {
+    #root.checkin-bg { background-attachment: scroll; }
   }
   /* Main Container */
   .checkin-container {
@@ -55,11 +62,12 @@ body, html {
   
   /* Heading styles */
   .checkin-container h2 {
-    font-size: 30px;
+    font-size: 42px; /* was 30px */
     color: #2c3e50;
     text-align: center;
     margin-bottom: 35px;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: .5px;
   }
   
   .checkin-container h2::after {
@@ -73,17 +81,19 @@ body, html {
   }
   
   .checkin-container h3 {
-    font-size: 22px;
-    margin: 30px 0 15px;
+    font-size: 28px; /* was 22px */
+    margin: 34px 0 18px;
     color: #2c3e50;
+    font-weight: 600;
+    letter-spacing: .4px;
   }
   
   /* Labels */
   .checkin-container label {
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 18px; /* was 16px */
+    font-weight: 600;
     color: #34495e;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     display: block;
   }
   
@@ -252,12 +262,12 @@ body, html {
 /* New refined welcome & layout tweaks */
 .welcome-message {
   margin-top: -10px;
-  margin-bottom: 38px;
+  margin-bottom: 42px;
   text-align: center;
-  font-size: 17px;
+  font-size: 19px; /* was 17px */
   color: #455a64;
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .mood-level-label { display: block; font-weight: 600; margin-top: 10px; margin-bottom: 8px; letter-spacing: .3px; }
@@ -280,6 +290,31 @@ body, html {
 .history-block { height: 320px; margin-top: 60px; position: relative; }
 .history-block h3 { margin-top: 0; margin-bottom: 24px; text-align: center; font-size: 22px; letter-spacing: .5px; }
 
+/* White container for chart visibility */
+.history-chart-box {
+  height: 100%;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 26px 28px 32px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.history-chart-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,255,255,0.75));
+  pointer-events: none;
+  mix-blend-mode: normal;
+}
+
+@media screen and (max-width: 768px) {
+  .history-chart-box { padding: 18px 16px 24px; }
+}
+
 /* Reduce vertical separation in flat mode */
 .checkin-container label { margin-top: 6px; }
 .mood-labels { margin-top: 2px; margin-bottom: 14px; }
@@ -293,7 +328,10 @@ body, #root { display: flex; flex-direction: column; min-height: 100vh; }
 .checkin-container h3::before { background: linear-gradient(to right, rgba(0,0,0,0), rgba(44,62,80,.22), rgba(0,0,0,0)); }
 
 @media screen and (max-width: 768px) {
-  .welcome-message { font-size: 15.5px; margin-bottom: 30px; }
+  .welcome-message { font-size: 17px; margin-bottom: 34px; }
+  .checkin-container h2 { font-size: 34px !important; }
+  .checkin-container h3 { font-size: 24px; margin: 30px 0 16px; }
+  .checkin-container label { font-size: 17px; }
   .history-block { margin-top: 50px; height: 300px; }
   .mic-btn { width: 44px; height: 44px; }
 }
@@ -301,6 +339,9 @@ body, #root { display: flex; flex-direction: column; min-height: 100vh; }
   .textarea-row { flex-direction: column; }
   .mic-btn { align-self: flex-start; }
   .history-block { margin-top: 45px; }
+  .checkin-container h2 { font-size: 30px !important; }
+  .checkin-container h3 { font-size: 22px; }
+  .welcome-message { font-size: 16px; }
 }
 
 /* Remove decorative floating radial blobs */
@@ -362,5 +403,4 @@ body, #root { display: flex; flex-direction: column; min-height: 100vh; }
   .checkin-container h2::after { display: none !important; }
   .checkin-container h3::before { display: none !important; }
 }
-/* === END FLAT MODE OVERRIDES === */
   

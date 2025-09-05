@@ -9,7 +9,6 @@ body, html, #root {
     overflow-x: hidden;
   }
   
-  /* Decorative Floating Bubbles */
   .library-container::before,
   .library-container::after {
     content: '';
@@ -32,11 +31,10 @@ body, html, #root {
     bottom: -200px;
     width: 400px;
     height: 600px;
-    background: radial-gradient(circle, #64b5f6 0%, #90caf9 100%);
+    background: radial-gradient(circle, #64b5f6 0%, #f9a390 100%);
     opacity: 0.15;
   }
   
-  /* Library Page Styling */
   .library-container {
     width: 100%;
     padding: 60px 40px;
@@ -47,7 +45,6 @@ body, html, #root {
     animation: float 8s ease-in-out infinite;
   }
   
-  /* Card Container */
   .library-card {
     background: rgba(255, 255, 255, 0.95);
     padding: 40px 30px;
@@ -59,11 +56,7 @@ body, html, #root {
     backdrop-filter: blur(6px);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-  
-  .library-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
-  }
+
   
   .library-card h1 {
     font-size: 32px;
@@ -78,7 +71,6 @@ body, html, #root {
     margin: 0 auto;
   }
   
-  /* Search and Filters */
   .library-controls {
     display: flex;
     justify-content: space-between;
@@ -96,7 +88,7 @@ body, html, #root {
   
   .search-box input,
   .category-filter select {
-    padding: 10px 14px;
+    padding: 10px 24px;
     border-radius: 10px;
     border: 1.5px solid #bdc3c7;
     font-size: 14px;
@@ -112,7 +104,6 @@ body, html, #root {
     box-shadow: 0 0 12px rgba(52, 152, 219, 0.2);
   }
   
-  /* Content List */
   .content-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -123,7 +114,6 @@ body, html, #root {
     width: 100%;
   }
   
-  /* Individual Content Card */
   .content-card {
     background: rgba(255, 255, 255, 0.95);
     padding: 30px 25px;
@@ -190,7 +180,7 @@ body, html, #root {
   .content-card a {
     display: inline-block;
     text-decoration: none;
-    color: #3498db;
+    color: #3498db31;
     font-weight: 600;
     font-size: 14px;
     padding: 8px 16px;
@@ -255,6 +245,13 @@ body, html, #root {
 .recommend-button:hover {
   background-color: #2980b9;
 }
+.resource-stats { display:flex; gap:24px; flex-wrap:wrap; margin:26px 0 10px; font-size:0.9rem; }
+.resource-stats .stat { background:#ffffff; padding:8px 16px; border-radius:30px; box-shadow:0 2px 4px rgba(0,0,0,0.08); border:1px solid #e2e8f0; font-weight:500; letter-spacing:.3px; }
+.resource-stats .stat strong { font-weight:700; color:#1f6fa5; margin-left:4px; }
+.resource-stats .stat.total strong { color:#2c3e50; }
+.resource-stats .stat.articles strong { color:#1d6fa5; }
+.resource-stats .stat.videos strong { color:#8e44ad; }
+.resource-stats .stat.exercises strong { color:#27ae60; }
 /* === FLAT MODE OVERRIDES (remove container/card look) === */
 .library-container { 
   background: linear-gradient(135deg, #e3f2fd 0%, #f8fafc 70%, #f1f8e9 100%) !important; 
@@ -307,6 +304,60 @@ body, html, #root {
 
 /* Recommend button flatten */
 .recommend-button { box-shadow: none !important; border-radius: 24px !important; }
+
+/* ===== New Sectioned Layout Styles ===== */
+.library-sections-wrapper { width: 100%; max-width: 1320px; margin: 10px auto 120px; display: flex; flex-direction: column; gap: 90px; }
+
+.library-section { position: relative; }
+.library-section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+.library-section-header h2 { margin: 0; font-size: 2rem; font-weight: 700; letter-spacing: .6px; background: linear-gradient(90deg,#2c3e50,#1f6fa5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.count-badge { background: linear-gradient(90deg,#3498db,#27ae60); color: #fff; font-size: .85rem; padding: 6px 14px; border-radius: 999px; font-weight: 600; letter-spacing: .5px; box-shadow: 0 4px 10px rgba(52,152,219,.35); }
+
+/* Section specific backgrounds */
+.bg-section {
+  padding: 42px 42px 60px;
+  border-radius: 28px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+}
+.bg-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(1.5px);
+  background: linear-gradient(180deg,rgba(255,255,255,0.82),rgba(255,255,255,0.78));
+  pointer-events: none;
+}
+
+.articles-section { background-image: url('../asserts/books.jpg'); }
+.videos-section { background-image: url('../asserts/videos.png'); }
+.exercises-section { background-image: url('../asserts/exercises.jpeg'); }
+
+/* Inner content above overlay */
+.bg-section > * { position: relative; z-index: 1; }
+
+/* Tiered list differentiator */
+.content-list.tiered { margin-top: 0 !important; gap: 40px !important; }
+.content-list.tiered .content-card { background: rgba(255,255,255,0.72) !important; }
+
+.empty-hint { color: #5a6c7d; font-style: italic; margin: 0 4px 0 2px; }
+
+/* Section separation accent */
+.library-section::after { content: ""; position: absolute; left: 0; bottom: -46px; width: 100%; height: 2px; background: linear-gradient(to right, rgba(0,0,0,0), rgba(44,62,80,0.16), rgba(0,0,0,0)); }
+.library-section:last-of-type::after { display: none; }
+
+@media (max-width: 900px) {
+  .library-sections-wrapper { gap: 70px; }
+  .library-section-header h2 { font-size: 1.75rem; }
+}
+@media (max-width: 600px) {
+  .library-sections-wrapper { gap: 60px; }
+  .library-section-header { margin-bottom: 22px; }
+  .library-section-header h2 { font-size: 1.55rem; }
+}
 
 /* Responsive tweaks */
 @media (max-width: 900px) {
