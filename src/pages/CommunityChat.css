@@ -30,6 +30,7 @@ html, body {
     min-width: 280px;
     max-width: 320px;
     height: 100%;
+    font-family: 'Poppins', sans-serif;
     background: linear-gradient(180deg, #3498db 0%, #2980b9 100%);
     color: white;
     padding: 25px;

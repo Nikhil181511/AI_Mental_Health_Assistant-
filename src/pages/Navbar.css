@@ -10,13 +10,17 @@
 
 .logo {
   color: white;
-  font-size: 1.5rem;
+  font-family: 'Poppins', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3rem);
+
   font-weight: bold;
 }
 
 .nav-links-desktop {
   display: flex;
   list-style: none;
+    font-weight: 700;
+
   gap: 24px;
   margin: 0;
   padding: 0;

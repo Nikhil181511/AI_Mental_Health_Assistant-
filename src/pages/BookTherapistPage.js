@@ -17,6 +17,8 @@ const BookTherapistPage = () => {
   const [therapists, setTherapists] = useState([]);
   const [isBooking, setIsBooking] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [selectedTherapist, setSelectedTherapist] = useState(null);
 
   // Fetch data on mount
   useEffect(() => {
@@ -30,9 +32,9 @@ const BookTherapistPage = () => {
     ]).then(() => setLoading(false))
     .catch(err => {
       console.error("Error loading initial data:", err);
-      setLoading(false); // Ensure loading state is cleared even on error
+      setLoading(false);
     });
-  }, []);
+  }, [user, loadingUser]);
 
   const fetchAppointments = async () => {
     try {
@@ -50,22 +52,192 @@ const BookTherapistPage = () => {
   const fetchTherapists = async () => {
     try {
       const { data } = await axios.get('http://localhost:8000/therapists');
-      setTherapists(data);
+      const templates = {
+        1: { experience: '5 years of experience', languages: 'Fluent in English, Hindi, Konkani', rating: 'Top-Rated', sessions: '120 happy client sessions', price: '₹2500 for 50 min', description: "Specialized in anxiety, depression, and stress management. I use evidence-based approaches to help you overcome life's challenges.", image: 'doc1.jpg', verified: true, availability: 'Tomorrow, 06 Sep, 07:30 pm IST' },
+        2: { experience: '8 years of experience', languages: 'Fluent in English, Hindi, Marathi', rating: 'Top-Rated', sessions: '200+ happy client sessions', price: '₹3000 for 50 min', description: 'Expert in trauma recovery and PTSD treatment. I provide a safe space for healing and growth.', image: 'doc2.jpg', verified: true, availability: 'Today, 05 Sep, 08:00 pm IST' },
+        3: { experience: '6 years of experience', languages: 'Fluent in English, Hindi, Konkani', rating: 'Highly Rated', sessions: '150 happy client sessions', price: '₹2800 for 50 min', description: 'Focused on family dynamics, relationship counseling, and communication improvement.', image: 'doc3.jpg', verified: true, availability: 'Tomorrow, 06 Sep, 06:00 pm IST' },
+        4: { experience: '7 years of experience', languages: 'Fluent in English, Hindi, Kannada', rating: 'Top-Rated', sessions: '180 happy client sessions', price: '₹2700 for 50 min', description: 'Specializing in mood disorders with a compassionate, holistic approach to mental wellness.', image: 'doc4.jpg', verified: true, availability: 'Today, 05 Sep, 09:30 pm IST' },
+        5: { experience: '4 years of experience', languages: 'Fluent in English, Hindi, Konkani', rating: 'Highly Rated', sessions: '90 happy client sessions', price: '₹2400 for 50 min', description: 'Integrating mindfulness and meditation techniques for stress reduction and emotional balance.', image: 'doc5.jpg', verified: true, availability: 'Tomorrow, 06 Sep, 05:30 pm IST' },
+        6: { experience: '9 years of experience', languages: 'Fluent in English, Hindi, Punjabi', rating: 'Top-Rated', sessions: '250+ happy client sessions', price: '₹3200 for 50 min', description: 'Expert in child development, behavioral issues, and family support systems.', image: 'doc6.jpg', verified: true, availability: 'Today, 05 Sep, 04:00 pm IST' },
+        7: { experience: '10 years of experience', languages: 'Fluent in English, Hindi, Tulu', rating: 'Top-Rated', sessions: '300+ happy client sessions', price: '₹3500 for 50 min', description: 'Comprehensive addiction recovery programs with ongoing support and relapse prevention.', image: 'doc7.jpg', verified: true, availability: 'Tomorrow, 06 Sep, 07:00 pm IST' },
+        8: { experience: '6 years of experience', languages: 'Fluent in English, Hindi, Marathi', rating: 'Highly Rated', sessions: '160 happy client sessions', price: '₹2600 for 50 min', description: 'Helping couples and individuals build stronger, healthier relationships through effective communication.', image: 'doc8.jpg', verified: true, availability: 'Today, 05 Sep, 06:30 pm IST' },
+        9: { experience: '5 years of experience', languages: 'Fluent in English, Hindi, Marathi', rating: 'Highly Rated', sessions: '130 happy client sessions', price: '₹2900 for 50 min', description: 'Corporate stress management and work-life balance coaching with proven techniques.', image: 'doc9.jpg', verified: true, availability: 'Tomorrow, 06 Sep, 08:30 pm IST' }
+      };
+
+      const enriched = (Array.isArray(data) ? data : []).map((t, idx) => {
+        const id = t.id || t._id || (idx + 1);
+        const template = templates[id] || {};
+        // Merge so template fills missing fields but backend overrides if provided
+        const merged = { id, ...template, ...t };
+        if (!merged.sessions) {
+          merged.sessions = merged.sessionCount ? `${merged.sessionCount}+ sessions` : 'Experienced professional';
+        }
+        if (!merged.price) {
+          const fallbackPrices = ['₹2400 for 50 min','₹2500 for 50 min','₹2600 for 50 min','₹2700 for 50 min','₹2800 for 50 min','₹2900 for 50 min','₹3000 for 50 min','₹3200 for 50 min','₹3500 for 50 min'];
+          merged.price = fallbackPrices[(id - 1) % fallbackPrices.length];
+        }
+        if (!merged.description) {
+          merged.description = 'Compassionate, client-centered approach focusing on measurable improvement and well-being.';
+        }
+        if (!merged.languages) merged.languages = 'English';
+        if (merged.verified === undefined) merged.verified = true;
+        return merged;
+      });
+      setTherapists(enriched);
     } catch (err) {
       console.error('Error fetching therapists:', err);
-      // Use region-specific mock data if API fails
+      // Use enhanced mock data with professional profiles
       setTherapists([
-        { id: 1, name: "Dr. Priya Naik", specialty: "Cognitive Behavioral Therapy", location: "Panaji, Goa", availability: "Mon-Wed" },
-        { id: 2, name: "Dr. Rajesh Kamath", specialty: "Trauma Therapy", location: "Margao, Goa", availability: "Tue-Fri" },
-        { id: 3, name: "Dr. Sneha D'Souza", specialty: "Family Counseling", location: "Vasco da Gama, Goa", availability: "Mon-Thu" },
-        { id: 4, name: "Dr. Vikram Shetty", specialty: "Depression & Anxiety", location: "Mapusa, Goa", availability: "Wed-Sat" },
-        { id: 5, name: "Dr. Anisha Pai", specialty: "Mindfulness Therapy", location: "Ponda, Goa", availability: "Mon, Wed, Fri" },
-        { id: 6, name: "Dr. Sunita Verma", specialty: "Child Psychology", location: "Calangute, Goa", availability: "Tue-Thu" },
-        { id: 7, name: "Dr. Manoj Prabhu", specialty: "Addiction Counseling", location: "Mangalore, Karnataka", availability: "Mon-Fri" },
-        { id: 8, name: "Dr. Leela Kamat", specialty: "Relationship Therapy", location: "Panjim, Goa", availability: "Tue, Thu, Sat" },
-        { id: 9, name: "Dr. Rahul Sawant", specialty: "Stress Management", location: "Mumbai, Maharashtra", availability: "Mon-Wed, Fri" }
+        { 
+          id: 1, 
+          name: "Dr. Priya Naik", 
+          specialty: "Cognitive Behavioral Therapy", 
+          location: "Panaji, Goa", 
+          availability: "Tomorrow, 06 Sep, 07:30 pm IST",
+          experience: "5 years of experience",
+          languages: "Fluent in English, Hindi, Konkani",
+          rating: "Top-Rated",
+          sessions: "120 happy client sessions",
+          price: "₹2500 for 50 min",
+          description: "Specialized in anxiety, depression, and stress management. I use evidence-based approaches to help you overcome life's challenges.",
+          image: "../asserts/doc1.jpg",
+          verified: true
+        },
+        { 
+          id: 2, 
+          name: "Dr. Rajesh Kamath", 
+          specialty: "Trauma Therapy", 
+          location: "Margao, Goa", 
+          availability: "Today, 05 Sep, 08:00 pm IST",
+          experience: "8 years of experience",
+          languages: "Fluent in English, Hindi, Marathi",
+          rating: "Top-Rated",
+          sessions: "200+ happy client sessions",
+          price: "₹3000 for 50 min",
+          description: "Expert in trauma recovery and PTSD treatment. I provide a safe space for healing and growth.",
+          image: "../asserts/doc2.jpg",
+          verified: true
+        },
+        { 
+          id: 3, 
+          name: "Dr. Sneha D'Souza", 
+          specialty: "Family Counseling", 
+          location: "Vasco da Gama, Goa", 
+          availability: "Tomorrow, 06 Sep, 06:00 pm IST",
+          experience: "6 years of experience",
+          languages: "Fluent in English, Hindi, Konkani",
+          rating: "Highly Rated",
+          sessions: "150 happy client sessions",
+          price: "₹2800 for 50 min",
+          description: "Focused on family dynamics, relationship counseling, and communication improvement.",
+          image: "../asserts/doc3.jpg",
+          verified: true
+        },
+        { 
+          id: 4, 
+          name: "Dr. Vikram Shetty", 
+          specialty: "Depression & Anxiety", 
+          location: "Mapusa, Goa", 
+          availability: "Today, 05 Sep, 09:30 pm IST",
+          experience: "7 years of experience",
+          languages: "Fluent in English, Hindi, Kannada",
+          rating: "Top-Rated",
+          sessions: "180 happy client sessions",
+          price: "₹2700 for 50 min",
+          description: "Specializing in mood disorders with a compassionate, holistic approach to mental wellness.",
+          image: "../asserts/doc4.jpg",
+          verified: true
+        },
+        { 
+          id: 5, 
+          name: "Dr. Anisha Pai", 
+          specialty: "Mindfulness Therapy", 
+          location: "Ponda, Goa", 
+          availability: "Tomorrow, 06 Sep, 05:30 pm IST",
+          experience: "4 years of experience",
+          languages: "Fluent in English, Hindi, Konkani",
+          rating: "Highly Rated",
+          sessions: "90 happy client sessions",
+          price: "₹2400 for 50 min",
+          description: "Integrating mindfulness and meditation techniques for stress reduction and emotional balance.",
+          image: "../asserts/doc5.jpg",
+          verified: true
+        },
+        { 
+          id: 6, 
+          name: "Dr. Sunita Verma", 
+          specialty: "Child Psychology", 
+          location: "Calangute, Goa", 
+          availability: "Today, 05 Sep, 04:00 pm IST",
+          experience: "9 years of experience",
+          languages: "Fluent in English, Hindi, Punjabi",
+          rating: "Top-Rated",
+          sessions: "250+ happy client sessions",
+          price: "₹3200 for 50 min",
+          description: "Expert in child development, behavioral issues, and family support systems.",
+          image: "../asserts/doc6.jpg",
+          verified: true
+        },
+        { 
+          id: 7, 
+          name: "Dr. Manoj Prabhu", 
+          specialty: "Addiction Counseling", 
+          location: "Mangalore, Karnataka", 
+          availability: "Tomorrow, 06 Sep, 07:00 pm IST",
+          experience: "10 years of experience",
+          languages: "Fluent in English, Hindi, Tulu",
+          rating: "Top-Rated",
+          sessions: "300+ happy client sessions",
+          price: "₹3500 for 50 min",
+          description: "Comprehensive addiction recovery programs with ongoing support and relapse prevention.",
+          image: "../asserts/doc7.jpg",
+          verified: true
+        },
+        { 
+          id: 8, 
+          name: "Dr. Leela Kamat", 
+          specialty: "Relationship Therapy", 
+          location: "Panjim, Goa", 
+          availability: "Today, 05 Sep, 06:30 pm IST",
+          experience: "6 years of experience",
+          languages: "Fluent in English, Hindi, Marathi",
+          rating: "Highly Rated",
+          sessions: "160 happy client sessions",
+          price: "₹2600 for 50 min",
+          description: "Helping couples and individuals build stronger, healthier relationships through effective communication.",
+          image: "../asserts/doc8.jpg",
+          verified: true
+        },
+        { 
+          id: 9, 
+          name: "Dr. Rahul Sawant", 
+          specialty: "Stress Management", 
+          location: "Mumbai, Maharashtra", 
+          availability: "Tomorrow, 06 Sep, 08:30 pm IST",
+          experience: "5 years of experience",
+          languages: "Fluent in English, Hindi, Marathi",
+          rating: "Highly Rated",
+          sessions: "130 happy client sessions",
+          price: "₹2900 for 50 min",
+          description: "Corporate stress management and work-life balance coaching with proven techniques.",
+          image: "../asserts/doc9.jpg",
+          verified: true
+        }
       ]);
     }
+  };
+
+  const openBookingModal = (therapist) => {
+    setSelectedTherapist(therapist);
+    setForm(prev => ({ ...prev, therapistId: therapist.id }));
+    setShowBookingModal(true);
+  };
+
+  const closeBookingModal = () => {
+    setShowBookingModal(false);
+    setSelectedTherapist(null);
+    // Reset form
+    setForm({ name: '', phone: '', datetime: '', concern: '', therapistId: '' });
   };
 
   const submitForm = async () => {
@@ -74,23 +246,33 @@ const BookTherapistPage = () => {
       return;
     }
     
+    if (!form.name || !form.phone || !form.datetime) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
     setIsBooking(true);
     try {
       if (!user) throw new Error('User not authenticated');
+      
       // Find selected therapist to include name in the booking data
-      const selectedTherapist = therapists.find(t => t.id === form.therapistId);
+      const selectedTherapistData = therapists.find(t => t.id === form.therapistId);
+      
       // Add therapist name, userId, userEmail to the booking data
       const bookingData = {
         ...form,
-        therapistName: selectedTherapist?.name || 'Unknown therapist',
+        therapistName: selectedTherapistData?.name || 'Unknown therapist',
         status: 'upcoming',
         userId: user.uid,
-        userEmail: user.email
+        userEmail: user.email,
+        createdAt: new Date().toISOString()
       };
+      
       await addDoc(collection(db, 'appointments'), bookingData);
       alert('Appointment booked successfully!');
       setForm({ name: '', phone: '', datetime: '', concern: '', therapistId: '' });
-      fetchAppointments(); // Refresh after booking
+      closeBookingModal();
+      fetchAppointments(); // Refresh appointments list
     } catch (err) {
       console.error('Error booking appointment:', err);
       alert('Failed to book appointment. Please try again.');
@@ -104,188 +286,319 @@ const BookTherapistPage = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const selectTherapist = (therapistId) => {
-    setForm({ ...form, therapistId });
-    
-    // Smooth scroll to booking form after selecting a therapist
-    setTimeout(() => {
-      document.querySelector('.booking-form').scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }, 300);
-  };
+  // Sort appointments into upcoming and past
+  const currentDate = new Date();
+  const upcomingAppointments = appointments.filter(appt => new Date(appt.datetime) > currentDate)
+    .sort((a, b) => new Date(a.datetime) - new Date(b.datetime)); // Earliest first for upcoming
 
-  const getCurrentDate = () => {
-    return new Date().toISOString(); // Get current date in ISO format (same format as datetime input)
-  };
-
-  // Sort appointments into upcoming and past combined
-  const allAppointments = appointments
-    .sort((a, b) => new Date(b.datetime) - new Date(a.datetime)); // Most recent first
+  const completedAppointments = appointments.filter(appt => new Date(appt.datetime) <= currentDate)
+    .sort((a, b) => new Date(b.datetime) - new Date(a.datetime)); // Most recent first for completed
 
   if (loadingUser || loading) {
-    return <div className="loading-container">Loading...</div>;
+    return <div className="loading-container">Loading therapists...</div>;
   }
+
   if (!user) {
-    return <div className="error-message">Please log in to book a therapist.</div>;
+    return (
+      <div className="error-message">
+        <h3>Please log in to book a therapist</h3>
+        <p>You need to be logged in to view and book appointments with our therapists.</p>
+      </div>
+    );
   }
 
   return (
     <div className="therapist-booking-page">
-      <h2>Book a Therapist</h2>
-
+      <h2>Find Your Perfect Therapist</h2>
+      
       <div className="therapists-section">
-        <h3>Available Therapists</h3>
-        <div className="therapists-grid">
+        <div className="therapists-grid-modern">
           {therapists.map((therapist) => (
-            <div 
-              key={therapist.id} 
-              className={`therapist-card ${form.therapistId === therapist.id ? 'selected' : ''}`}
-              onClick={() => selectTherapist(therapist.id)}
-            >
-              <div className="therapist-avatar">
-                {therapist.name.charAt(0)}
+            <div key={therapist.id} className="therapist-card-modern">
+              {/** Compute base numeric price for couples calculation */}
+              {(() => { return null; })()}
+              <div className="therapist-header">
+                <div className="rating-badges">
+                  {therapist.verified && <span className="verified-badge">✓</span>}
+                  <span className="rating-badge">{therapist.rating}</span>
+                  <span className="sessions-badge">{therapist.sessions}</span>
+                </div>
               </div>
-              <div className="therapist-info">
-                <h4>{therapist.name}</h4>
-                <p className="specialty">{therapist.specialty}</p>
-                <p className="location">
-                  <span className="location-icon">📍</span> {therapist.location}
-                </p>
-                <p className="availability">Available: {therapist.availability}</p>
+              
+              <div className="therapist-profile">
+                <div className="therapist-avatar-modern">
+                  <img 
+                    src={therapist.image?.startsWith('http') ? therapist.image : require(`../asserts/${therapist.image.replace(/^\.\/|^\.\.\/(asserts\/)?/,'')}`)} 
+                    alt={therapist.name}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                  <div className="avatar-fallback" style={{display: 'none'}}>
+                    {therapist.name.charAt(0)}
+                  </div>
+                </div>
+                
+                <div className="therapist-details">
+                  <h3 className="therapist-name">
+                    {therapist.name}
+                    {therapist.verified && <span className="verify-check">✓</span>}
+                  </h3>
+                  <p className="therapist-specialty">{therapist.specialty}</p>
+                  <p className="therapist-experience">{therapist.experience}</p>
+                  <p className="therapist-languages">{therapist.languages}</p>
+                </div>
               </div>
-              <div className="select-indicator"></div>
+              
+              <div className="therapist-description">
+                <p>{therapist.description}</p>
+              </div>
+              
+              <div className="appointment-info">
+                <div className="availability">
+                  <div className="availability-time">
+                    {therapist.availability}
+                  </div>
+                </div>
+                
+                <div className="pricing-booking">
+                  <div className="pricing-info">
+                    <div className="price-individual">
+                      <strong>
+                        Individuals: {therapist.price || 'Pricing on request'}
+                      </strong>
+                    </div>
+                    <div className="price-couples">
+                        {(() => {
+                          if (!therapist.price) return 'Couples Session: Pricing on request';
+                          // Extract only the first standalone number (base fee) ignoring the "50" from "50 min"
+                          const match = String(therapist.price).match(/(\d[\d,]*)/); // first numeric block
+                          if (!match) return 'Couples Session: Pricing on request';
+                          const base = parseInt(match[1].replace(/,/g, ''), 10);
+                          if (Number.isNaN(base)) return 'Couples Session: Pricing on request';
+                          return `Couples Session: ₹${base + 500} for 50 min`;
+                        })()}
+                    </div>
+                  </div>
+                  
+                  <button 
+                    className="book-session-btn"
+                    onClick={() => openBookingModal(therapist)}
+                  >
+                    Book Your Session
+                  </button>
+                  
+                  <div className="session-features">
+                    <span className="feature">⚡ Instant Confirmation</span>
+                    <span className="feature">📹 Google Meet</span>
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="booking-form">
-        <div className="form-field">
-          <label htmlFor="name">Full Name</label>
-          <input
-            id="name"
-            className="form-input"
-            name="name"
-            placeholder="Enter your full name"
-            value={form.name}
-            onChange={handleChange}
-          />
-        </div>
-        
-        <div className="form-field">
-          <label htmlFor="phone">Phone Number</label>
-          <input
-            id="phone"
-            className="form-input"
-            name="phone"
-            placeholder="Enter your phone number"
-            value={form.phone}
-            onChange={handleChange}
-            type="tel"
-          />
-        </div>
-        
-        <div className="form-field">
-          <label htmlFor="datetime">Preferred Date & Time</label>
-          <input
-            id="datetime"
-            className="form-input"
-            name="datetime"
-            value={form.datetime}
-            onChange={handleChange}
-            type="datetime-local"
-          />
-        </div>
-        
-        <div className="form-field">
-          <label htmlFor="concern">Your Concerns</label>
-          <textarea
-            id="concern"
-            className="form-textarea"
-            name="concern"
-            placeholder="Please describe your concerns briefly..."
-            value={form.concern}
-            onChange={handleChange}
-          />
-        </div>
+      {/* Booking Modal */}
+      {showBookingModal && (
+        <div className="modal-overlay" onClick={closeBookingModal}>
+          <div className="booking-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Book Appointment with {selectedTherapist?.name}</h3>
+              <button className="close-btn" onClick={closeBookingModal}>×</button>
+            </div>
+            
+            <div className="modal-content">
+              <div className="selected-therapist-info">
+                <div className="therapist-avatar-small">
+                  <img 
+                    src={selectedTherapist?.image?.startsWith('http') ? selectedTherapist.image : require(`../asserts/${selectedTherapist?.image.replace(/^\.\/|^\.\.\/(asserts\/)?/,'')}`)} 
+                    alt={selectedTherapist?.name}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                  <div className="avatar-fallback-small" style={{display: 'none'}}>
+                    {selectedTherapist?.name.charAt(0)}
+                  </div>
+                </div>
+                <div>
+                  <h4>{selectedTherapist?.name}</h4>
+                  <p>{selectedTherapist?.specialty}</p>
+                  <p className="price-highlight">{selectedTherapist?.price}</p>
+                </div>
+              </div>
+              
+              <div className="booking-form-modal">
+                <div className="form-field">
+                  <label htmlFor="modal-name">Full Name *</label>
+                  <input
+                    id="modal-name"
+                    className="form-input"
+                    name="name"
+                    placeholder="Enter your full name"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                
+                <div className="form-field">
+                  <label htmlFor="modal-phone">Phone Number *</label>
+                  <input
+                    id="modal-phone"
+                    className="form-input"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    value={form.phone}
+                    onChange={handleChange}
+                    type="tel"
+                    required
+                  />
+                </div>
+                
+                <div className="form-field">
+                  <label htmlFor="modal-datetime">Preferred Date & Time *</label>
+                  <input
+                    id="modal-datetime"
+                    className="form-input"
+                    name="datetime"
+                    value={form.datetime}
+                    onChange={handleChange}
+                    type="datetime-local"
+                    min={new Date().toISOString().slice(0, 16)}
+                    required
+                  />
+                </div>
+                
+                <div className="form-field">
+                  <label htmlFor="modal-concern">Your Concerns (Optional)</label>
+                  <textarea
+                    id="modal-concern"
+                    className="form-textarea"
+                    name="concern"
+                    placeholder="Please describe your concerns briefly... This helps the therapist prepare for your session."
+                    value={form.concern}
+                    onChange={handleChange}
+                    rows="4"
+                  />
+                </div>
 
-        <button
-          onClick={submitForm}
-          disabled={isBooking || !form.therapistId}
-          className={`submit-button ${isBooking ? 'loading' : ''}`}
-        >
-          {isBooking ? 'Booking...' : 'Book Appointment'}
-        </button>
-        
-        {!form.therapistId && 
-          <p className="selection-note">Please select a therapist above</p>
-        }
-      </div>
+                <div className="modal-actions">
+                  <button
+                    onClick={closeBookingModal}
+                    className="cancel-btn"
+                    disabled={isBooking}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={submitForm}
+                    disabled={isBooking || !form.name || !form.phone || !form.datetime}
+                    className="confirm-booking-btn"
+                  >
+                    {isBooking ? 'Booking...' : 'Confirm Booking'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-      {/* Appointment History - Upcoming and Completed */}
+      {/* Appointment History */}
       <div className="appointments-section">
-        <h3>Upcoming Appointments</h3>
-        {allAppointments.filter(appt => new Date(appt.datetime) > new Date()).length ? (
-          allAppointments.filter(appt => new Date(appt.datetime) > new Date()).map((appt) => {
-            const therapist = therapists.find(t => t.id === appt.therapistId);
-            const apptDate = new Date(appt.datetime);
-            return (
-              <div key={appt.id} className="appointment-card upcoming-history pro-appt-card">
-                <div className="appt-status-tag upcoming-tag"></div>
-                <div className="appt-details-row">
-                  <span className="appt-label highlight-label"><b>Therapist: </b></span>
-                  <span className="appt-value">{therapist?.name || 'No therapist selected'}</span>
-                </div>
-                <div className="appt-details-row">
-                  <span className="appt-label highlight-label"><b>Name: </b></span>
-                  <span className="appt-value">{appt.name}</span>
-                </div>
-                <div className="appt-details-row">
-                  <span className="appt-label highlight-label"><b>Date & Time: </b></span>
-                  <span className="appt-value">{apptDate.toLocaleString()}</span>
-                </div>
-                <div className="appt-details-row">
-                  <span className="appt-label highlight-label"><b>Concerns: </b></span>
-                  <span className="appt-value">{appt.concern}</span>
-                </div>
+        <h3>Your Appointments</h3>
+        
+        <div className="appointments-tabs">
+          <div className="tab-content">
+            <h4>Upcoming Appointments</h4>
+            {upcomingAppointments.length > 0 ? (
+              upcomingAppointments.map((appt) => {
+                const therapist = therapists.find(t => t.id === appt.therapistId);
+                const apptDate = new Date(appt.datetime);
+                return (
+                  <div key={appt.id} className="appointment-card upcoming">
+                    <div className="appointment-status">Upcoming</div>
+                    <div className="appointment-details">
+                      <div className="detail-row">
+                        <span className="label"><b>Therapist:</b></span>
+                        <span className="value">{therapist?.name || appt.therapistName}</span>
+                      </div>
+                      <div className="detail-row">
+                        <span className="label"><b>Date & Time:</b></span>
+                        <span className="value">{apptDate.toLocaleString()}</span>
+                      </div>
+                      <div className="detail-row">
+                        <span className="label"><b>Patient:</b></span>
+                        <span className="value">{appt.name}</span>
+                      </div>
+                      <div className="detail-row">
+                        <span className="label"><b>Phone:</b></span>
+                        <span className="value">{appt.phone}</span>
+                      </div>
+                      {appt.concern && (
+                        <div className="detail-row">
+                          <span className="label"><b>Concerns:</b></span>
+                          <span className="value">{appt.concern}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="empty-state">
+                <p>No upcoming appointments. Book your first session above!</p>
               </div>
-            );
-          })
-        ) : (
-          <p>No upcoming appointments</p>
-        )}
-        <h3 style={{marginTop: '40px'}}>Completed Appointments</h3>
-        {allAppointments.filter(appt => new Date(appt.datetime) <= new Date()).length ? (
-          allAppointments.filter(appt => new Date(appt.datetime) <= new Date()).map((appt) => {
-            const therapist = therapists.find(t => t.id === appt.therapistId);
-            const apptDate = new Date(appt.datetime);
-            return (
-              <div key={appt.id} className="appointment-card completed-history pro-appt-card">
-                <div className="appt-status-tag completed-tag"></div>
-                <div className="appt-details-row">
-                  <span className="appt-label highlight-label"><b>Therapist: </b></span>
-                  <span className="appt-value">{therapist?.name || 'No therapist selected'}</span>
-                </div>
-                <div className="appt-details-row">
-                  <span className="appt-label highlight-label"><b>Name: </b></span>
-                  <span className="appt-value">{appt.name}</span>
-                </div>
-                <div className="appt-details-row">
-                  <span className="appt-label highlight-label"><b>Date & Time: </b></span>
-                  <span className="appt-value">{apptDate.toLocaleString()}</span>
-                </div>
-                <div className="appt-details-row">
-                  <span className="appt-label highlight-label"><b>Concerns: </b></span>
-                  <span className="appt-value">{appt.concern}</span>
-                </div>
+            )}
+          </div>
+
+          <div className="tab-content">
+            <h4>Completed Appointments</h4>
+            {completedAppointments.length > 0 ? (
+              completedAppointments.map((appt) => {
+                const therapist = therapists.find(t => t.id === appt.therapistId);
+                const apptDate = new Date(appt.datetime);
+                return (
+                  <div key={appt.id} className="appointment-card completed">
+                    <div className="appointment-status completed-status">Completed</div>
+                    <div className="appointment-details">
+                      <div className="detail-row">
+                        <span className="label"><b>Therapist:</b></span>
+                        <span className="value">{therapist?.name || appt.therapistName}</span>
+                      </div>
+                      <div className="detail-row">
+                        <span className="label"><b>Date & Time:</b></span>
+                        <span className="value">{apptDate.toLocaleString()}</span>
+                      </div>
+                      <div className="detail-row">
+                        <span className="label"><b>Patient:</b></span>
+                        <span className="value">{appt.name}</span>
+                      </div>
+                      <div className="detail-row">
+                        <span className="label"><b>Phone:</b></span>
+                        <span className="value">{appt.phone}</span>
+                      </div>
+                      {appt.concern && (
+                        <div className="detail-row">
+                          <span className="label"><b>Concerns:</b></span>
+                          <span className="value">{appt.concern}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="empty-state">
+                <p>No completed appointments yet.</p>
               </div>
-            );
-          })
-        ) : (
-          <p>No completed appointments</p>
-        )}
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

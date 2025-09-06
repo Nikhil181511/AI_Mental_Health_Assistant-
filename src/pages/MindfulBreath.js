@@ -202,54 +202,58 @@ const MindfulBreath = () => {
           </div>
         )}
 
-        {/* Breathing Sphere */}
-        <BreathingCircle isExpanding={isExpanding} />
-
-        {/* Inhale / Exhale Indicator */}
-        <div className="text-center status-block">
-          <p className="inhale-exhale">{isPaused ? 'Paused' : (isExpanding ? 'Inhale' : 'Exhale')}</p>
-          <p>Cycles: {cycles}</p>
-          {isPaused && <p className="pause-message">Session paused - click Resume to continue</p>}
+        {/* Desktop Left Panel - Breathing Sphere */}
+        <div className="desktop-left-panel">
+          <BreathingCircle isExpanding={isExpanding} />
+          
+          {/* Inhale / Exhale Indicator */}
+          <div className="status-block">
+            <p className="inhale-exhale">{isPaused ? 'Paused' : (isExpanding ? 'Inhale' : 'Exhale')}</p>
+            <p>Cycles: {cycles}</p>
+            {isPaused && <p className="pause-message">Session paused - click Resume to continue</p>}
+          </div>
         </div>
 
-        {/* Session Time + Start / Pause Controls */}
-        <div className="session-time-controls">
-          <div className="progress-section compact">
-            <div className="time-display">
-              <p className="time-label">Session time: {formatTime(seconds)}</p>
-              {isGameRunning && (
-                <p className="time-remaining">Remaining: {formatTime(remainingTime)}</p>
+        {/* Desktop Right Panel - Controls */}
+        <div className="desktop-right-panel">
+          {/* Session Time + Start / Pause Controls */}
+          <div className="session-time-controls">
+            <div className="progress-section compact">
+              <div className="time-display">
+                <p className="time-label">Session time: {formatTime(seconds)}</p>
+                {isGameRunning && (
+                  <p className="time-remaining">Remaining: {formatTime(remainingTime)}</p>
+                )}
+              </div>
+              <div className="progress-container">
+                <div className="progress-bar" style={{ width: `${progress}%` }}></div>
+              </div>
+            </div>
+            {/* Music Selector moved above the session controls */}
+            <div className="music-selector-footer inline" style={{marginTop: '10px'}}>
+              <label htmlFor="music-select">Background Music:</label>
+              <select id="music-select" className="music-select" value={selectedTrack} onChange={handleTrackChange}>
+                {MUSIC_TRACKS.map(track => (
+                  <option key={track.url} value={track.url}>{track.label}</option>
+                ))}
+              </select>
+              {selectedTrack && (
+                <audio ref={audioRef} src={selectedTrack} loop />
               )}
             </div>
-            <div className="progress-container">
-              <div className="progress-bar" style={{ width: `${progress}%` }}></div>
+            <div className="session-controls inline">
+              {!isGameRunning ? (
+                <button className="btn start" onClick={handleStartGame}>Start Session</button>
+              ) : (
+                <>
+                  <button className="btn pause" onClick={handlePauseResumeGame}>
+                    {isPaused ? 'Resume' : 'Pause'}
+                  </button>
+                  <button className="btn stop" onClick={handleStopGame}>Stop Session</button>
+                </>
+              )}
             </div>
           </div>
-          <div className="session-controls inline">
-            {!isGameRunning ? (
-              <button className="btn start" onClick={handleStartGame}>Start Session</button>
-            ) : (
-              <>
-                <button className="btn pause" onClick={handlePauseResumeGame}>
-                  {isPaused ? 'Resume' : 'Pause'}
-                </button>
-                <button className="btn stop" onClick={handleStopGame}>Stop Session</button>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Music Selector (kept for functionality) */}
-        <div className="music-selector-footer inline">
-          <label htmlFor="music-select">Background Music:</label>
-            <select id="music-select" className="music-select" value={selectedTrack} onChange={handleTrackChange}>
-              {MUSIC_TRACKS.map(track => (
-                <option key={track.url} value={track.url}>{track.label}</option>
-              ))}
-            </select>
-            {selectedTrack && (
-              <audio ref={audioRef} src={selectedTrack} loop />
-            )}
         </div>
       </div>
     </div>
@@ -257,4 +261,3 @@ const MindfulBreath = () => {
 };
 
 export default MindfulBreath;
-

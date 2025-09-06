@@ -71,8 +71,8 @@ const AIAssistantPage = () => {
       <>
         <div className="ai-chat-fullscreen">
             <div className="ai-chat-header">
-                <Brain size={32} className="icon" />
-                <span>AI Assistant</span>
+                <Brain size={42} className="icon" />
+                <span> AI Assistant</span>
             </div>
 
             <div className="ai-chat-messages">
