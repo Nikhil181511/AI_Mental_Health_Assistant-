@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth, db, collection, query, where, getDocs } from './firebase';
-import './userprofile.css';
+import './EditProfile.css';
 
 export default function UserProfile() {
   const [saving, setSaving] = useState(false);
