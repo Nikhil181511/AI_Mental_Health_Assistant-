@@ -36,6 +36,7 @@ const CheckInPage = () => {
   const [desc, setDesc] = useState('');
   const [checkIns, setCheckIns] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuggestion, setShowSuggestion] = useState(false);
 
   const {
     transcript,
@@ -109,7 +110,6 @@ const CheckInPage = () => {
     try {
       // Add check-in data to Firestore with user ID
       await addDoc(collection(db, "checkins"), newData);
-      
       // Store latest mood data for recommendations
       const moodData = {
         mood: `${MOOD_LABELS[moodRating]} - ${desc}`.trim(),
@@ -120,10 +120,9 @@ const CheckInPage = () => {
         userId: user.uid
       };
       localStorage.setItem('latestMoodData', JSON.stringify(moodData));
-      
-      alert("Mood check-in saved!");
       setDesc('');
       fetchCheckIns();
+      setShowSuggestion(true); // Show smart popup after check-in
     } catch (error) {
       alert("❌ Failed to submit.");
       console.error(error);
@@ -164,6 +163,27 @@ const CheckInPage = () => {
 
   // Don't render if user is not authenticated
   if (!user) return null;
+
+  // Smart suggestion logic
+  const getSuggestions = () => {
+    if (moodRating <= 2) {
+      return [
+        { label: 'Try Meditation', link: '/Game' },
+        { label: 'Chat with AI Assistant', link: '/assistant' },
+        { label: 'Book a Therapist', link: '/Book' }
+      ];
+    } else if (moodRating === 3) {
+      return [
+        { label: 'Try Meditation', link: '/Game' },
+        { label: 'Chat with AI Assistant', link: '/assistant' }
+      ];
+    } else {
+      return [
+        { label: 'Explore Mindfulness Library', link: '/library' },
+        { label: 'Join Community', link: '/community' }
+      ];
+    }
+  };
 
   return (
     <div className="checkin-container">
@@ -240,6 +260,35 @@ const CheckInPage = () => {
           </div>
         </div>
       )}
+
+      {/* Smart Suggestion Popup Modal */}
+      {showSuggestion && (
+        <div className="smart-popup-overlay">
+          <div className="smart-popup-modal">
+            <button className="smart-popup-close" onClick={() => setShowSuggestion(false)} aria-label="Close">
+              {/* X icon SVG, smaller and red */}
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <h3>What would you like to do next?</h3>
+            
+            <div className="smart-popup-actions">
+              {getSuggestions().map((s, idx) => (
+                <button
+                  key={s.label}
+                  className="smart-popup-btn"
+                  onClick={() => {
+                    setShowSuggestion(false);
+                    navigate(s.link);
+                  }}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      
     </div>
   );
 };
