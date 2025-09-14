@@ -41,7 +41,7 @@ export default function Navbar() {
           <li><Link to="/library" className="nav-link">Library</Link></li>
           <li><Link to="/assistant" className="nav-link">AI Assistant</Link></li>
           <li><Link to="/community" className="nav-link">Community</Link></li>
-          <li><Link to="/profile" className="nav-link">DocuMe</Link></li>
+          <li><Link to="/docume" className="nav-link">DocuMe</Link></li>
           <li><Link to="/Book" className="nav-link">Book Therapist</Link></li>
           <li><Link to="/Game" className="nav-link">Relax</Link></li>
           <li style={{position: 'relative'}}>
@@ -50,7 +50,7 @@ export default function Navbar() {
             </span>
             {showProfileMenu && (
               <div style={{position: 'absolute', top: 36, right: 0, background: '#fff', borderRadius: 8, boxShadow: '0 2px 12px #eee', padding: '12px 18px', minWidth: 140, zIndex: 100}}>
-                <div style={{marginBottom: 10, cursor: 'pointer', color: '#1890ff', fontWeight: 'bold'}} onClick={() => setShowProfileMenu(false)}>Edit Profile</div>
+                <div style={{marginBottom: 10, cursor: 'pointer', color: '#1890ff', fontWeight: 'bold'}} onClick={() => { setShowProfileMenu(false); navigate('/edit-profile'); }}>Edit Profile</div>
                 <div style={{cursor: 'pointer', color: '#e74c3c', fontWeight: 'bold'}} onClick={async () => { await signOut(auth); navigate('/'); setShowProfileMenu(false); }}>Logout</div>
               </div>
             )}
@@ -109,7 +109,7 @@ export default function Navbar() {
             <Link to="/community" className="nav-link-mobile" onClick={closeSidebar}>Community</Link>
           </li>
           <li>
-            <Link to="/profile" className="nav-link-mobile" onClick={closeSidebar}>DocuMe</Link>
+            <Link to="/docume" className="nav-link-mobile" onClick={closeSidebar}>DocuMe</Link>
           </li>
           <li>
             <Link to="/Book" className="nav-link-mobile" onClick={closeSidebar}>Book Therapist</Link>
@@ -138,7 +138,7 @@ export default function Navbar() {
                 maxWidth: '90vw',
                 textAlign: 'center',
               }}>
-                <div style={{marginBottom: 16, cursor: 'pointer', color: '#1890ff', fontWeight: 'bold', fontSize: 18, padding: '10px 0'}} onClick={() => setShowProfileMenu(false)}>Edit Profile</div>
+                <div style={{marginBottom: 16, cursor: 'pointer', color: '#1890ff', fontWeight: 'bold', fontSize: 18, padding: '10px 0'}} onClick={() => { setShowProfileMenu(false); navigate('/edit-profile'); }}>Edit Profile</div>
                 <div style={{cursor: 'pointer', color: '#e74c3c', fontWeight: 'bold', fontSize: 18, padding: '10px 0'}} onClick={async () => { await signOut(auth); navigate('/'); setShowProfileMenu(false); }}>Logout</div>
               </div>
             )}

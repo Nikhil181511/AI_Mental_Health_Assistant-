@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
 import { auth, db, collection, query, where, getDocs } from './firebase';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import './userprofile.css';
 
-export default function UserProfile() {
+export default function EditProfile() {
+  const [user, setUser] = useState(null);
+  const [editName, setEditName] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
   const [streak, setStreak] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editName, setEditName] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -30,12 +28,10 @@ export default function UserProfile() {
           // Calculate streak
           let streakCount = 0;
           if (entries.length > 0) {
-            // Get unique check-in dates
             const uniqueDates = Array.from(new Set(entries.map(e => {
               const d = new Date(e.timestamp);
               return d.toISOString().slice(0, 10);
             })));
-            // Streak calculation
             let today = new Date().toISOString().slice(0, 10);
             if (uniqueDates.includes(today)) {
               streakCount = 1;
@@ -54,12 +50,10 @@ export default function UserProfile() {
           setStreak(0);
         }
       }
-      setLoading(false);
     };
     fetchUserData();
   }, []);
 
-  // Update user name in Firebase Auth
   const handleSaveProfile = async () => {
     if (!editName.trim()) {
       setError('Name cannot be empty');
@@ -71,7 +65,7 @@ export default function UserProfile() {
       if (auth.currentUser) {
         await auth.currentUser.updateProfile({ displayName: editName });
         setUser({ ...auth.currentUser });
-        setShowEditModal(false);
+        navigate('/userprofile');
       }
     } catch (err) {
       setError('Failed to update name');
@@ -79,33 +73,36 @@ export default function UserProfile() {
     setSaving(false);
   };
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      navigate('/');
-    } catch (error) {
-      console.error('Error signing out:', error);
+  const handleChangePassword = async () => {
+    if (user && user.email) {
+      await sendPasswordResetEmail(auth, user.email);
+      alert('Password reset email sent!');
     }
   };
 
-  if (loading) return <div className="profile-container">Loading...</div>;
+  if (!user) return <div className="profile-container">Loading...</div>;
 
   return (
     <div className="profile-container">
-      <h2>User Profile</h2>
-      {user && (
-        <div className="profile-details">
-          <div><strong>Name:</strong> <span>{user.displayName || 'N/A'}</span></div>
-          <div><strong>Email:</strong> <span>{user.email}</span></div>
-          <div><strong>Current Streak:</strong> <span>{streak} days</span></div>
-        </div>
-      )}
+      <h2>Edit Profile</h2>
+      <div className="profile-details">
+        <div><strong>Name:</strong> <span>{user.displayName || 'N/A'}</span></div>
+        <div><strong>Email:</strong> <span>{user.email}</span></div>
+        <div><strong>Current Streak:</strong> <span>{streak} days</span></div>
+      </div>
       <div className="profile-actions">
-        <button className="edit-profile-btn" onClick={() => navigate('/edit-profile')}>
-          Edit Profile
+        <label>Update Name:
+          <input type="text" value={editName} onChange={e => setEditName(e.target.value)} />
+        </label>
+        {error && <div className="error-message">{error}</div>}
+        <button className="save-btn" onClick={handleSaveProfile} disabled={saving}>
+          {saving ? 'Saving...' : 'Save Changes'}
         </button>
-        <button className="logout-btn" onClick={handleLogout}>
-          Logout
+        <button className="change-password-btn" onClick={handleChangePassword}>
+          Change Password
+        </button>
+        <button className="cancel-btn" onClick={() => navigate('/userprofile')}>
+          Cancel
         </button>
       </div>
     </div>

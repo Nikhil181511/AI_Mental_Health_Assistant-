@@ -3,12 +3,13 @@ import WelcomePage from './pages/WelcomePage';
 import UserProfile from './pages/UserProfile';
 import LoginPage from './pages/LoginPage';
 import Navbar from './pages/Navbar';
+import EditProfile from './pages/EditProfile';
 import CheckInPage from './pages/CheckInPage';
 import RecommendationsPage from './pages/RecommendationsPage';
 import AIAssistantPage from './pages/AIAssistantPage';
 import LibraryPage from './pages/LibraryPage';
 import BookTherapistPage from './pages/BookTherapistPage';
-import ProfileAnalysisPage from './pages/ProfileAnalysis';
+import DocuMe from './pages/ProfileAnalysis';
 import BookTherapistPages from './pages/BookTherapistPage';
 import MindfulBreathPage from './pages/MindfulBreath';
 import RecommendationsPages from './pages/RecommendationsPage';
@@ -31,11 +32,12 @@ function AppContent() {
         <Route path="/library" element={<LibraryPage />} />
         <Route path="/book" element={<BookTherapistPage />} />
         <Route path="/community" element={<CommunityChat />} />
-        <Route path="/profile" element={<ProfileAnalysisPage />} />
+        <Route path="/docume" element={<DocuMe />} />
         <Route path="/userprofile" element={<UserProfile />} />
         <Route path="/Book" element={<BookTherapistPages />} />
         <Route path="/Game" element={<MindfulBreathPage />} />
         <Route path="/Recommend" element={<RecommendationsPages />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </>
