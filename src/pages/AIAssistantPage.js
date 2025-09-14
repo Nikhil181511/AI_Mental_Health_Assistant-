@@ -31,7 +31,7 @@ const AIAssistantPage = () => {
         const history = [...messages, userMessage].slice(-5);
 
         try {
-            const response = await fetch("http://localhost:8000/chat", {
+            const response = await fetch("https://mh-backend-8w1j.onrender.com", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ text: input, history }),
