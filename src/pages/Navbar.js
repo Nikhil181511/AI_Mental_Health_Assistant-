@@ -3,9 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from './firebase';
 import './Navbar.css';
+import { User } from 'lucide-react';
 
 export default function Navbar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
@@ -35,36 +37,23 @@ export default function Navbar() {
         </div>
         <ul className="nav-links-desktop">
          
-          <li>
-            <Link to="/checkin" className="nav-link">Check-in</Link>
-          </li>
-          <li>
-            <Link to="/library" className="nav-link">Library</Link>
-          </li>
-          <li>
-            <Link to="/assistant" className="nav-link">AI Assistant</Link>
-          </li>
-          <li>
-            <Link to="/community" className="nav-link">Community</Link>
-          </li>
-          <li>
-            <Link to="/profile" className="nav-link">DocuMe</Link>
-          </li>
-          <li>
-            <Link to="/Book" className="nav-link">Book Therapist</Link>
-          </li>
-          <li>
-            <Link to="/Game" className="nav-link">Relax</Link>
-          </li>
-          <li>
-            <button onClick={handleLogout} className="logout-btn">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16,17 21,12 16,7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-              </svg>
-              Logout
-            </button>
+          <li><Link to="/checkin" className="nav-link">Check-in</Link></li>
+          <li><Link to="/library" className="nav-link">Library</Link></li>
+          <li><Link to="/assistant" className="nav-link">AI Assistant</Link></li>
+          <li><Link to="/community" className="nav-link">Community</Link></li>
+          <li><Link to="/profile" className="nav-link">DocuMe</Link></li>
+          <li><Link to="/Book" className="nav-link">Book Therapist</Link></li>
+          <li><Link to="/Game" className="nav-link">Relax</Link></li>
+          <li style={{position: 'relative'}}>
+            <span style={{cursor: 'pointer', display: 'flex', alignItems: 'center'}} onClick={() => setShowProfileMenu(v => !v)}>
+              <User size={24} style={{marginRight: 6}} />
+            </span>
+            {showProfileMenu && (
+              <div style={{position: 'absolute', top: 36, right: 0, background: '#fff', borderRadius: 8, boxShadow: '0 2px 12px #eee', padding: '12px 18px', minWidth: 140, zIndex: 100}}>
+                <div style={{marginBottom: 10, cursor: 'pointer', color: '#1890ff', fontWeight: 'bold'}} onClick={() => setShowProfileMenu(false)}>Edit Profile</div>
+                <div style={{cursor: 'pointer', color: '#e74c3c', fontWeight: 'bold'}} onClick={async () => { await signOut(auth); navigate('/'); setShowProfileMenu(false); }}>Logout</div>
+              </div>
+            )}
           </li>
         </ul>
       </nav>
@@ -128,15 +117,31 @@ export default function Navbar() {
           <li>
             <Link to="/Game" className="nav-link-mobile" onClick={closeSidebar}>Relax</Link>
           </li>
-          <li className="logout-item">
-            <button onClick={handleLogout} className="logout-btn-mobile">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16,17 21,12 16,7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-              </svg>
-              Logout
-            </button>
+          <li style={{position: 'relative'}}>
+            <span style={{cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '8px'}} onClick={() => setShowProfileMenu(v => !v)}>
+              <h4 style={{color: 'white', margin: 0, marginRight: 6}}>Profile</h4>
+              <User size={28} style={{marginRight: 6}} />
+            </span>
+            {showProfileMenu && (
+              <div style={{
+                position: 'absolute',
+                top: 40,
+                right: 0,
+                left: 'auto',
+                background: '#fff',
+                borderRadius: 12,
+                boxShadow: '0 4px 16px #ddd',
+                padding: '18px 24px',
+                minWidth: 160,
+                zIndex: 100,
+                width: 'max-content',
+                maxWidth: '90vw',
+                textAlign: 'center',
+              }}>
+                <div style={{marginBottom: 16, cursor: 'pointer', color: '#1890ff', fontWeight: 'bold', fontSize: 18, padding: '10px 0'}} onClick={() => setShowProfileMenu(false)}>Edit Profile</div>
+                <div style={{cursor: 'pointer', color: '#e74c3c', fontWeight: 'bold', fontSize: 18, padding: '10px 0'}} onClick={async () => { await signOut(auth); navigate('/'); setShowProfileMenu(false); }}>Logout</div>
+              </div>
+            )}
           </li>
         </ul>
       </div>

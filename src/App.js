@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import WelcomePage from './pages/WelcomePage';
+import UserProfile from './pages/UserProfile';
 import LoginPage from './pages/LoginPage';
 import Navbar from './pages/Navbar';
 import CheckInPage from './pages/CheckInPage';
@@ -31,6 +32,7 @@ function AppContent() {
         <Route path="/book" element={<BookTherapistPage />} />
         <Route path="/community" element={<CommunityChat />} />
         <Route path="/profile" element={<ProfileAnalysisPage />} />
+        <Route path="/userprofile" element={<UserProfile />} />
         <Route path="/Book" element={<BookTherapistPages />} />
         <Route path="/Game" element={<MindfulBreathPage />} />
         <Route path="/Recommend" element={<RecommendationsPages />} />
