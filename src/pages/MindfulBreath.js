@@ -32,6 +32,12 @@ const BreathingCircle = ({ isExpanding }) => {
 };
 
 const MindfulBreath = () => {
+  // Streak restore integration
+  const urlParams = new URLSearchParams(window.location.search);
+  const restoreStreakMode = urlParams.get('restoreStreak') === '1';
+  const restoreDuration = parseInt(urlParams.get('duration'), 10) || 2;
+  // Track if streak restore is completed
+  const [restoreCompleted, setRestoreCompleted] = useState(false);
   // Music selector state
   const [selectedTrack, setSelectedTrack] = useState(MUSIC_TRACKS[0].url);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -53,7 +59,7 @@ const MindfulBreath = () => {
       interval = setInterval(() => {
         setIsExpanding(prev => !prev);
         setCycles(prev => prev + 1);
-      }, 4800); // Changed from 5000ms to 4800ms for more natural breathing
+      }, 4800);
       timer = setInterval(() => {
         setSeconds(prev => {
           const totalSessionSeconds = duration * 60;
@@ -62,14 +68,17 @@ const MindfulBreath = () => {
             setIsPaused(false);
             clearInterval(interval);
             clearInterval(timer);
-            
             // Auto-stop music when session ends
             if (audioRef.current) {
               audioRef.current.pause();
               audioRef.current.currentTime = 0;
               setIsPlaying(false);
             }
-            
+            // Streak restore logic: if in restore mode and session >= restoreDuration
+            if (restoreStreakMode && duration >= restoreDuration && !restoreCompleted) {
+              localStorage.setItem('restoreStreakDone', '1');
+              setRestoreCompleted(true);
+            }
             return totalSessionSeconds;
           }
           return prev + 1;
@@ -80,7 +89,7 @@ const MindfulBreath = () => {
       clearInterval(interval);
       clearInterval(timer);
     };
-  }, [isGameRunning, isPaused, duration]);
+  }, [isGameRunning, isPaused, duration, restoreStreakMode, restoreDuration, restoreCompleted]);
 
   const handleTrackChange = (e) => {
     setSelectedTrack(e.target.value);
@@ -161,6 +170,26 @@ const MindfulBreath = () => {
 
   return (
     <div className="mindful-container">
+      {/* Streak restore completion message */}
+      {restoreStreakMode && restoreCompleted && (
+        <div
+          style={{position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.25)', zIndex: 200}}
+          onClick={() => setRestoreCompleted(false)}
+        >
+          <div
+            style={{background: '#fff', borderRadius: '16px', maxWidth: 350, margin: '80px auto', padding: 24, boxShadow: '0 4px 24px #aaa', textAlign: 'center', position: 'relative'}}
+            onClick={e => e.stopPropagation()}
+          >
+            <button
+              style={{position: 'absolute', top: 8, right: 8, background: 'transparent', border: 'none', fontSize: 20, cursor: 'pointer'}}
+              aria-label="Close"
+              onClick={() => setRestoreCompleted(false)}
+            >×</button>
+            <h3>✅ Streak Restored!</h3>
+            <p>Your streak will be restored on your next check-in.</p>
+          </div>
+        </div>
+      )}
       {/* Heading */}
       <div className="card-header">
         <div className="card-title">
@@ -171,18 +200,19 @@ const MindfulBreath = () => {
       </div>
 
       <div className="card-content">
-        {/* Timer Settings */}
+        {/* Timer Settings - always at top */}
         {showSettings && (
-          <div className="settings-container">
+          <div className="settings-container" style={{marginBottom: '40px'}}>
             <label htmlFor="duration" className="settings-label">Set meditation length (minutes):</label>
             <input
               type="number"
               id="duration"
               className="duration-input"
               value={duration}
-              onChange={handleDurationChange}
+              onChange={restoreStreakMode ? undefined : handleDurationChange}
               min="1"
-              max="60"
+              max="30"
+              disabled={restoreStreakMode}
             />
             <div className="duration-slider">
               <input
@@ -199,24 +229,22 @@ const MindfulBreath = () => {
                 <span>30 min</span>
               </div>
             </div>
+            {restoreStreakMode && (
+              <div style={{marginTop: '10px', color: '#fa709a', fontWeight: 'bold'}}>Timer is set to 2 min for streak restore</div>
+            )}
           </div>
         )}
 
-        {/* Desktop Left Panel - Breathing Sphere */}
+        {/* Sphere and session controls below timer */}
         <div className="desktop-left-panel">
           <BreathingCircle isExpanding={isExpanding} />
-          
-          {/* Inhale / Exhale Indicator */}
           <div className="status-block">
             <p className="inhale-exhale">{isPaused ? 'Paused' : (isExpanding ? 'Inhale' : 'Exhale')}</p>
             <p>Cycles: {cycles}</p>
             {isPaused && <p className="pause-message">Session paused - click Resume to continue</p>}
           </div>
         </div>
-
-        {/* Desktop Right Panel - Controls */}
         <div className="desktop-right-panel">
-          {/* Session Time + Start / Pause Controls */}
           <div className="session-time-controls">
             <div className="progress-section compact">
               <div className="time-display">
@@ -229,7 +257,6 @@ const MindfulBreath = () => {
                 <div className="progress-bar" style={{ width: `${progress}%` }}></div>
               </div>
             </div>
-            {/* Music Selector moved above the session controls */}
             <div className="music-selector-footer inline" style={{marginTop: '10px'}}>
               <label htmlFor="music-select">Background Music:</label>
               <select id="music-select" className="music-select" value={selectedTrack} onChange={handleTrackChange}>

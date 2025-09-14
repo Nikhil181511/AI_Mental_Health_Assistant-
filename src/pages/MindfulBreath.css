@@ -184,6 +184,7 @@ body::after {
 .card-content {
   padding: 40px;
   text-align: center;
+    padding-bottom: 80px;
   min-height: calc(100vh - 200px);
   display: flex;
   flex-direction: column;
@@ -191,15 +192,20 @@ body::after {
 }
 
 .settings-container {
-  margin-bottom: 40px;
+  margin-bottom: 60px;
   padding: 30px;
-  background: var(--glass-bg);
+  background: var(--bg-card);
   backdrop-filter: blur(15px);
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-md);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  z-index: 100;
+  width: 100%;
+  max-width: 700px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .settings-container::before {
@@ -247,12 +253,16 @@ body::after {
 .duration-slider {
   width: 100%;
   margin-top: 20px;
+  display: block;
+  overflow: visible;
 }
 
 .slider {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
+  min-width: 200px;
+  max-width: 700px;
   height: 15px;
   border-radius: 8px;
   background: var(--accent-gradient);
@@ -261,6 +271,8 @@ body::after {
   transition: all 0.3s ease;
   opacity: 0.8;
   box-shadow: var(--shadow-sm);
+  position: relative;
+  z-index: 9999;
 }
 
 .slider:hover {
@@ -750,6 +762,7 @@ body::after {
   
   .card-content {
     padding: 15px;
+    padding-bottom: 100px;
   }
   
   .card-title {
@@ -801,6 +814,7 @@ body::after {
   .card-content {
     min-height: auto;
     padding: 15px;
+    padding-bottom: 80px;
   }
   
   .circle-container {

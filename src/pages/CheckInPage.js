@@ -37,6 +37,11 @@ const CheckInPage = () => {
   const [checkIns, setCheckIns] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuggestion, setShowSuggestion] = useState(false);
+  // Streak system state
+  const [streak, setStreak] = useState(0);
+  const [lastCheckInDate, setLastCheckInDate] = useState(null);
+  const [streakBroken, setStreakBroken] = useState(false);
+  const [showRestoreModal, setShowRestoreModal] = useState(false);
 
   const {
     transcript,
@@ -69,10 +74,9 @@ const CheckInPage = () => {
 
   const fetchCheckIns = async () => {
     if (!user) return;
-    
     try {
       const q = query(
-        collection(db, "checkins"), 
+        collection(db, "checkins"),
         where("userId", "==", user.uid)
       );
       const querySnapshot = await getDocs(q);
@@ -81,10 +85,68 @@ const CheckInPage = () => {
         return {
           ...data,
           id: doc.id,
-          formattedTime: format(new Date(data.timestamp), 'MMM d, HH:mm')
+          formattedTime: format(new Date(data.timestamp), 'MMM d, HH:mm'),
+          dateOnly: format(new Date(data.timestamp), 'yyyy-MM-dd')
         };
       });
-      setCheckIns(entries.sort((a, b) => a.timestamp - b.timestamp));
+      const sortedEntries = entries.sort((a, b) => a.timestamp - b.timestamp);
+      setCheckIns(sortedEntries);
+      // Streak calculation
+      let streakCount = 0;
+      let lastDate = null;
+      let broken = false;
+      let restoreStreakDone = localStorage.getItem('restoreStreakDone') === '1';
+      if (sortedEntries.length > 0) {
+        // Get unique check-in dates (ignore multiple check-ins per day)
+        const uniqueDates = Array.from(new Set(sortedEntries.map(e => e.dateOnly)));
+        // Start from the last date and go backwards
+        let today = format(new Date(), 'yyyy-MM-dd');
+        let yesterday = format(new Date(Date.now() - 86400000), 'yyyy-MM-dd');
+        // If last check-in is today, streak continues
+        if (uniqueDates[uniqueDates.length - 1] === today) {
+          streakCount = 1;
+          lastDate = today;
+          for (let i = uniqueDates.length - 2; i >= 0; i--) {
+            let expected = format(new Date(Date.parse(uniqueDates[i + 1]) - 86400000), 'yyyy-MM-dd');
+            if (uniqueDates[i] === expected) {
+              streakCount++;
+              lastDate = uniqueDates[i];
+            } else {
+              break;
+            }
+          }
+          broken = false;
+        } else if (uniqueDates[uniqueDates.length - 1] === yesterday) {
+          // Missed today, streak can be restored
+          if (restoreStreakDone) {
+            // Restore streak: treat as if today was checked in
+            streakCount = 1;
+            lastDate = today;
+            for (let i = uniqueDates.length - 1; i >= 0; i--) {
+              let expected = format(new Date(Date.parse(i === uniqueDates.length - 1 ? today : uniqueDates[i + 1]) - 86400000), 'yyyy-MM-dd');
+              if (uniqueDates[i] === expected) {
+                streakCount++;
+                lastDate = uniqueDates[i];
+              } else {
+                break;
+              }
+            }
+            broken = false;
+            localStorage.removeItem('restoreStreakDone');
+          } else {
+            streakCount = 0;
+            lastDate = yesterday;
+            broken = true;
+          }
+        } else {
+          streakCount = 0;
+          lastDate = uniqueDates[uniqueDates.length - 1];
+          broken = true;
+        }
+      }
+      setStreak(streakCount);
+      setLastCheckInDate(lastDate);
+      setStreakBroken(broken);
     } catch (error) {
       console.error("Error fetching check-ins:", error);
     }
@@ -187,6 +249,11 @@ const CheckInPage = () => {
 
   return (
     <div className="checkin-container">
+      <div className="streak-badge" style={{position: 'absolute', top: 20, right: 20, zIndex: 10}}>
+        <span style={{background: '#ffe066', borderRadius: '20px', padding: '8px 16px', fontWeight: 'bold', boxShadow: '0 2px 8px #eee', display: 'flex', alignItems: 'center'}}>
+          🔥 Streak: {streak}
+        </span>
+      </div>
       <h2>Your Mood Check‑In</h2>
       <p className="welcome-message">Hi {user.displayName || user.email}, lets start the day with a checkin.</p>
 
@@ -257,6 +324,38 @@ const CheckInPage = () => {
                 />
               </LineChart>
             </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+      {/* Streak restore modal */}
+      {streakBroken && (
+        <div className="restore-streak-modal" style={{position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.25)', zIndex: 100}}>
+          <div style={{background: '#fff', borderRadius: '16px', maxWidth: 350, margin: '80px auto', padding: 24, boxShadow: '0 4px 24px #aaa', textAlign: 'center'}}>
+            <h3>Streak Broken 😔</h3>
+            <p>You missed your daily check-in. Restore your streak by completing a 2 min meditation:</p>
+            <button style={{margin: '12px 0', padding: '10px 18px', background: '#52c41a', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer'}} onClick={() => { setStreakBroken(false); navigate('/Game?restoreStreak=1&duration=2'); }}>
+              Do 2 min Meditation
+            </button>
+            <br />
+            <button style={{marginTop: '8px', color: '#e74c3c', background: 'none', border: 'none', fontWeight: 'bold', cursor: 'pointer'}} onClick={() => setStreakBroken(false)}>
+              Skip (Start new streak)
+            </button>
+          </div>
+        </div>
+      )}
+      {/* Restore modal navigation (to MindfulBreath.js) */}
+      {showRestoreModal && (
+        <div className="restore-streak-modal" style={{position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.25)', zIndex: 101}}>
+          <div style={{background: '#fff', borderRadius: '16px', maxWidth: 350, margin: '80px auto', padding: 24, boxShadow: '0 4px 24px #aaa', textAlign: 'center'}}>
+            <h3>Restore Streak</h3>
+            <p>Complete a 2 min meditation session to restore your streak.</p>
+            <button style={{margin: '12px 0', padding: '10px 18px', background: '#1890ff', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer'}} onClick={() => { setShowRestoreModal(false); setStreakBroken(false); navigate('/MindfulBreath?restoreStreak=1&duration=2'); }}>
+              Go to Meditation
+            </button>
+            <br />
+            <button style={{marginTop: '8px', color: '#e74c3c', background: 'none', border: 'none', fontWeight: 'bold', cursor: 'pointer'}} onClick={() => { setShowRestoreModal(false); setStreakBroken(false); }}>
+              Cancel
+            </button>
           </div>
         </div>
       )}
