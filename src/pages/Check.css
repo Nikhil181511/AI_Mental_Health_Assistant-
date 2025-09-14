@@ -855,7 +855,7 @@ body,
   }
   
   .smart-popup-modal h3 {
-    font-size: 22px;
+    font-size: 25px;
     margin-bottom: 28px;
   }
   
@@ -902,8 +902,9 @@ body,
   }
   
   .smart-popup-modal h3 {
-    background: linear-gradient(135deg, #041d63 0%, #5388d1 100%);
+    background: linear-gradient(135deg, #041d63 0%, #050387 100%);
     background-clip: text;
+    font-size: 28px;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }

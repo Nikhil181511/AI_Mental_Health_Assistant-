@@ -364,10 +364,12 @@ const CheckInPage = () => {
       {showSuggestion && (
         <div className="smart-popup-overlay">
           <div className="smart-popup-modal">
-            <button className="smart-popup-close" onClick={() => setShowSuggestion(false)} aria-label="Close">
-              {/* X icon SVG, smaller and red */}
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
+            <span
+              className="smart-popup-close"
+              onClick={() => setShowSuggestion(false)}
+              aria-label="Close"
+              style={{position: 'absolute', top: 1, right: 4, fontSize: 32, color: '#e74c3c', cursor: 'pointer', fontWeight: 'bold', background: 'none', border: 'none'}}
+            >x</span>
             <h3>What would you like to do next?</h3>
             
             <div className="smart-popup-actions">
