@@ -74,13 +74,13 @@ const MindfulBreath = () => {
               audioRef.current.currentTime = 0;
               setIsPlaying(false);
             }
-            // Streak restore logic: if in restore mode and session >= restoreDuration
+            // Streak restore logic: always set both flags
             if (restoreStreakMode && duration >= restoreDuration && !restoreCompleted) {
-              // Save previous streak value for restoration
-              const prevStreak = localStorage.getItem('prevStreakValue');
-              if (prevStreak) {
-                localStorage.setItem('restoreStreakValue', prevStreak);
+              let prevStreak = localStorage.getItem('prevStreakValue');
+              if (!prevStreak) {
+                prevStreak = '1'; // fallback to 1 if missing
               }
+              localStorage.setItem('restoreStreakValue', prevStreak);
               localStorage.setItem('restoreStreakDone', '1');
               setRestoreCompleted(true);
             }
@@ -179,16 +179,18 @@ const MindfulBreath = () => {
       {restoreStreakMode && restoreCompleted && (
         <div
           style={{position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.25)', zIndex: 200}}
-          onClick={() => setRestoreCompleted(false)}
         >
           <div
             style={{background: '#fff', borderRadius: '16px', maxWidth: 350, margin: '80px auto', padding: 24, boxShadow: '0 4px 24px #aaa', textAlign: 'center', position: 'relative'}}
-            onClick={e => e.stopPropagation()}
           >
             <button
               style={{position: 'absolute', top: 8, right: 8, background: 'transparent', border: 'none', fontSize: 20, cursor: 'pointer'}}
               aria-label="Close"
-              onClick={() => setRestoreCompleted(false)}
+              onClick={() => {
+                setRestoreCompleted(false);
+                // Set flag to trigger restore on next check-in
+                localStorage.setItem('triggerStreakRestore', '1');
+              }}
             >×</button>
             <h3>✅ Streak Restored!</h3>
             <p>Your streak will be restored on your next check-in.</p>

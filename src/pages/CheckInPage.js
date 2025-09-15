@@ -91,12 +91,14 @@ const CheckInPage = () => {
       });
       const sortedEntries = entries.sort((a, b) => a.timestamp - b.timestamp);
       setCheckIns(sortedEntries);
-      // Improved streak calculation: streak only breaks if user misses two consecutive days
-      let streakCount = 0;
-      let lastDate = null;
-      let broken = false;
-      let restoreStreakDone = localStorage.getItem('restoreStreakDone') === '1';
-      let restoreStreakValue = localStorage.getItem('restoreStreakValue');
+  // Improved streak calculation: streak only breaks if user misses two consecutive days
+  let streakCount = 0;
+  let lastDate = null;
+  let broken = false;
+  let restoreStreakDone = localStorage.getItem('restoreStreakDone') === '1';
+  let restoreStreakValue = localStorage.getItem('restoreStreakValue');
+  let triggerStreakRestore = localStorage.getItem('triggerStreakRestore') === '1';
+  let highestStreak = Number(localStorage.getItem('highestStreak') || '0');
       if (sortedEntries.length > 0) {
         const uniqueDates = Array.from(new Set(sortedEntries.map(e => e.dateOnly)));
         let today = format(new Date(), 'yyyy-MM-dd');
@@ -142,17 +144,25 @@ const CheckInPage = () => {
           broken = true;
         }
       }
-      // Save previous streak value before breaking
-      if (broken && streakCount > 0) {
-        localStorage.setItem('prevStreakValue', streakCount.toString());
+      // Update highest streak
+      if (streakCount > highestStreak) {
+        localStorage.setItem('highestStreak', streakCount.toString());
+        highestStreak = streakCount;
       }
-      // Restore streak if meditation was completed
-      if (restoreStreakDone && restoreStreakValue) {
-        setStreak(Number(restoreStreakValue));
+      // Save highest streak for restore
+      if (broken && highestStreak > 0) {
+        localStorage.setItem('prevStreakValue', highestStreak.toString());
+      }
+      // Restore streak only when user closes notification
+      if (triggerStreakRestore) {
+        const restoreValue = restoreStreakValue || highestStreak || '1';
+        setStreak(Number(restoreValue));
         setStreakBroken(false);
+        setLastCheckInDate(lastDate);
         localStorage.removeItem('restoreStreakDone');
         localStorage.removeItem('restoreStreakValue');
         localStorage.removeItem('prevStreakValue');
+        localStorage.removeItem('triggerStreakRestore');
         return;
       }
       setStreak(streakCount);
@@ -260,8 +270,8 @@ const CheckInPage = () => {
 
   return (
     <div className="checkin-container">
-      <div className="streak-badge" style={{position: 'absolute', top: 20, right: 20, zIndex: 10}}>
-        <span style={{background: '#ffe066', borderRadius: '20px', padding: '8px 16px', fontWeight: 'bold', boxShadow: '0 2px 8px #eee', display: 'flex', alignItems: 'center'}}>
+      <div className="streak-badge" style={{ position: 'absolute', top: 20, right: 20, zIndex: 10 }}>
+        <span style={{ background: '#ffe066', borderRadius: '20px', padding: '8px 16px', fontWeight: 'bold', boxShadow: '0 2px 8px #eee', display: 'flex', alignItems: 'center' }}>
           🔥 Streak: {streak}
         </span>
       </div>
@@ -338,17 +348,26 @@ const CheckInPage = () => {
           </div>
         </div>
       )}
-      {/* Streak restore modal */}
+      {/* Updated streak restore modal with close button */}
       {streakBroken && (
-        <div className="restore-streak-modal" style={{position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.25)', zIndex: 100}}>
-          <div style={{background: '#fff', borderRadius: '16px', maxWidth: 350, margin: '80px auto', padding: 24, boxShadow: '0 4px 24px #aaa', textAlign: 'center'}}>
-            <h3>Streak Broken 😔</h3>
+        <div className="restore-streak-modal">
+          <div>
+            <button
+              className="notification-close"
+              onClick={() => setStreakBroken(false)}
+              aria-label="Close notification"
+            >
+              ×
+            </button>
+            <h3>🔥 Streak Broken 😔</h3>
             <p>You missed your daily check-in. Restore your streak by completing a 2 min meditation:</p>
-            <button style={{margin: '12px 0', padding: '10px 18px', background: '#52c41a', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer'}} onClick={() => { setStreakBroken(false); navigate('/Game?restoreStreak=1&duration=2'); }}>
+            <button onClick={() => {
+              setStreakBroken(false);
+              navigate('/Game?restoreStreak=1&duration=2');
+            }}>
               Do 2 min Meditation
             </button>
-            <br />
-            <button style={{marginTop: '8px', color: '#e74c3c', background: 'none', border: 'none', fontWeight: 'bold', cursor: 'pointer'}} onClick={() => setStreakBroken(false)}>
+            <button onClick={() => setStreakBroken(false)}>
               Skip (Start new streak)
             </button>
           </div>
@@ -356,15 +375,16 @@ const CheckInPage = () => {
       )}
       {/* Restore modal navigation (to MindfulBreath.js) */}
       {showRestoreModal && (
-        <div className="restore-streak-modal" style={{position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.25)', zIndex: 101}}>
-          <div style={{background: '#fff', borderRadius: '16px', maxWidth: 350, margin: '80px auto', padding: 24, boxShadow: '0 4px 24px #aaa', textAlign: 'center'}}>
+        <div className="restore-streak-modal" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.25)', zIndex: 101 }}>
+          <div style={{ background: '#fff', borderRadius: '16px', maxWidth: 350, margin: '80px auto', padding: 24, boxShadow: '0 4px 24px #aaa', textAlign: 'center' }}>
             <h3>Restore Streak</h3>
+            <br />
             <p>Complete a 2 min meditation session to restore your streak.</p>
-            <button style={{margin: '12px 0', padding: '10px 18px', background: '#1890ff', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer'}} onClick={() => { setShowRestoreModal(false); setStreakBroken(false); navigate('/MindfulBreath?restoreStreak=1&duration=2'); }}>
+            <button style={{ margin: '12px 0', padding: '10px 18px', background: '#1890ff', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => { setShowRestoreModal(false); setStreakBroken(false); navigate('/MindfulBreath?restoreStreak=1&duration=2'); }}>
               Go to Meditation
             </button>
             <br />
-            <button style={{marginTop: '8px', color: '#e74c3c', background: 'none', border: 'none', fontWeight: 'bold', cursor: 'pointer'}} onClick={() => { setShowRestoreModal(false); setStreakBroken(false); }}>
+            <button style={{ marginTop: '8px', color: '#e74c3c', background: 'none', border: 'none', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => { setShowRestoreModal(false); setStreakBroken(false); }}>
               Cancel
             </button>
           </div>
@@ -379,10 +399,10 @@ const CheckInPage = () => {
               className="smart-popup-close"
               onClick={() => setShowSuggestion(false)}
               aria-label="Close"
-              style={{position: 'absolute', top: 1, right: 4, fontSize: 32, color: '#e74c3c', cursor: 'pointer', fontWeight: 'bold', background: 'none', border: 'none'}}
+              style={{ position: 'absolute', top: 1, right: 4, fontSize: 32, color: '#e74c3c', cursor: 'pointer', fontWeight: 'bold', background: 'none', border: 'none' }}
             >x</span>
             <h3>What would you like to do next?</h3>
-            
+
             <div className="smart-popup-actions">
               {getSuggestions().map((s, idx) => (
                 <button
@@ -400,7 +420,7 @@ const CheckInPage = () => {
           </div>
         </div>
       )}
-      
+
     </div>
   );
 };

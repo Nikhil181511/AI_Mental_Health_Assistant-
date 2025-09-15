@@ -979,3 +979,152 @@ body,
     transform: rotate(360deg);
   }
 }
+
+/* Streak Notification Box - Top notification style */
+.restore-streak-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0;
+  background: none;
+  pointer-events: none;
+}
+
+.restore-streak-modal > div {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+  padding: 16px 24px;
+  margin: 16px auto;
+  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 
+    0 8px 32px rgb(255, 255, 255),
+    0 0 0 1px rgb(255, 255, 255) inset;
+  text-align: center;
+  position: relative;
+  pointer-events: auto;
+  animation: slideDownNotification 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+@keyframes slideDownNotification {
+  from {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Notification content styling */
+.restore-streak-modal h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: rgb(16, 15, 15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.restore-streak-modal p {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  opacity: 0.95;
+  line-height: 1.4;
+  color: rgb(1, 1, 1);
+}
+
+/* Notification buttons */
+.restore-streak-modal button {
+  margin: 4px 8px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.restore-streak-modal button:first-of-type {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.restore-streak-modal button:first-of-type:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.restore-streak-modal button:last-of-type {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.restore-streak-modal button:last-of-type:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* Close button for notification (optional - you can add an X) */
+.notification-close {
+  position: absolute;
+  right: -12px;
+  top: -21px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 15px;
+  cursor: pointer;
+  padding: 3px;
+  line-height: 1;
+}
+
+.notification-close:hover {
+  color: white;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .restore-streak-modal > div {
+    margin: 12px 16px;
+    padding: 14px 20px;
+    border-radius: 10px;
+  }
+  
+  .restore-streak-modal h3 {
+    font-size: 16px;
+  }
+  
+  .restore-streak-modal p {
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  
+  .restore-streak-modal button {
+    padding: 7px 14px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .restore-streak-modal > div {
+    margin: 8px 12px;
+    padding: 12px 16px;
+  }
+  
+  .restore-streak-modal button {
+    display: block;
+    width: 100%;
+    margin: 6px 0;
+  }
+}

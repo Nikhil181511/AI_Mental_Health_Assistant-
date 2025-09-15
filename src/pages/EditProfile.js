@@ -21,14 +21,15 @@ export default function EditProfile() {
       if (currentUser) {
         setUser(currentUser);
         setEditName(currentUser.displayName || '');
+        // Fetch location and phone from Firestore
         try {
+          // Get streak
           const q = query(
             collection(db, 'checkins'),
             where('userId', '==', currentUser.uid)
           );
           const querySnapshot = await getDocs(q);
           const entries = querySnapshot.docs.map(doc => doc.data());
-          // Calculate streak
           let streakCount = 0;
           if (entries.length > 0) {
             const uniqueDates = Array.from(new Set(entries.map(e => {
@@ -49,6 +50,16 @@ export default function EditProfile() {
             }
           }
           setStreak(streakCount);
+
+          // Get location and phone from users collection
+          const userDocRef = collection(db, 'users');
+          const qUser = query(userDocRef, where('userId', '==', currentUser.uid));
+          const userSnapshot = await getDocs(qUser);
+          if (!userSnapshot.empty) {
+            const userData = userSnapshot.docs[0].data();
+            setEditLocation(userData.location || '');
+            setEditPhone(userData.phone || '');
+          }
         } catch (err) {
           setStreak(0);
         }
@@ -66,8 +77,10 @@ export default function EditProfile() {
     setError('');
     try {
       if (auth.currentUser) {
-        await auth.currentUser.updateProfile({ displayName: editName });
-        setUser({ ...auth.currentUser });
+        // Use updateProfile from firebase/auth
+        const { updateProfile } = await import('firebase/auth');
+        await updateProfile(auth.currentUser, { displayName: editName });
+        setUser({ ...auth.currentUser, displayName: editName });
         // Save location and phone to Firestore
         const userDocRef = collection(db, 'users');
         const qUser = query(userDocRef, where('userId', '==', auth.currentUser.uid));
@@ -75,7 +88,7 @@ export default function EditProfile() {
         if (!userSnapshot.empty) {
           await updateDoc(userSnapshot.docs[0].ref, { location: editLocation, phone: editPhone });
         }
-        navigate('/userprofile');
+  // Do not navigate away; stay on edit profile page
       }
     } catch (err) {
       setError('Failed to update profile');
@@ -119,7 +132,7 @@ export default function EditProfile() {
           {/* Profile Basic Info */}
           <div className="profile-basic-info">
             <h2 className="profile-name">{user.displayName || 'Anonymous User'}</h2>
-            <p className="profile-location">Your Location • Country</p>
+            <p className="profile-location">Location: {editLocation || 'N/A'}</p>
           </div>
 
           {/* Stats Section */}
