@@ -91,17 +91,18 @@ const CheckInPage = () => {
       });
       const sortedEntries = entries.sort((a, b) => a.timestamp - b.timestamp);
       setCheckIns(sortedEntries);
-      // Streak calculation
+      // Improved streak calculation: streak only breaks if user misses two consecutive days
       let streakCount = 0;
       let lastDate = null;
       let broken = false;
       let restoreStreakDone = localStorage.getItem('restoreStreakDone') === '1';
+      let restoreStreakValue = localStorage.getItem('restoreStreakValue');
       if (sortedEntries.length > 0) {
-        // Get unique check-in dates (ignore multiple check-ins per day)
         const uniqueDates = Array.from(new Set(sortedEntries.map(e => e.dateOnly)));
-        // Start from the last date and go backwards
         let today = format(new Date(), 'yyyy-MM-dd');
         let yesterday = format(new Date(Date.now() - 86400000), 'yyyy-MM-dd');
+        let dayBeforeYesterday = format(new Date(Date.now() - 2 * 86400000), 'yyyy-MM-dd');
+
         // If last check-in is today, streak continues
         if (uniqueDates[uniqueDates.length - 1] === today) {
           streakCount = 1;
@@ -117,32 +118,42 @@ const CheckInPage = () => {
           }
           broken = false;
         } else if (uniqueDates[uniqueDates.length - 1] === yesterday) {
-          // Missed today, streak can be restored
-          if (restoreStreakDone) {
-            // Restore streak: treat as if today was checked in
-            streakCount = 1;
-            lastDate = today;
-            for (let i = uniqueDates.length - 1; i >= 0; i--) {
-              let expected = format(new Date(Date.parse(i === uniqueDates.length - 1 ? today : uniqueDates[i + 1]) - 86400000), 'yyyy-MM-dd');
-              if (uniqueDates[i] === expected) {
-                streakCount++;
-                lastDate = uniqueDates[i];
-              } else {
-                break;
-              }
+          // Missed today, but streak is still active
+          streakCount = 1;
+          lastDate = yesterday;
+          for (let i = uniqueDates.length - 2; i >= 0; i--) {
+            let expected = format(new Date(Date.parse(uniqueDates[i + 1]) - 86400000), 'yyyy-MM-dd');
+            if (uniqueDates[i] === expected) {
+              streakCount++;
+              lastDate = uniqueDates[i];
+            } else {
+              break;
             }
-            broken = false;
-            localStorage.removeItem('restoreStreakDone');
-          } else {
-            streakCount = 0;
-            lastDate = yesterday;
-            broken = true;
           }
+          broken = false;
+        } else if (uniqueDates[uniqueDates.length - 1] === dayBeforeYesterday) {
+          // Missed two days, streak broken
+          streakCount = 0;
+          lastDate = uniqueDates[uniqueDates.length - 1];
+          broken = true;
         } else {
           streakCount = 0;
           lastDate = uniqueDates[uniqueDates.length - 1];
           broken = true;
         }
+      }
+      // Save previous streak value before breaking
+      if (broken && streakCount > 0) {
+        localStorage.setItem('prevStreakValue', streakCount.toString());
+      }
+      // Restore streak if meditation was completed
+      if (restoreStreakDone && restoreStreakValue) {
+        setStreak(Number(restoreStreakValue));
+        setStreakBroken(false);
+        localStorage.removeItem('restoreStreakDone');
+        localStorage.removeItem('restoreStreakValue');
+        localStorage.removeItem('prevStreakValue');
+        return;
       }
       setStreak(streakCount);
       setLastCheckInDate(lastDate);

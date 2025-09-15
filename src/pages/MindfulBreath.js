@@ -76,6 +76,11 @@ const MindfulBreath = () => {
             }
             // Streak restore logic: if in restore mode and session >= restoreDuration
             if (restoreStreakMode && duration >= restoreDuration && !restoreCompleted) {
+              // Save previous streak value for restoration
+              const prevStreak = localStorage.getItem('prevStreakValue');
+              if (prevStreak) {
+                localStorage.setItem('restoreStreakValue', prevStreak);
+              }
               localStorage.setItem('restoreStreakDone', '1');
               setRestoreCompleted(true);
             }
