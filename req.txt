@@ -6,7 +6,3 @@ yt-dlp
 requests
 pydantic
 
-
-
-cd Backend; uvicorn main:app --reload
-npm start

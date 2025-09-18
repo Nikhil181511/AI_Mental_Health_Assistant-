@@ -37,11 +37,8 @@ const CheckInPage = () => {
   const [checkIns, setCheckIns] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuggestion, setShowSuggestion] = useState(false);
-  // Streak system state
+  // Simplified streak system state - only increases
   const [streak, setStreak] = useState(0);
-  const [lastCheckInDate, setLastCheckInDate] = useState(null);
-  const [streakBroken, setStreakBroken] = useState(false);
-  const [showRestoreModal, setShowRestoreModal] = useState(false);
 
   const {
     transcript,
@@ -91,82 +88,43 @@ const CheckInPage = () => {
       });
       const sortedEntries = entries.sort((a, b) => a.timestamp - b.timestamp);
       setCheckIns(sortedEntries);
-  // Improved streak calculation: streak only breaks if user misses two consecutive days
-  let streakCount = 0;
-  let lastDate = null;
-  let broken = false;
-  let restoreStreakDone = localStorage.getItem('restoreStreakDone') === '1';
-  let restoreStreakValue = localStorage.getItem('restoreStreakValue');
-  let triggerStreakRestore = localStorage.getItem('triggerStreakRestore') === '1';
-  let highestStreak = Number(localStorage.getItem('highestStreak') || '0');
+
+      // Simplified streak calculation - only counts consecutive days, never decreases
+      let streakCount = 0;
+      
       if (sortedEntries.length > 0) {
         const uniqueDates = Array.from(new Set(sortedEntries.map(e => e.dateOnly)));
-        let today = format(new Date(), 'yyyy-MM-dd');
-        let yesterday = format(new Date(Date.now() - 86400000), 'yyyy-MM-dd');
-        let dayBeforeYesterday = format(new Date(Date.now() - 2 * 86400000), 'yyyy-MM-dd');
+        const today = format(new Date(), 'yyyy-MM-dd');
+        const yesterday = format(new Date(Date.now() - 86400000), 'yyyy-MM-dd');
 
-        // If last check-in is today, streak continues
-        if (uniqueDates[uniqueDates.length - 1] === today) {
+        // Start counting from today or yesterday
+        let startIndex = -1;
+        if (uniqueDates.includes(today)) {
+          startIndex = uniqueDates.indexOf(today);
+        } else if (uniqueDates.includes(yesterday)) {
+          startIndex = uniqueDates.indexOf(yesterday);
+        }
+
+        if (startIndex >= 0) {
           streakCount = 1;
-          lastDate = today;
-          for (let i = uniqueDates.length - 2; i >= 0; i--) {
-            let expected = format(new Date(Date.parse(uniqueDates[i + 1]) - 86400000), 'yyyy-MM-dd');
-            if (uniqueDates[i] === expected) {
+          // Count backwards for consecutive days
+          for (let i = startIndex - 1; i >= 0; i--) {
+            const currentDate = uniqueDates[i];
+            const expectedPreviousDate = format(
+              new Date(Date.parse(uniqueDates[i + 1]) - 86400000), 
+              'yyyy-MM-dd'
+            );
+            
+            if (currentDate === expectedPreviousDate) {
               streakCount++;
-              lastDate = uniqueDates[i];
             } else {
               break;
             }
           }
-          broken = false;
-        } else if (uniqueDates[uniqueDates.length - 1] === yesterday) {
-          streakCount = 1;
-          lastDate = yesterday;
-          for (let i = uniqueDates.length - 2; i >= 0; i--) {
-            let expected = format(new Date(Date.parse(uniqueDates[i + 1]) - 86400000), 'yyyy-MM-dd');
-            if (uniqueDates[i] === expected) {
-              streakCount++;
-              lastDate = uniqueDates[i];
-            } else {
-              break;
-            }
-          }
-          broken = false;
-        } else if (uniqueDates[uniqueDates.length - 1] === dayBeforeYesterday) {
-          // Missed two days, streak broken
-          streakCount = 0;
-          lastDate = uniqueDates[uniqueDates.length - 1];
-          broken = true;
-        } else {
-          streakCount = 0;
-          lastDate = uniqueDates[uniqueDates.length - 1];
-          broken = true;
         }
       }
-      // Update highest streak
-      if (streakCount > highestStreak) {
-        localStorage.setItem('highestStreak', streakCount.toString());
-        highestStreak = streakCount;
-      }
-      // Save highest streak for restore
-      if (broken && highestStreak > 0) {
-        localStorage.setItem('prevStreakValue', highestStreak.toString());
-      }
-      // Restore streak only when user closes notification
-      if (triggerStreakRestore) {
-        const restoreValue = restoreStreakValue || highestStreak || '1';
-        setStreak(Number(restoreValue));
-        setStreakBroken(false);
-        setLastCheckInDate(lastDate);
-        localStorage.removeItem('restoreStreakDone');
-        localStorage.removeItem('restoreStreakValue');
-        localStorage.removeItem('prevStreakValue');
-        localStorage.removeItem('triggerStreakRestore');
-        return;
-      }
+      
       setStreak(streakCount);
-      setLastCheckInDate(lastDate);
-      setStreakBroken(broken);
     } catch (error) {
       console.error("Error fetching check-ins:", error);
     }
@@ -181,8 +139,8 @@ const CheckInPage = () => {
 
     setIsSubmitting(true);
     const newData = {
-      userId: user.uid, // Add user ID to the check-in data
-      userEmail: user.email, // Optional: store user email for reference
+      userId: user.uid,
+      userEmail: user.email,
       moodRating,
       moodDescription: MOOD_LABELS[moodRating],
       description: desc,
@@ -233,7 +191,7 @@ const CheckInPage = () => {
     }
   }, [user]);
 
-  // Page-specific background class (must appear before any conditional return to satisfy hooks rules)
+  // Page-specific background class
   useEffect(() => {
     const rootEl = document.getElementById('root');
     if (rootEl) rootEl.classList.add('checkin-bg');
@@ -344,48 +302,6 @@ const CheckInPage = () => {
                 />
               </LineChart>
             </ResponsiveContainer>
-          </div>
-        </div>
-      )}
-      {/* Updated streak restore modal with close button */}
-      {streakBroken && (
-        <div className="restore-streak-modal">
-          <div>
-            <button
-              className="notification-close"
-              onClick={() => setStreakBroken(false)}
-              aria-label="Close notification"
-            >
-              ×
-            </button>
-            <h3>🔥 Streak Broken 😔</h3>
-            <p>You missed your daily check-in. Restore your streak by completing a 2 min meditation:</p>
-            <button onClick={() => {
-              setStreakBroken(false);
-              navigate('/Game?restoreStreak=1&duration=2');
-            }}>
-              Do 2 min Meditation
-            </button>
-            <button onClick={() => setStreakBroken(false)}>
-              Skip (Start new streak)
-            </button>
-          </div>
-        </div>
-      )}
-      {/* Restore modal navigation (to MindfulBreath.js) */}
-      {showRestoreModal && (
-        <div className="restore-streak-modal" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.25)', zIndex: 101 }}>
-          <div style={{ background: '#fff', borderRadius: '16px', maxWidth: 350, margin: '80px auto', padding: 24, boxShadow: '0 4px 24px #aaa', textAlign: 'center' }}>
-            <h3>Restore Streak</h3>
-            <br />
-            <p>Complete a 2 min meditation session to restore your streak.</p>
-            <button style={{ margin: '12px 0', padding: '10px 18px', background: '#1890ff', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => { setShowRestoreModal(false); setStreakBroken(false); navigate('/MindfulBreath?restoreStreak=1&duration=2'); }}>
-              Go to Meditation
-            </button>
-            <br />
-            <button style={{ marginTop: '8px', color: '#e74c3c', background: 'none', border: 'none', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => { setShowRestoreModal(false); setStreakBroken(false); }}>
-              Cancel
-            </button>
           </div>
         </div>
       )}
