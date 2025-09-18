@@ -120,7 +120,6 @@ const CheckInPage = () => {
           }
           broken = false;
         } else if (uniqueDates[uniqueDates.length - 1] === yesterday) {
-          // Missed today, but streak is still active
           streakCount = 1;
           lastDate = yesterday;
           for (let i = uniqueDates.length - 2; i >= 0; i--) {
