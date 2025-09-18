@@ -74,7 +74,7 @@ MindWell prioritizes your privacy and data security. All personal information an
 
 4. **Start the Backend server:**
 	```bash
-	cd Backend; uvicorn main:app --reload
+	uvicorn main:app --reload
 	```
 ---
 
