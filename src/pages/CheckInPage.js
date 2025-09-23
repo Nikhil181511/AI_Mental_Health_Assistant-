@@ -89,42 +89,18 @@ const CheckInPage = () => {
       const sortedEntries = entries.sort((a, b) => a.timestamp - b.timestamp);
       setCheckIns(sortedEntries);
 
-      // Simplified streak calculation - only counts consecutive days, never decreases
-      let streakCount = 0;
-      
+      // Streak only increases, never decreases, even if user misses days
+      let maxStreak = Number(localStorage.getItem('maxStreak') || '0');
+      let currentStreak = 0;
       if (sortedEntries.length > 0) {
         const uniqueDates = Array.from(new Set(sortedEntries.map(e => e.dateOnly)));
-        const today = format(new Date(), 'yyyy-MM-dd');
-        const yesterday = format(new Date(Date.now() - 86400000), 'yyyy-MM-dd');
-
-        // Start counting from today or yesterday
-        let startIndex = -1;
-        if (uniqueDates.includes(today)) {
-          startIndex = uniqueDates.indexOf(today);
-        } else if (uniqueDates.includes(yesterday)) {
-          startIndex = uniqueDates.indexOf(yesterday);
-        }
-
-        if (startIndex >= 0) {
-          streakCount = 1;
-          // Count backwards for consecutive days
-          for (let i = startIndex - 1; i >= 0; i--) {
-            const currentDate = uniqueDates[i];
-            const expectedPreviousDate = format(
-              new Date(Date.parse(uniqueDates[i + 1]) - 86400000), 
-              'yyyy-MM-dd'
-            );
-            
-            if (currentDate === expectedPreviousDate) {
-              streakCount++;
-            } else {
-              break;
-            }
-          }
+        currentStreak = uniqueDates.length;
+        if (currentStreak > maxStreak) {
+          maxStreak = currentStreak;
+          localStorage.setItem('maxStreak', maxStreak.toString());
         }
       }
-      
-      setStreak(streakCount);
+      setStreak(maxStreak);
     } catch (error) {
       console.error("Error fetching check-ins:", error);
     }

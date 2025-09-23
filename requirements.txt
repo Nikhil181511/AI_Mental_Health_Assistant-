@@ -1,8 +1,7 @@
 fastapi
 uvicorn
 firebase-admin
-google-generativeai
-yt-dlp
-requests
 pydantic
-
+google-generativeai
+requests
+yt-dlp
