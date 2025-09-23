@@ -23,33 +23,9 @@ export default function EditProfile() {
         setEditName(currentUser.displayName || '');
         // Fetch location and phone from Firestore
         try {
-          // Get streak
-          const q = query(
-            collection(db, 'checkins'),
-            where('userId', '==', currentUser.uid)
-          );
-          const querySnapshot = await getDocs(q);
-          const entries = querySnapshot.docs.map(doc => doc.data());
-          let streakCount = 0;
-          if (entries.length > 0) {
-            const uniqueDates = Array.from(new Set(entries.map(e => {
-              const d = new Date(e.timestamp);
-              return d.toISOString().slice(0, 10);
-            })));
-            let today = new Date().toISOString().slice(0, 10);
-            if (uniqueDates.includes(today)) {
-              streakCount = 1;
-              for (let i = uniqueDates.length - 2; i >= 0; i--) {
-                let expected = new Date(Date.parse(uniqueDates[i + 1]) - 86400000).toISOString().slice(0, 10);
-                if (uniqueDates[i] === expected) {
-                  streakCount++;
-                } else {
-                  break;
-                }
-              }
-            }
-          }
-          setStreak(streakCount);
+          // Get highest streak from localStorage
+          const maxStreak = Number(localStorage.getItem('maxStreak') || '0');
+          setStreak(maxStreak);
 
           // Get location and phone from users collection
           const userDocRef = collection(db, 'users');
@@ -87,8 +63,18 @@ export default function EditProfile() {
         const userSnapshot = await getDocs(qUser);
         if (!userSnapshot.empty) {
           await updateDoc(userSnapshot.docs[0].ref, { location: editLocation, phone: editPhone });
+        } else {
+          // Create user document if not exists
+          const { addDoc } = await import('firebase/firestore');
+          await addDoc(userDocRef, {
+            userId: auth.currentUser.uid,
+            location: editLocation,
+            phone: editPhone,
+            email: auth.currentUser.email,
+            name: editName
+          });
         }
-  // Do not navigate away; stay on edit profile page
+        // Do not navigate away; stay on edit profile page
       }
     } catch (err) {
       setError('Failed to update profile');
@@ -119,22 +105,11 @@ export default function EditProfile() {
       <div className="profile-header">
         <div className="profile-header-content">
           <h1 className="profile-title">Edit Profile</h1>
-          
-          {/* Profile Avatar */}
-          <div className="profile-avatar">
-            <img 
-              src={require('../asserts/face.jpg')}
-              alt="Profile"
-              className="avatar-image"
-            />
-          </div>
-
-          {/* Profile Basic Info */}
+          {/* Profile Basic Info (no image) */}
           <div className="profile-basic-info">
             <h2 className="profile-name">{user.displayName || 'Anonymous User'}</h2>
             <p className="profile-location">Location: {editLocation || 'N/A'}</p>
           </div>
-
           {/* Stats Section */}
           <div className="profile-stats">
             <div className="stat-item">
