@@ -38,13 +38,13 @@ export default function Navbar() {
         <ul className="nav-links-desktop">
           <li><Link to="/checkin" className="nav-link">Check-in</Link></li>
           <li><Link to="/task" className="nav-link">Daily Tasks</Link></li>
-          <li><Link to="/leaderboard" className="nav-link">Leaderboard</Link></li>
           <li><Link to="/library" className="nav-link">Library</Link></li>
           <li><Link to="/assistant" className="nav-link">AI Assistant</Link></li>
           <li><Link to="/community" className="nav-link">Community</Link></li>
           <li><Link to="/docume" className="nav-link">DocuMe</Link></li>
           <li><Link to="/Book" className="nav-link">Book Therapist</Link></li>
           <li><Link to="/Game" className="nav-link">Relax</Link></li>
+          <li><Link to="/leaderboard" className="nav-link">Leaderboard</Link></li>
           <li style={{position: 'relative'}}>
             <span style={{cursor: 'pointer', display: 'flex', alignItems: 'center'}} onClick={() => setShowProfileMenu(v => !v)}>
               <User size={24} style={{marginRight: 6}} />
@@ -107,9 +107,6 @@ export default function Navbar() {
             <Link to="/task" className="nav-link-mobile" onClick={closeSidebar}>Daily Tasks</Link>
           </li>
           <li>
-            <Link to="/library" className="nav-link-mobile" onClick={closeSidebar}>Library</Link>
-          </li>
-          <li>
             <Link to="/assistant" className="nav-link-mobile" onClick={closeSidebar}>AI Assistant</Link>
           </li>
           <li>
@@ -123,6 +120,9 @@ export default function Navbar() {
           </li>
           <li>
             <Link to="/Game" className="nav-link-mobile" onClick={closeSidebar}>Relax</Link>
+          </li>
+          <li>
+            <Link to="/library" className="nav-link-mobile" onClick={closeSidebar}>Library</Link>
           </li>
           <li style={{position: 'relative'}}>
             <span style={{cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '8px'}} onClick={() => setShowProfileMenu(v => !v)}>

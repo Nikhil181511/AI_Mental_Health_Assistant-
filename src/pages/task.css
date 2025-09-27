@@ -1,7 +1,6 @@
 
 .task-container {
-  min-height: 100vh;
-  width: 100vw;
+
   display: flex;
   flex-direction: column;
   background: url('../asserts/Task-mgmt.jpeg') no-repeat center center;
@@ -83,6 +82,7 @@
 .task-title {
   font-size: 3rem;
   font-weight: 700;
+  font-family: 'Poppins', sans-serif;
   margin: 4rem auto 3rem;
   color: #1e3a8a;
   text-align: center;
@@ -201,8 +201,8 @@
 
 /* Footer Text - Centered */
 .task-footer {
-  font-size: 1.1rem;
-  color: #64748b;
+  font-size: 1.4rem;
+  color: #282f3a;
   margin-top: auto;
   padding-top: 2rem;
   line-height: 1.8;
@@ -214,7 +214,8 @@
 
 .task-footer-highlight {
   color: #dc2626;
-  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
   font-weight: 600;
 }
 
