@@ -13,6 +13,7 @@ export default function EditProfile() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [streak, setStreak] = useState(0);
+  const [wellnessScore, setWellnessScore] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +36,7 @@ export default function EditProfile() {
             const userData = userSnapshot.docs[0].data();
             setEditLocation(userData.location || '');
             setEditPhone(userData.phone || '');
+            setWellnessScore(userData.wellnessScore || 0);
           }
         } catch (err) {
           setStreak(0);
@@ -100,127 +102,92 @@ export default function EditProfile() {
   }
 
   return (
-    <div className="profile-page">
-      {/* Header Section with Gradient */}
-      <div className="profile-header">
-        <div className="profile-header-content">
-          <h1 className="profile-title">Edit Profile</h1>
-          {/* Profile Basic Info (no image) */}
-          <div className="profile-basic-info">
-            <h2 className="profile-name">{user.displayName || 'Anonymous User'}</h2>
-            <p className="profile-location">Location: {editLocation || 'N/A'}</p>
+    <div className="profile-page" style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Card view for profile info on the left */}
+      <div style={{ flex: '0 0 350px', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '2rem 0' }}>
+        <div className="profile-card" style={{ background: 'linear-gradient(120deg, #f8ffae 0%, #43c6ac 100%)', borderRadius: '24px', boxShadow: '0 10px 40px rgba(67,198,172,0.13)', padding: '2.5rem 2rem', minWidth: 320, maxWidth: 350 }}>
+          <h2 className="profile-name" style={{ textAlign: 'center', marginBottom: '1rem' }}>{user.displayName || 'Anonymous User'}</h2>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <div className="profile-info-row"><strong>Location:</strong> {editLocation || 'N/A'}</div>
+            <div className="profile-info-row"><strong>Email:</strong> {user.email}</div>
+            <div className="profile-info-row"><strong>Phone:</strong> {editPhone || 'N/A'}</div>
+            <div className="profile-info-row"><strong>Member Since:</strong> {user.metadata?.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString() : 'N/A'}</div>
+            <div className="profile-info-row"><strong>Wellness Score:</strong> {wellnessScore}</div>
           </div>
-          {/* Stats Section */}
-          <div className="profile-stats">
-            <div className="stat-item">
+          <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
+            <div className="stat-item" style={{ minWidth: 100 }}>
               <div className="stat-number">{streak}</div>
               <div className="stat-label">Streak Days</div>
             </div>
-            <div className="stat-item">
-              <div className="stat-number">1000</div>
+            <div className="stat-item" style={{ minWidth: 100 }}>
+              <div className="stat-number">{wellnessScore}</div>
               <div className="stat-label">Wellness Points</div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Content Section */}
-      <div className="profile-content">
-        {/* Profile Details */}
-        <div className="profile-details-section">
-          <h3 className="section-title">Profile Information</h3>
-          <div className="profile-details">
-            <div className="detail-row">
-              <span className="detail-label">Name:</span>
-              <span className="detail-value">{user.displayName || 'N/A'}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Email:</span>
-              <span className="detail-value">{user.email}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Current Streak:</span>
-              <span className="detail-value">{streak} days</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Location:</span>
-              <span className="detail-value">{editLocation || 'N/A'}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Phone Number:</span>
-              <span className="detail-value">{editPhone || 'N/A'}</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Member Since:</span>
-              <span className="detail-value">
-                {user.metadata?.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString() : 'N/A'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Edit Actions */}
-        <div className="profile-actions-section">
-          <h3 className="section-title">Edit Profile</h3>
-          <div className="profile-actions">
-            <div className="form-group">
-              <label htmlFor="editName" className="form-label">Update Name:</label>
-              <input 
-                id="editName"
-                type="text" 
-                value={editName} 
-                onChange={e => setEditName(e.target.value)} 
-                placeholder="Enter your name"
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="editLocation" className="form-label">Location:</label>
-              <input 
-                id="editLocation"
-                type="text" 
-                value={editLocation} 
-                onChange={e => setEditLocation(e.target.value)} 
-                placeholder="Enter your location"
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="editPhone" className="form-label">Phone Number:</label>
-              <input 
-                id="editPhone"
-                type="text" 
-                value={editPhone} 
-                onChange={e => setEditPhone(e.target.value)} 
-                placeholder="Enter your phone number"
-                className="form-input"
-              />
-            </div>
-            
-            {error && <div className="error-message">{error}</div>}
-            
-            <div className="button-group">
-              <button 
-                className="btn btn-primary" 
-                onClick={handleSaveProfile} 
-                disabled={saving}
-              >
-                {saving ? 'Saving...' : 'Save Changes'}
-              </button>
-              
-              <button 
-                className="btn btn-secondary" 
-                onClick={handleChangePassword}
-              >
-                Change Password
-              </button>
-              
-              <button 
-                className="btn btn-outline" 
-                onClick={() => navigate('/userprofile')}
-              >
-                Cancel
-              </button>
+      {/* Main content and form on the right */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '2rem 0' }}>
+        <div className="profile-content" style={{ maxWidth: 600, width: '100%' }}>
+          {/* Edit Actions */}
+          <div className="profile-actions-section">
+            <h3 className="section-title">Edit Profile</h3>
+            <div className="profile-actions">
+              <div className="form-group">
+                <label htmlFor="editName" className="form-label">Update Name:</label>
+                <input 
+                  id="editName"
+                  type="text" 
+                  value={editName} 
+                  onChange={e => setEditName(e.target.value)} 
+                  placeholder="Enter your name"
+                  className="form-input"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="editLocation" className="form-label">Location:</label>
+                <input 
+                  id="editLocation"
+                  type="text" 
+                  value={editLocation} 
+                  onChange={e => setEditLocation(e.target.value)} 
+                  placeholder="Enter your location"
+                  className="form-input"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="editPhone" className="form-label">Phone Number:</label>
+                <input 
+                  id="editPhone"
+                  type="text" 
+                  value={editPhone} 
+                  onChange={e => setEditPhone(e.target.value)} 
+                  placeholder="Enter your phone number"
+                  className="form-input"
+                />
+              </div>
+              {error && <div className="error-message">{error}</div>}
+              <div className="button-group">
+                <button 
+                  className="btn btn-primary" 
+                  onClick={handleSaveProfile} 
+                  disabled={saving}
+                >
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </button>
+                <button 
+                  className="btn btn-secondary" 
+                  onClick={handleChangePassword}
+                >
+                  Change Password
+                </button>
+                <button 
+                  className="btn btn-outline" 
+                  onClick={() => navigate('/userprofile')}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         </div>

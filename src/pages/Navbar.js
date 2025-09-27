@@ -36,8 +36,9 @@ export default function Navbar() {
           MindWell AI
         </div>
         <ul className="nav-links-desktop">
-         
           <li><Link to="/checkin" className="nav-link">Check-in</Link></li>
+          <li><Link to="/task" className="nav-link">Daily Tasks</Link></li>
+          <li><Link to="/leaderboard" className="nav-link">Leaderboard</Link></li>
           <li><Link to="/library" className="nav-link">Library</Link></li>
           <li><Link to="/assistant" className="nav-link">AI Assistant</Link></li>
           <li><Link to="/community" className="nav-link">Community</Link></li>
@@ -97,7 +98,13 @@ export default function Navbar() {
       <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <ul className="nav-links-mobile">
           <li>
+            <Link to="/leaderboard" className="nav-link-mobile" onClick={closeSidebar}>Leaderboard</Link>
+          </li>
+          <li>
             <Link to="/checkin" className="nav-link-mobile" onClick={closeSidebar}>Check-in</Link>
+          </li>
+          <li>
+            <Link to="/task" className="nav-link-mobile" onClick={closeSidebar}>Daily Tasks</Link>
           </li>
           <li>
             <Link to="/library" className="nav-link-mobile" onClick={closeSidebar}>Library</Link>

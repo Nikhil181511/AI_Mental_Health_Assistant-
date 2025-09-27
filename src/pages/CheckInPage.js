@@ -9,6 +9,7 @@ import './Check.css';
 
 // Firebase imports
 import { db, auth, collection, addDoc, getDocs, query, where } from './firebase';
+import { updateDoc } from 'firebase/firestore';
 
 // Lucide Icons
 import { Angry, Frown, Meh, Smile, Laugh, Mic, MicOff } from 'lucide-react';
@@ -90,14 +91,15 @@ const CheckInPage = () => {
       setCheckIns(sortedEntries);
 
       // Streak only increases, never decreases, even if user misses days
-      let maxStreak = Number(localStorage.getItem('maxStreak') || '0');
+      const streakKey = `maxStreak_${user.uid}`;
+      let maxStreak = Number(localStorage.getItem(streakKey) || '0');
       let currentStreak = 0;
       if (sortedEntries.length > 0) {
         const uniqueDates = Array.from(new Set(sortedEntries.map(e => e.dateOnly)));
         currentStreak = uniqueDates.length;
         if (currentStreak > maxStreak) {
           maxStreak = currentStreak;
-          localStorage.setItem('maxStreak', maxStreak.toString());
+          localStorage.setItem(streakKey, maxStreak.toString());
         }
       }
       setStreak(maxStreak);
@@ -126,6 +128,24 @@ const CheckInPage = () => {
     try {
       // Add check-in data to Firestore with user ID
       await addDoc(collection(db, "checkins"), newData);
+
+      // Award 50 points only for the first check-in of the day
+      const todayKey = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      const checkinCol = collection(db, "checkins");
+      const qToday = query(checkinCol, where("userId", "==", user.uid), where("dateOnly", "==", todayKey));
+      const todaySnapshot = await getDocs(qToday);
+      if (todaySnapshot.size === 1) { // This is the first check-in for today
+        const userDocRef = collection(db, 'users');
+        const qUser = query(userDocRef, where('userId', '==', user.uid));
+        const userSnapshot = await getDocs(qUser);
+        if (!userSnapshot.empty) {
+          const userDoc = userSnapshot.docs[0];
+          const userData = userDoc.data();
+          const newScore = (userData.wellnessScore || 0) + 50;
+          await updateDoc(userDoc.ref, { wellnessScore: newScore });
+        }
+      }
+
       // Store latest mood data for recommendations
       const moodData = {
         mood: `${MOOD_LABELS[moodRating]} - ${desc}`.trim(),
@@ -194,9 +214,11 @@ const CheckInPage = () => {
         { label: 'Chat with AI Assistant', link: '/assistant' }
       ];
     } else {
+      // Good (4) or Very Good (5) mood
       return [
+        { label: 'Do Daily Task', link: '/task' },
         { label: 'Explore Mindfulness Library', link: '/library' },
-        { label: 'Join Community', link: '/community' }
+        { label: 'Chat with Community', link: '/community' }
       ];
     }
   };

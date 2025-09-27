@@ -60,8 +60,28 @@ const BookTherapistPage = () => {
         5: { experience: '4 years of experience', languages: 'Fluent in English, Hindi, Konkani', rating: 'Highly Rated', sessions: '90 happy client sessions', price: '₹2400 for 50 min', description: 'Integrating mindfulness and meditation techniques for stress reduction and emotional balance.', image: 'doc5.jpg', verified: true, availability: 'Tomorrow, 06 Sep, 05:30 pm IST' },
         6: { experience: '9 years of experience', languages: 'Fluent in English, Hindi, Punjabi', rating: 'Top-Rated', sessions: '250+ happy client sessions', price: '₹3200 for 50 min', description: 'Expert in child development, behavioral issues, and family support systems.', image: 'doc6.jpg', verified: true, availability: 'Today, 05 Sep, 04:00 pm IST' },
         7: { experience: '10 years of experience', languages: 'Fluent in English, Hindi, Tulu', rating: 'Top-Rated', sessions: '300+ happy client sessions', price: '₹3500 for 50 min', description: 'Comprehensive addiction recovery programs with ongoing support and relapse prevention.', image: 'doc7.jpg', verified: true, availability: 'Tomorrow, 06 Sep, 07:00 pm IST' },
-        8: { experience: '6 years of experience', languages: 'Fluent in English, Hindi, Marathi', rating: 'Highly Rated', sessions: '160 happy client sessions', price: '₹2600 for 50 min', description: 'Helping couples and individuals build stronger, healthier relationships through effective communication.', image: 'doc8.jpg', verified: true, availability: 'Today, 05 Sep, 06:30 pm IST' },
-        9: { experience: '5 years of experience', languages: 'Fluent in English, Hindi, Marathi', rating: 'Highly Rated', sessions: '130 happy client sessions', price: '₹2900 for 50 min', description: 'Corporate stress management and work-life balance coaching with proven techniques.', image: 'doc9.jpg', verified: true, availability: 'Tomorrow, 06 Sep, 08:30 pm IST' }
+        8: {
+          experience: '6 years of experience',
+          languages: 'Fluent in English, Hindi, Marathi',
+          rating: 'Highly Rated',
+          sessions: 'Available for all PCCE students',
+          price: 'Free for PCCE students',
+          description: 'Providing emotional support, academic guidance, and personal counseling for students at PCCE.',
+          image: 'doc8.jpg',
+          verified: true,
+          availability: 'Mon-Fri, 10:00 am - 4:00 pm'
+        },
+        9: {
+          experience: '5 years of experience',
+          languages: 'Fluent in English, Hindi, Marathi',
+          rating: 'Highly Rated',
+          sessions: 'Available for all Don Bosco students',
+          price: 'Free for Don Bosco students',
+          description: 'Helping students manage stress, academic challenges, and personal issues at Don Bosco.',
+          image: 'doc9.jpg',
+          verified: true,
+          availability: 'Mon-Fri, 11:00 am - 5:00 pm'
+        }
       };
 
       const enriched = (Array.isArray(data) ? data : []).map((t, idx) => {
@@ -193,33 +213,35 @@ const BookTherapistPage = () => {
           image: "../asserts/doc7.jpg",
           verified: true
         },
-        { 
-          id: 8, 
-          name: "Dr. Leela Kamat", 
-          specialty: "Relationship Therapy", 
-          location: "Panjim, Goa", 
-          availability: "Today, 05 Sep, 06:30 pm IST",
-          experience: "6 years of experience",
-          languages: "Fluent in English, Hindi, Marathi",
-          rating: "Highly Rated",
-          sessions: "160 happy client sessions",
-          price: "₹2600 for 50 min",
-          description: "Helping couples and individuals build stronger, healthier relationships through effective communication.",
+        {
+          id: 8,
+          name: "Ms. Anjali D'Souza",
+          specialty: "College Counselor",
+          college: "Padre Conceicao College Of Engineering",
+          location: "Verna, Goa",
+          availability: "Mon-Fri, 10:00 am - 4:00 pm",
+          experience: "Student counseling, career guidance, mental wellness",
+          languages: "English, Hindi, Konkani",
+          rating: "Friendly & Supportive",
+          sessions: "Available for all PCC students",
+          price: "Free for PCC students",
+          description: "Providing emotional support, academic guidance, and personal counseling for students at PCC.",
           image: "../asserts/doc8.jpg",
           verified: true
         },
-        { 
-          id: 9, 
-          name: "Dr. Rahul Sawant", 
-          specialty: "Stress Management", 
-          location: "Mumbai, Maharashtra", 
-          availability: "Tomorrow, 06 Sep, 08:30 pm IST",
-          experience: "5 years of experience",
-          languages: "Fluent in English, Hindi, Marathi",
-          rating: "Highly Rated",
-          sessions: "130 happy client sessions",
-          price: "₹2900 for 50 min",
-          description: "Corporate stress management and work-life balance coaching with proven techniques.",
+        {
+          id: 9,
+          name: "Mr. Rohan Naik",
+          specialty: "College Counselor",
+          college: "Don Bosco College of Engineering",
+          location: "Fatorda, Goa",
+          availability: "Mon-Fri, 11:00 am - 5:00 pm",
+          experience: "Student counseling, stress management, career advice",
+          languages: "English, Hindi, Marathi",
+          rating: "Approachable & Caring",
+          sessions: "Available for all Don Bosco students",
+          price: "Free for Don Bosco students",
+          description: "Helping students manage stress, academic challenges, and personal issues at Don Bosco.",
           image: "../asserts/doc9.jpg",
           verified: true
         }
@@ -371,9 +393,11 @@ const BookTherapistPage = () => {
                     </div>
                     <div className="price-couples">
                         {(() => {
+                          if (therapist.id === 8 || therapist.id === 9) {
+                            return 'Couples Session: Not applicable for college counselors';
+                          }
                           if (!therapist.price) return 'Couples Session: Pricing on request';
-                          // Extract only the first standalone number (base fee) ignoring the "50" from "50 min"
-                          const match = String(therapist.price).match(/(\d[\d,]*)/); // first numeric block
+                          const match = String(therapist.price).match(/(\d[\d,]*)/);
                           if (!match) return 'Couples Session: Pricing on request';
                           const base = parseInt(match[1].replace(/,/g, ''), 10);
                           if (Number.isNaN(base)) return 'Couples Session: Pricing on request';

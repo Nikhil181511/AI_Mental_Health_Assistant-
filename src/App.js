@@ -14,6 +14,7 @@ import BookTherapistPages from './pages/BookTherapistPage';
 import MindfulBreathPage from './pages/MindfulBreath';
 import RecommendationsPages from './pages/RecommendationsPage';
 import CommunityChat from './pages/CommunityPage';
+import TaskPage from './pages/task';
 
 function AppContent() {
   const location = useLocation();
@@ -38,6 +39,8 @@ function AppContent() {
         <Route path="/Game" element={<MindfulBreathPage />} />
         <Route path="/Recommend" element={<RecommendationsPages />} />
         <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/task" element={<TaskPage />} />
+        <Route path="/leaderboard" element={require('./pages/leaderboad.js').default()} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </>
