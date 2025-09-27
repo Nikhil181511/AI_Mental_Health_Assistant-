@@ -70,8 +70,8 @@ body {
     0 0 0 1px rgba(255, 255, 255, 0.2) !important;
   padding: 3rem 2.5rem !important;
   width: 100% !important;
-  max-width: 680px !important;
-  min-width: 640px !important;
+  max-width: 550px !important;
+  min-width: 560px !important;
   transform: translateY(0);
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;

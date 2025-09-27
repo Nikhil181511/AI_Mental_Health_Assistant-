@@ -14,7 +14,7 @@ const sampleContent = [
   { id: '8', type: 'exercise', title: 'Mindful Walking', description: 'Practice mindfulness during your daily walk.', category: 'Mindfulness', content: 'https://www.youtube.com/watch?v=QdO1vZJgUu0' },
   { id: '9', type: 'article', title: 'The Science of Bouncing Back', description: 'Research on resilience and how it enables individuals to thrive during and after difficult times.', category: 'Resilience', url: 'https://time.com/3892044/the-science-of-bouncing-back/' },
   { id: '10', type: 'exercise', title: 'Walking Meditation', description: 'Discover the health benefits of walking meditation.', category: 'Mindfulness', content: 'https://www.verywellhealth.com/walking-meditation-8685709' },
-  { id: '11', type: 'video', title: 'Overcoming Social Anxiety', description: 'Tips to help you feel more comfortable in social settings.', category: 'Anxiety', url: 'https://www.healthline.com/health/social-anxiety-disorder' },
+  { id: '11', type: 'video', title: 'Overcoming Social Anxiety', description: 'Tips to help you feel more comfortable in social settings.', category: 'Anxiety', url: 'https://youtube.com/shorts/Gph8wOi3BPM?si=qidb5P-8BU4ZeBlo' },
   { id: '12', type: 'video', title: 'Mindful Eating Exercise', description: 'Practice being present while eating to enhance digestion and enjoyment.', category: 'Mindfulness', url: 'https://www.thefullhelping.com/how-to-practice-mindful-eating/' },
   { id: '13', type: 'exercise', title: 'Music Therapy for Stress', description: 'Discover how music can reduce stress and anxiety.', category: 'Stress', content: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3734071/' },
   { id: '14', type: 'article', title: 'Intro to CBT', description: 'How Cognitive Behavioral Therapy works and its benefits.', category: 'CBT', url: 'https://psychcentral.com/lib/in-depth-cognitive-behavioral-therapy' },
@@ -29,37 +29,37 @@ const sampleContent = [
   { id: '23', type: 'video', title: 'Stress Relief Yoga', description: 'Simple yoga flow for reducing stress and anxiety.', category: 'Stress', url: 'https://www.youtube.com/watch?v=bJJWArRfKa0' },
   { id: '24', type: 'article', title: 'Understanding Cognitive Distortions', description: 'Identify and reframe negative thought patterns.', category: 'CBT', url: 'https://www.verywellmind.com/what-are-cognitive-distortions-2794767' },
   { id: '25', type: 'exercise', title: 'Journaling for Resilience', description: 'Write through your feelings to increase mental strength.', category: 'Resilience', content: 'https://www.psychologytoday.com/us/blog/words-matter/201902/how-journaling-builds-resilience' },
-  { id: '26', type: 'video', title: 'Understanding Panic Attacks', description: 'Explore the causes and how to handle panic attacks.', category: 'Anxiety', url: 'https://www.youtube.com/watch?v=WUU9ZrXkY9M' },
+  { id: '26', type: 'video', title: 'Understanding Panic Attacks', description: 'Explore the causes and how to handle panic attacks.', category: 'Anxiety', url: 'https://youtu.be/IzFObkVRSV0?si=XupNDzkRJTCcjrle' },
   { id: '27', type: 'article', title: 'Mindfulness for Beginners', description: 'A practical guide to starting mindfulness practices.', category: 'Mindfulness', url: 'https://www.mindful.org/mindfulness-for-beginners-video/' },
   { id: '28', type: 'exercise', title: 'Guided Body Scan', description: 'A full-body mindfulness exercise for relaxation.', category: 'Mindfulness', content: 'https://www.uclahealth.org/programs/marc/mindful-meditations/body-scan' },
   { id: '29', type: 'video', title: 'Work-Life Balance Tips', description: 'Improve your work-life balance to reduce stress.', category: 'Stress', url: 'https://www.youtube.com/watch?v=yzj0D4XB-4I' },
   { id: '30', type: 'article', title: 'Behavioral Activation in CBT', description: 'How behavioral strategies help combat depression.', category: 'CBT', url: 'https://psychologytools.com/self-help/behavioral-activation/' },
   { id: '31', type: 'exercise', title: 'Visualization Exercise', description: 'Calm your mind with guided imagery.', category: 'Resilience', content: 'https://www.headspace.com/meditation/visualization' },
-  { id: '32', type: 'article', title: 'How to Calm an Anxious Mind', description: 'Techniques to regain control in moments of anxiety.', category: 'Anxiety', url: 'https://www.psychologytoday.com/us/blog/finding-new-home/202106/5-ways-calm-your-anxious-mind' },
+  { id: '32', type: 'article', title: 'How to Calm an Anxious Mind', description: 'Techniques to regain control in moments of anxiety.', category: 'Anxiety', url: 'https://www.healthline.com/health/how-to-calm-down' },
   { id: '33', type: 'video', title: '10-Minute Meditation', description: 'Follow this quick meditation session for mindfulness.', category: 'Mindfulness', url: 'https://www.youtube.com/watch?v=inpok4MKVLM' },
   { id: '34', type: 'exercise', title: 'Mindful Listening Exercise', description: 'Enhance awareness by listening without judgment.', category: 'Mindfulness', content: 'https://www.mindful.org/mindful-listening/' },
   { id: '35', type: 'article', title: 'The Effects of Chronic Stress', description: 'Understand how stress affects your health long-term.', category: 'Stress', url: 'https://www.apa.org/topics/stress/chronic' },
   { id: '36', type: 'exercise', title: 'CBT Thought Record Sheet', description: 'Track and challenge your unhelpful thoughts.', category: 'CBT', content: 'https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself/Depression' },
   { id: '37', type: 'video', title: 'Stories of Resilience', description: 'Inspiring real-life stories of people who overcame adversity.', category: 'Resilience', url: 'https://www.youtube.com/watch?v=Q_F1NQSi9xQ' },
-  { id: '38', type: 'article', title: 'How to Identify an Anxiety Trigger', description: 'Recognizing the root causes of anxious responses.', category: 'Anxiety', url: 'https://www.verywellmind.com/common-anxiety-triggers-5207497' },
+  { id: '38', type: 'article', title: 'How to Identify an Anxiety Trigger', description: 'Recognizing the root causes of anxious responses.', category: 'Anxiety', url: 'https://www.healthline.com/health/anxiety/anxiety-triggers' },
   { id: '39', type: 'exercise', title: 'Mindful Coloring', description: 'Use art to engage the senses and relax.', category: 'Mindfulness', content: 'https://www.therapistaid.com/therapy-worksheet/mindfulness-coloring' },
   { id: '40', type: 'video', title: 'Progressive Relaxation for Sleep', description: 'Help your body relax to fall asleep faster.', category: 'Stress', url: 'https://www.youtube.com/watch?v=ihO02wUzgkc' },
   { id: '41', type: 'article', title: 'Reframing Negative Thoughts', description: 'Use CBT to reshape your perspective.', category: 'CBT', url: 'https://www.therapistaid.com/worksheets/cognitive-restructuring-introduction.pdf' },
   { id: '42', type: 'exercise', title: 'Self-Compassion Practice', description: 'Treat yourself with kindness in difficult times.', category: 'Resilience', content: 'https://self-compassion.org/wp-content/uploads/2020/08/self-compassion.exercises.pdf' },
-  { id: '43', type: 'video', title: 'Dealing with Anxiety in Teens', description: 'Support strategies for youth anxiety.', category: 'Anxiety', url: 'https://www.youtube.com/watch?v=jz_8tVME3W8' },
+  { id: '43', type: 'video', title: 'Dealing with Anxiety in Teens', description: 'Support strategies for youth anxiety.', category: 'Anxiety', url: 'https://youtu.be/iNAqWoVIX4s?si=GC7Ovv3TWK1_ha6t' },
   { id: '44', type: 'article', title: 'Mindfulness at Work', description: 'Techniques to stay focused and calm in the office.', category: 'Mindfulness', url: 'https://hbr.org/2017/09/mindfulness-can-literally-change-your-brain' },
   { id: '45', type: 'exercise', title: 'Gratitude Journaling', description: 'Daily prompts to focus on the positive.', category: 'Mindfulness', content: 'https://greatergood.berkeley.edu/images/tools/gratitude_journal.pdf' },
   { id: '46', type: 'article', title: 'Signs of Burnout', description: 'Learn how to spot and recover from burnout.', category: 'Stress', url: 'https://www.helpguide.org/articles/stress/burnout-prevention-and-recovery.htm' },
   { id: '47', type: 'exercise', title: 'CBT for Self-Criticism', description: 'Techniques to overcome negative self-talk.', category: 'CBT', content: 'https://psychologytools.com/self-help/self-criticism/' },
   { id: '48', type: 'video', title: 'Post-Traumatic Growth', description: 'Discover how adversity can lead to positive change.', category: 'Resilience', url: 'https://www.youtube.com/watch?v=1FDyiUEn8V0' },
-  { id: '49', type: 'article', title: 'Managing Anxiety in Relationships', description: 'Address anxiety without damaging connection.', category: 'Anxiety', url: 'https://www.verywellmind.com/how-to-handle-anxiety-in-relationships-5206986' },
+  { id: '49', type: 'article', title: 'Managing Anxiety in Relationships', description: 'Address anxiety without damaging connection.', category: 'Anxiety', url: 'https://www.calm.com/blog/anxiety-in-relationships' },
   { id: '50', type: 'exercise', title: '5 Senses Grounding Technique', description: 'Bring yourself to the present moment with this sensory exercise.', category: 'Mindfulness', content: 'https://www.therapistaid.com/worksheets/grounding-techniques.pdf' },
   { id: '51', type: 'article', title: 'Understanding Panic Disorder', description: 'An overview of panic disorder symptoms and treatments.', category: 'Anxiety', url: 'https://www.nimh.nih.gov/health/topics/panic-disorder' },
   { id: '52', type: 'exercise', title: 'Mindful Breathing for Anxiety', description: 'A guided breathing exercise to manage anxiety.', category: 'Mindfulness', content: 'https://www.youtube.com/watch?v=SEfs5TJZ6Nk' },
   { id: '53', type: 'video', title: 'Stress Management Techniques', description: 'Learn effective techniques to manage stress.', category: 'Stress', url: 'https://www.youtube.com/watch?v=hnpQrMqDoqE' },
   { id: '54', type: 'article', title: 'Cognitive Behavioral Therapy Explained', description: 'An introduction to CBT and how it works.', category: 'CBT', url: 'https://www.apa.org/ptsd-guideline/patients-and-families/cognitive-behavioral' },
   { id: '55', type: 'exercise', title: 'Resilience Building Activities', description: 'Activities designed to enhance personal resilience.', category: 'Resilience', content: 'https://www.mindtools.com/pages/article/resilience-building.htm' },
-  { id: '56', type: 'video', title: 'Overcoming Social Anxiety', description: 'Strategies to cope with social anxiety.', category: 'Anxiety', url: 'https://www.youtube.com/watch?v=5oY1Qz0U1h4' },
+  { id: '56', type: 'video', title: 'Overcoming Social Anxiety', description: 'Strategies to cope with social anxiety.', category: 'Anxiety', url: 'https://youtube.com/shorts/Gph8wOi3BPM?si=qidb5P-8BU4ZeBlo' },
   { id: '57', type: 'article', title: 'Mindfulness Meditation Benefits', description: 'Explore the benefits of mindfulness meditation.', category: 'Mindfulness', url: 'https://www.healthline.com/nutrition/mindfulness-meditation' },
   { id: '58', type: 'exercise', title: 'Guided Meditation for Stress Relief', description: 'A meditation session to alleviate stress.', category: 'Stress', content: 'https://www.youtube.com/watch?v=MIr3RsUWrdo' },
   { id: '59', type: 'video', title: 'CBT Techniques for Depression', description: 'Learn CBT techniques to manage depression.', category: 'CBT', url: 'https://www.youtube.com/watch?v=9c_Bv_FBE-c' },
@@ -118,11 +118,9 @@ const getIcon = (type) => {
 
 const LibraryPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  // Re-introduced category filtering (without an 'All' option)
   const categories = useMemo(() => Array.from(new Set(sampleContent.map(i => i.category))).sort(), []);
   const [selectedCategory, setSelectedCategory] = useState('');
 
-  // Initialize default category (first in sorted list) if none selected
   useEffect(() => {
     if (!selectedCategory && categories.length > 0) {
       setSelectedCategory(categories[0]);
