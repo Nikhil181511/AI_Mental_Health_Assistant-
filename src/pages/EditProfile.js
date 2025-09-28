@@ -14,6 +14,7 @@ export default function EditProfile() {
   const [error, setError] = useState('');
   const [streak, setStreak] = useState(0);
   const [wellnessScore, setWellnessScore] = useState(0);
+  const [showOnLeaderboard, setShowOnLeaderboard] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +38,7 @@ export default function EditProfile() {
             setEditLocation(userData.location || '');
             setEditPhone(userData.phone || '');
             setWellnessScore(userData.wellnessScore || 0);
+            setShowOnLeaderboard(userData.showOnLeaderboard !== false); // default true
           }
         } catch (err) {
           setStreak(0);
@@ -59,12 +61,12 @@ export default function EditProfile() {
         const { updateProfile } = await import('firebase/auth');
         await updateProfile(auth.currentUser, { displayName: editName });
         setUser({ ...auth.currentUser, displayName: editName });
-        // Save location and phone to Firestore
+        // Save location, phone, and leaderboard preference to Firestore
         const userDocRef = collection(db, 'users');
         const qUser = query(userDocRef, where('userId', '==', auth.currentUser.uid));
         const userSnapshot = await getDocs(qUser);
         if (!userSnapshot.empty) {
-          await updateDoc(userSnapshot.docs[0].ref, { location: editLocation, phone: editPhone });
+          await updateDoc(userSnapshot.docs[0].ref, { location: editLocation, phone: editPhone, showOnLeaderboard });
         } else {
           // Create user document if not exists
           const { addDoc } = await import('firebase/firestore');
@@ -73,7 +75,8 @@ export default function EditProfile() {
             location: editLocation,
             phone: editPhone,
             email: auth.currentUser.email,
-            name: editName
+            name: editName,
+            showOnLeaderboard
           });
         }
         // Do not navigate away; stay on edit profile page
@@ -102,7 +105,7 @@ export default function EditProfile() {
   }
 
   return (
-    <div className="profile-page" style={{ display: 'flex', minHeight: '100vh' }}>
+  <div className="profile-page" style={{ display: 'flex', minHeight: '100vh' }}>
       {/* Card view for profile info on the left */}
       <div style={{ flex: '0 0 350px', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '2rem 0' }}>
         <div className="profile-card" style={{ background: 'linear-gradient(120deg, #f8ffae 0%, #43c6ac 100%)', borderRadius: '24px', boxShadow: '0 10px 40px rgba(67,198,172,0.13)', padding: '2.5rem 2rem', minWidth: 320, maxWidth: 350 }}>
@@ -112,7 +115,6 @@ export default function EditProfile() {
             <div className="profile-info-row"><strong>Email:</strong> {user.email}</div>
             <div className="profile-info-row"><strong>Phone:</strong> {editPhone || 'N/A'}</div>
             <div className="profile-info-row"><strong>Member Since:</strong> {user.metadata?.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString() : 'N/A'}</div>
-            <div className="profile-info-row"><strong>Wellness Score:</strong> {wellnessScore}</div>
           </div>
           <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
             <div className="stat-item" style={{ minWidth: 100 }}>
@@ -167,6 +169,17 @@ export default function EditProfile() {
                 />
               </div>
               {error && <div className="error-message">{error}</div>}
+              <div className="form-group">
+                <label className="form-label">Show my name on leaderboard:</label>
+                <button
+                  type="button"
+                  className={showOnLeaderboard ? 'btn btn-primary' : 'btn btn-outline'}
+                  style={{ marginBottom: '1rem' }}
+                  onClick={() => setShowOnLeaderboard(prev => !prev)}
+                >
+                  {showOnLeaderboard ? 'Yes, display my name' : 'No, keep my name hidden'}
+                </button>
+              </div>
               <div className="button-group">
                 <button 
                   className="btn btn-primary" 

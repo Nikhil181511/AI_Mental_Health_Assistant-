@@ -13,9 +13,8 @@ body {
   line-height: 1.6;
 }
 
-/* Main Page Container - Full Viewport Usage */
 .profile-page {
-  min-height: 100vh;
+  height: 100%;
   width: 100vw;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   background-attachment: fixed;
@@ -397,8 +396,15 @@ body {
 
 .btn-primary {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  color: #fff !important;
   box-shadow: 0 12px 24px rgba(102, 126, 234, 0.3);
+  border: 2px solid #764ba2 !important;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  z-index: 10;
+  position: relative;
+  display: block;
+  margin: 0 auto 1.5rem auto;
 }
 
 .btn-primary:hover {

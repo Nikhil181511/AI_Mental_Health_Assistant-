@@ -9,31 +9,35 @@ function Leaderboard() {
 	const [currentUserRank, setCurrentUserRank] = useState(null);
 
 		useEffect(() => {
-			async function fetchUsers() {
-				const usersRef = collection(db, 'users');
-				const snapshot = await getDocs(usersRef);
-				const userList = snapshot.docs.map(doc => {
-					const data = doc.data();
-					return {
-						name: data.name || data.displayName || data.email || 'Anonymous',
-						email: data.email,
-						wellnessScore: data.wellnessScore || 0
-					};
-				});
-				// Sort by wellnessScore descending
-				userList.sort((a, b) => b.wellnessScore - a.wellnessScore);
-				setUsers(userList);
-				// Find current user's rank
-				const currentUser = auth.currentUser;
-				if (currentUser && currentUser.email) {
-					const idx = userList.findIndex(u => u.email === currentUser.email);
-					if (idx !== -1) {
-						setCurrentUserRank(idx + 1);
+					async function fetchUsers() {
+						const usersRef = collection(db, 'users');
+						const snapshot = await getDocs(usersRef);
+						// Only include users who want to be shown on leaderboard
+						const userList = snapshot.docs
+							.map(doc => {
+								const data = doc.data();
+								return {
+									name: data.name || data.displayName || data.email || 'Anonymous',
+									email: data.email,
+									wellnessScore: data.wellnessScore || 0,
+									showOnLeaderboard: data.showOnLeaderboard !== false // default true
+								};
+							})
+							.filter(u => u.showOnLeaderboard);
+						// Sort by wellnessScore descending
+						userList.sort((a, b) => b.wellnessScore - a.wellnessScore);
+						setUsers(userList);
+						// Find current user's rank among visible users
+						const currentUser = auth.currentUser;
+						if (currentUser && currentUser.email) {
+							const idx = userList.findIndex(u => u.email === currentUser.email);
+							if (idx !== -1) {
+								setCurrentUserRank(idx + 1);
+							}
+						}
+						setLoading(false);
 					}
-				}
-				setLoading(false);
-			}
-			fetchUsers();
+					fetchUsers();
 		}, []);
 
 	if (loading) {
