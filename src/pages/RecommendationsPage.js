@@ -22,7 +22,7 @@ const Recommendations = () => {
         browserSupportsSpeechRecognition
     } = useSpeechRecognition();
 
-    // Load mood data from localStorage on component mount
+    // Load mood data from localStorage on component mount and trigger auto recommendation
     useEffect(() => {
         if (user) {
             const savedMoodData = localStorage.getItem('latestMoodData');
@@ -33,13 +33,15 @@ const Recommendations = () => {
                     if (moodData.userId === user.uid) {
                         setPreLoadedData(moodData);
                         setMood(moodData.mood);
-                        // Automatically get recommendations for pre-loaded mood
                         getRecommendationsForMood(moodData.mood);
+                        return;
                     }
                 } catch (err) {
                     console.error('Error parsing saved mood data:', err);
                 }
             }
+            // If no preloaded mood, auto trigger recommendation for empty mood
+            getRecommendationsForMood('');
         }
     }, [user]);
 
@@ -130,7 +132,7 @@ const Recommendations = () => {
     };
 
     return (
-        <div className="ai-chat-fullscreen">
+        <div className="ai-chat-fullscreen1">
             <div className="ai-chat-header">
                 <span>Personalized Recommendations</span>
                 {preLoadedData && (
@@ -162,13 +164,13 @@ const Recommendations = () => {
                 {result && !result.error && (
                     <div>
                         <div className="recommendations-header">
-                            <h3>� Recommendations for: "{result.detected_mood}"</h3>
+                            <h3>Recommendations for: "{result.detected_mood}"</h3>
                             <button onClick={refreshRecommendations} className="refresh-btn" title="Refresh recommendations">
                                 <RefreshCw size={16} />
                             </button>
                         </div>
 
-                        <h3>�🎥 YouTube Videos</h3>
+                        <h3>🎥 YouTube Videos</h3>
                         <ol>{renderLinkList(result.videos || [])}</ol>
 
                         <h3>📰 Articles</h3>

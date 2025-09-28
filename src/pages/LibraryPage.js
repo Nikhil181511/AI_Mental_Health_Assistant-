@@ -209,7 +209,7 @@ const LibraryPage = () => {
               ))}
             </select>
           </div>
-          <button className="recommend-button" onClick={() => navigate('/Recommend')}>
+          <button className="recommend-button" onClick={() => navigate('/recommend')}>
             📊 Get Personalized Recommendations
           </button>
         </div>

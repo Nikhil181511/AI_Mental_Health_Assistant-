@@ -116,34 +116,37 @@ const CheckInPage = () => {
     }
 
     setIsSubmitting(true);
+    const todayKey = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
     const newData = {
       userId: user.uid,
       userEmail: user.email,
       moodRating,
       moodDescription: MOOD_LABELS[moodRating],
       description: desc,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      dateOnly: todayKey
     };
 
     try {
       // Add check-in data to Firestore with user ID
       await addDoc(collection(db, "checkins"), newData);
 
-      // Award 50 points only for the first check-in of the day
-      const todayKey = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      // Award 50 points for each unique day check-in
+      // Check if this is the first check-in for today
       const checkinCol = collection(db, "checkins");
       const qToday = query(checkinCol, where("userId", "==", user.uid), where("dateOnly", "==", todayKey));
       const todaySnapshot = await getDocs(qToday);
-      if (todaySnapshot.size === 1) { // This is the first check-in for today
-        const userDocRef = collection(db, 'users');
-        const qUser = query(userDocRef, where('userId', '==', user.uid));
-        const userSnapshot = await getDocs(qUser);
-        if (!userSnapshot.empty) {
-          const userDoc = userSnapshot.docs[0];
-          const userData = userDoc.data();
-          const newScore = (userData.wellnessScore || 0) + 50;
-          await updateDoc(userDoc.ref, { wellnessScore: newScore });
+      if (todaySnapshot.size === 1) { // First check-in for today
+        // Award 50 points
+        const { doc, getDoc, setDoc } = await import('firebase/firestore');
+        const userDocRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userDocRef);
+        let newScore = 50;
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          newScore = (userData.wellnessScore || 0) + 50;
         }
+        await setDoc(userDocRef, { wellnessScore: newScore }, { merge: true });
       }
 
       // Store latest mood data for recommendations

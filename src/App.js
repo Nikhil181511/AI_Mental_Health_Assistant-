@@ -5,7 +5,6 @@ import LoginPage from './pages/LoginPage';
 import Navbar from './pages/Navbar';
 import EditProfile from './pages/EditProfile';
 import CheckInPage from './pages/CheckInPage';
-import RecommendationsPage from './pages/RecommendationsPage';
 import AIAssistantPage from './pages/AIAssistantPage';
 import LibraryPage from './pages/LibraryPage';
 import BookTherapistPage from './pages/BookTherapistPage';
@@ -28,7 +27,6 @@ function AppContent() {
         <Route path="/" element={<WelcomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/checkin" element={<CheckInPage />} />
-        <Route path="/recommendations" element={<RecommendationsPage />} />
         <Route path="/assistant" element={<AIAssistantPage />} />
         <Route path="/library" element={<LibraryPage />} />
         <Route path="/book" element={<BookTherapistPage />} />
@@ -37,7 +35,7 @@ function AppContent() {
         <Route path="/userprofile" element={<UserProfile />} />
         <Route path="/Book" element={<BookTherapistPages />} />
         <Route path="/Game" element={<MindfulBreathPage />} />
-        <Route path="/Recommend" element={<RecommendationsPages />} />
+        <Route path="/recommend" element={<RecommendationsPages />} />
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/task" element={<TaskPage />} />
         <Route path="/leaderboard" element={require('./pages/leaderboad.js').default()} />

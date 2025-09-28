@@ -23,18 +23,17 @@ export default function EditProfile() {
       if (currentUser) {
         setUser(currentUser);
         setEditName(currentUser.displayName || '');
-        // Fetch location and phone from Firestore
         try {
           // Get highest streak from localStorage
           const maxStreak = Number(localStorage.getItem('maxStreak') || '0');
           setStreak(maxStreak);
 
-          // Get location and phone from users collection
-          const userDocRef = collection(db, 'users');
-          const qUser = query(userDocRef, where('userId', '==', currentUser.uid));
-          const userSnapshot = await getDocs(qUser);
-          if (!userSnapshot.empty) {
-            const userData = userSnapshot.docs[0].data();
+          // Get user document by UID
+          const { doc, getDoc } = await import('firebase/firestore');
+          const userDocRef = doc(db, 'users', currentUser.uid);
+          const userSnap = await getDoc(userDocRef);
+          if (userSnap.exists()) {
+            const userData = userSnap.data();
             setEditLocation(userData.location || '');
             setEditPhone(userData.phone || '');
             setWellnessScore(userData.wellnessScore || 0);
@@ -62,23 +61,16 @@ export default function EditProfile() {
         await updateProfile(auth.currentUser, { displayName: editName });
         setUser({ ...auth.currentUser, displayName: editName });
         // Save location, phone, and leaderboard preference to Firestore
-        const userDocRef = collection(db, 'users');
-        const qUser = query(userDocRef, where('userId', '==', auth.currentUser.uid));
-        const userSnapshot = await getDocs(qUser);
-        if (!userSnapshot.empty) {
-          await updateDoc(userSnapshot.docs[0].ref, { location: editLocation, phone: editPhone, showOnLeaderboard });
-        } else {
-          // Create user document if not exists
-          const { addDoc } = await import('firebase/firestore');
-          await addDoc(userDocRef, {
-            userId: auth.currentUser.uid,
-            location: editLocation,
-            phone: editPhone,
-            email: auth.currentUser.email,
-            name: editName,
-            showOnLeaderboard
-          });
-        }
+        const { doc, setDoc } = await import('firebase/firestore');
+        const userDocRef = doc(db, 'users', auth.currentUser.uid);
+        await setDoc(userDocRef, {
+          userId: auth.currentUser.uid,
+          location: editLocation,
+          phone: editPhone,
+          email: auth.currentUser.email,
+          name: editName,
+          showOnLeaderboard
+        }, { merge: true });
         // Do not navigate away; stay on edit profile page
       }
     } catch (err) {

@@ -98,13 +98,13 @@ export default function Navbar() {
       <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <ul className="nav-links-mobile">
           <li>
-            <Link to="/leaderboard" className="nav-link-mobile" onClick={closeSidebar}>Leaderboard</Link>
-          </li>
-          <li>
             <Link to="/checkin" className="nav-link-mobile" onClick={closeSidebar}>Check-in</Link>
           </li>
           <li>
             <Link to="/task" className="nav-link-mobile" onClick={closeSidebar}>Daily Tasks</Link>
+          </li>
+           <li>
+            <Link to="/library" className="nav-link-mobile" onClick={closeSidebar}>Library</Link>
           </li>
           <li>
             <Link to="/assistant" className="nav-link-mobile" onClick={closeSidebar}>AI Assistant</Link>
@@ -122,7 +122,7 @@ export default function Navbar() {
             <Link to="/Game" className="nav-link-mobile" onClick={closeSidebar}>Relax</Link>
           </li>
           <li>
-            <Link to="/library" className="nav-link-mobile" onClick={closeSidebar}>Library</Link>
+            <Link to="/leaderboard" className="nav-link-mobile" onClick={closeSidebar}>Leaderboard</Link>
           </li>
           <li style={{position: 'relative'}}>
             <span style={{cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '8px'}} onClick={() => setShowProfileMenu(v => !v)}>
