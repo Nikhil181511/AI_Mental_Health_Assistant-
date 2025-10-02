@@ -103,7 +103,7 @@ const ProfileAnalysis = () => {
   useEffect(() => {
     if (user) {
       // Pass user ID to get user-specific analysis
-      axios.get(`http://localhost:8000/analysis?user_id=${user.uid}`)
+      axios.get(`https://mh-backend-8w1j.onrender.com/analysis?user_id=${user.uid}`)
         .then(res => {
           console.log("Profile data:", res.data); // Check the structure here
           setProfileData(res.data);
