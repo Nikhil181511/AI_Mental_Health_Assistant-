@@ -166,7 +166,7 @@ export default function EditProfile() {
                 <button
                   type="button"
                   className={showOnLeaderboard ? 'btn btn-primary' : 'btn btn-outline'}
-                  style={{ marginBottom: '1rem' }}
+                  style={{ }}
                   onClick={() => setShowOnLeaderboard(prev => !prev)}
                 >
                   {showOnLeaderboard ? 'Yes, display my name' : 'No, keep my name hidden'}

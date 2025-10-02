@@ -144,7 +144,6 @@ body, html, #root {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shimmer 3s ease-in-out infinite;
   line-height: 1.1;
   letter-spacing: -2px;
 }
