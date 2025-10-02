@@ -51,7 +51,7 @@ const BookTherapistPage = () => {
 
   const fetchTherapists = async () => {
     try {
-      const { data } = await axios.get('http://localhost:8000/therapists');
+      const { data } = await axios.get('https://mh-backend-8w1j.onrender.com/therapists');
       const templates = {
         1: { experience: '5 years of experience', languages: 'Fluent in English, Hindi, Konkani', rating: 'Top-Rated', sessions: '120 happy client sessions', price: '₹2500 for 50 min', description: "Specialized in anxiety, depression, and stress management. I use evidence-based approaches to help you overcome life's challenges.", image: 'doc1.jpg', verified: true, availability: 'Tomorrow, 06 Sep, 07:30 pm IST' },
         2: { experience: '8 years of experience', languages: 'Fluent in English, Hindi, Marathi', rating: 'Top-Rated', sessions: '200+ happy client sessions', price: '₹3000 for 50 min', description: 'Expert in trauma recovery and PTSD treatment. I provide a safe space for healing and growth.', image: 'doc2.jpg', verified: true, availability: 'Today, 05 Sep, 08:00 pm IST' },
