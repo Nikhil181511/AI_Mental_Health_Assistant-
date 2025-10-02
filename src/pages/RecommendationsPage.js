@@ -56,7 +56,7 @@ const Recommendations = () => {
         setResult(null);
         setIsLoadingRecommendations(true);
         try {
-            const response = await axios.post('http://localhost:8000/recommend', {
+            const response = await axios.post('https://mh-backend-8w1j.onrender.com/recommend', {
                 user_mood: moodText,
             });
             setResult(response.data);
